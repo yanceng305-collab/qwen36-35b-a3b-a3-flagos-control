@@ -1,8 +1,8 @@
 # 项目状态
 
-更新时间：2026-08-25
+更新时间：2026-08-26
 
-总体状态：Stage 0 **COMPLETE**；`QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` **STOP at Gate B**，Codex1 Formal Review为 **NEEDS-FOLLOWUP**；`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG` **STOP / DIAGNOSTIC PASS**并等待 Codex1 review；Stage gate未推进，Stage 3 **LOCKED**。
+总体状态：Stage 0 **COMPLETE**；`QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` **STOP at Gate B**，Codex1 Formal Review为 **NEEDS-FOLLOWUP**；`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG` diagnostic run **STOP / DIAGNOSTIC PASS**；最新 follow-up 已 **Gate B PASS** 但 **STOP at Gate C**；Stage gate未推进，Stage 3 **LOCKED**。
 
 ## 当前快照
 
@@ -18,7 +18,7 @@
 | Official A3 base route | Bounded selection authorized | `v0.20.2rc1-a3` Ubuntu或`v0.20.2rc1-a3-openeuler`；ordinary unsuffixed A2 image excluded |
 | Model artifact | `DOWNLOADING / NOT YET READY FOR STAGE 3` | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；不阻塞Stage 1/2 |
 | First Codex2 task | **STOP / Codex1 Review NEEDS-FOLLOWUP** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
-| Latest bounded Task | **STOP / DIAGNOSTIC PASS / Review pending** | [`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md)；parent metadata blocker已定位为 path naming / CMake regex classification；corrected no-plus attempt后剩余 gitcode DNS依赖 blocker；无 wheel |
+| Latest bounded Task | **STOP / Gate B PASS; Gate C STOP / Review pending** | [`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md)；parent metadata blocker已定位为 path naming / CMake regex classification；follow-up使用现有代理闭合 gitcode依赖下载并产出 A3 `ascend910_93` wheel；standalone Gate C在 `import vllm_fl.platform` 时因缺少 `flag_gems` distribution STOP；Gate D NOT RUN |
 | Validation Code repo/fork | **Not needed yet** | 已有 A3 execution blocker，但尚未证明 attributable to implementation source或需要 source change |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
@@ -101,6 +101,24 @@ Result：[`RESULT-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-20260825T224528+0800.md`
 - Evidence root：`/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG/evidence/20260825T224528+0800`；main build log `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG/evidence/20260825T224528+0800/logs/gate_b_corrected_no_plus_path_build_wheel.log`。
 
 Stage 1/2仍未 PASS；Stage 3仍锁定。下一步需 Codex1 review/Acceptance或 User另行 dispatch有边界 follow-up。
+
+## Current follow-up run — QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG
+
+Result：[`RESULT-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-FOLLOWUP-20260825T234607+0800.md`](results/RESULT-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-FOLLOWUP-20260825T234607+0800.md)
+
+本次 run 事实：
+
+- Gate A supplement：`PASS`；复核 official A3 openEuler image、Triton/provider identity和 NPU 0/1 safe scope。
+- Source：继续绑定 parent exact `7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82`；follow-up开始时记录 moving tracked branch已到 `e610a990d785356bf51a3cad50219d4c03310a31`，但不替换本次 reproduction source。
+- Network correction：使用服务器现有代理后，container内两个 `gitcode.com`依赖 GET probe均返回 HTTP 200。
+- Gate B：`PASS`；产出 `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG/artifacts/20260825T234607p0800/wheels/vllm_plugin_fl-0.2.0+g7beda84f5-cp311-cp311-linux_aarch64.whl`，sha256 `fa33f586b2e56e78f671989e6dc3dc2ee23f5005c5f0cc4800a6cf6e4b2e98c1`；wheel包含 `ascend910_93` prebuilt `_C_ascend`/OPP，严格 `ascend910b`/`ascend910b1`搜索为0。
+- Gate C：`STOP`；required standalone uninstall/install transaction成功，`vllm-ascend` distribution absent、`vllm_ascend` import不可用、`vllm_fl`来自 site-packages wheel，`_C_ascend`和 OPP来自本次 wheel；但 `import vllm_fl.platform` 触发 `ModuleNotFoundError: No module named 'flag_gems'`，无法完成 PlatformFL identity gate。
+- Gate D：`NOT RUN`。
+- Task container：`qw36-a3-s2-gateb-net-followup-20260825T234607p0800` / `82a815b4b7576230f3f786b95583f9d1b8400a1622b5a82752c62fcd444444f6`已删除；NPU 0/1释放。
+- Code PR：`N/A`；implementation source未修改。
+- Evidence root：`/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG/evidence/20260825T234607p0800`；main build log `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG/evidence/20260825T234607p0800/logs/gate_b_corrected_proxy_build_wheel.log`。
+
+Stage 1/2仍未 PASS；Stage 3仍锁定。
 
 ## 当前已确认的高影响事实
 
