@@ -12,8 +12,9 @@
   - `quay.io/ascend/vllm-ascend:v0.20.2rc1-a3`
   - `quay.io/ascend/vllm-ascend:v0.20.2rc1-a3-openeuler`
 - 先按 actual host/driver/CANN/build/runtime compatibility选择 Ubuntu或 openEuler，记录 selected tag、digest、image ID、OS、Python、CANN、torch、torch_npu、vLLM、Triton和理由。普通无后缀 `v0.20.2rc1`是 A2 route，明确排除；两候选均不兼容则 STOP/Decision requested，不得改用 A2、nightly或其他版本。
+- 默认使用一个 Task专属 container完成最短闭环：selected official A3 image → checkout tracked exact HEAD → container内 clean build `ascend910_93` wheel → 离开 FL source tree → uninstall `vllm-ascend`/old `vllm-plugin-fl` → install本次 wheel → new Python process验证 site-packages standalone FL → `_C_ascend`/OPP → real A3 NPU custom-op smoke。不要默认拆成 Builder Container + Runtime Container；clean/isolated只表示同一 container内的 Task专属 clean source/build workspace。只有真实 Evidence证明单容器无法满足当前 gate时，才 STOP并提出额外 container层与理由。
 - Roots：在现有 `/data`创建不覆盖既有内容、与 GLM/其他任务隔离的 Qwen Validation专属 work/Evidence/artifacts/cache roots，返回 exact paths；不要写入模型目录。
-- Container：可 pull/inspect上述 images，创建/停止/删除本 Task自己的临时 container并在其中做 package transaction；不得改其他 container/image或 Host全局 Python/CANN。长期 image snapshot后置 Stage 8。
+- Container：可 pull/inspect上述 images并创建一个 Task专属 container。失败过程中的无价值临时 container可清理；Gate A–D全部 PASS后必须保留最终 container、standalone FL环境、wheel和必要 artifacts，等待 Codex1 Acceptance及 User dispatch Stage 3后在该环境继续 TP2 BF16 eager。无明确 Decision不得删除/重建 PASS环境；不得改其他 container/image或 Host全局 Python/CANN。长期 image snapshot后置 Stage 8。
 - Dependencies：允许现有 GitHub/package index/registry/CATLASS；离线 artifact必须可核验。CATLASS绑定 `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
 ## Model fact — non-blocking inventory only
@@ -35,7 +36,7 @@ Stage 1/2只可只读记录 path存在/download状态；不要等待、加载、
 
 ## Boundaries
 
-不要运行完整模型、TP2 model/HCCL、graph、serve、prefix、EP、64K、benchmark/profiling/performance或 GLM；不要修改同事源码、创建 fork/Code repo/branch/PR、silent downgrade或切换 vLLM/CANN。需要源码修改时保存 first blocker/root-cause Evidence并 STOP，返回 bounded fix proposal / Decision requested。
+不要运行完整模型、TP2 model/HCCL、graph、serve、prefix、EP、64K、benchmark/profiling/performance或 GLM；不要修改同事源码、创建 fork/Code repo/branch/PR、silent downgrade或切换 vLLM/CANN；不要在无 blocker时增加额外 container/environment、artifact handoff或 build/runtime分层。需要源码修改或额外 container层时保存 first blocker/root-cause Evidence并 STOP，返回 bounded proposal / Decision requested。
 
 ## PASS / STOP / Return
 
@@ -43,4 +44,4 @@ Stage 1/2只可只读记录 path存在/download状态；不要等待、加载、
 
 遇到 owner/权限风险、两个 A3 image都不兼容、wrong tuple/source/family、A2 residue、wheel/ABI/`_C_ascend`/OPP失败、final `vllm_ascend`依赖、FL source import、FlagGems activation、NPU failure/CPU fallback或需要源码/major route修改时，在 first attributable blocker STOP。保存 last successful gate、raw Evidence、root-cause confidence、最小复现和 bounded follow-up；不得跑完整模型绕过。
 
-生成 immutable Result并同步 `results/INDEX.md`，返回 selected image与environment、exact source/wheel/SoC identities、Task exact roots、per-gate Evidence、model download-state inventory、last success/first blocker、Code PR=`N/A`或 Decision request。Execution PASS不等于 formal Acceptance，不得自行进入 Stage 3。
+生成 immutable Result并同步 `results/INDEX.md`，返回 selected image与environment、single Task container name/ID、exact source/wheel/SoC identities、Task exact roots、per-gate Evidence、model download-state inventory、last success/first blocker、Code PR=`N/A`或 Decision request。PASS时明确 container/standalone FL/wheel已保留供 Acceptance和 Stage 3续用。Execution PASS不等于 formal Acceptance，不得自行进入 Stage 3。

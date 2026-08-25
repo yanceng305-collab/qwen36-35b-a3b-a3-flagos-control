@@ -76,6 +76,30 @@ Evidence、Result、PASS、Acceptance 只对该次 exact SHA/tree 有效。分�
 - 重大路线、版本、CANN、baseline、模型、quantization 或大范围架构变化必须 `Decision requested`。
 - 当前分支/PR/SHA等移动事实必须在 dispatch 前从 GitHub重新查询，不能使用旧 prompt 或聊天 SHA。
 
+## 简单优先 / 不无故复杂化
+
+本项目默认采用**满足当前目标与 Evidence gate 的最简单可行方案**。当已有经过验证的参考流程时，优先复用其整体执行方式，只修改当前硬件、版本或真实 blocker要求变化的部分。
+
+不得仅为了“更规范”“更隔离”或假设未来可能需要，在没有实际 Evidence/blocker时增加：
+
+- 额外 container/environment层；
+- 中间 artifact handoff；
+- 新 repo/fork；
+- 新 abstraction/wrapper；
+- 新 build/runtime分层；
+- 多余 Stage/Task；
+- 当前问题未要求的重构。
+
+任何新增复杂度必须明确回答：
+
+1. 它解决了哪个已经观察到的真实问题？
+2. 不增加它会导致哪个当前 Task gate无法满足？
+3. 增加后的新变量和验证成本是否值得？
+
+无法明确回答时，保持现有更简单方案。
+
+> Prefer the smallest change and shortest execution path that can satisfy the current gate. Do not solve hypothetical future problems before they become real blockers.
+
 ## VERIFY FIRST / FIX ONLY WHEN EVIDENCE REQUIRES IT
 
 Codex2可以检查、build、install、run、debug、收集 traceback/log、缩小 first blocker。任何源码修改必须遵循：

@@ -34,11 +34,31 @@ quay.io/ascend/vllm-ascend:v0.20.2rc1-a3-openeuler
 
 Base image只作为 A3 software environment/build carrier。其名称或初始 package/source状态不改变 final runtime ownership。
 
+### Default single-container execution closure
+
+本 Task默认复用同事已验证思路，在**一个 Task专属 container**内完成闭环：
+
+```text
+selected official A3 v0.20.2rc1 image
+  -> one Task-specific container
+  -> checkout tracked exact HEAD
+  -> clean build A3 ascend910_93 wheel in that container
+  -> leave the FL source tree
+  -> uninstall vllm-ascend / old vllm-plugin-fl
+  -> install the newly built wheel
+  -> verify standalone FL from site-packages in a new Python process
+  -> load _C_ascend / OPP
+  -> run the real A3 NPU custom-op smoke
+```
+
+不要求独立 Builder Container + Runtime Container。本文中的 clean/isolated build只表示在该 Task container内使用 Task专属 clean source/build workspace，不表示另建 builder container。只有实际 Evidence证明单容器无法满足当前某个 gate时，才允许 STOP后提出额外 container层，并明确被阻塞的 gate、原因、新变量和验证成本；不得在本 Task内自行扩层。
+
 ### Server roots and container
 
 - Codex2可在现有 `/data`空间选择并创建新的 Qwen A3 Validation专属 `work`、`Evidence`、`artifacts`、`cache` roots；可以参考 `/data/tiankuan/zyg/FL/`。
 - 新 roots必须与 GLM和其他任务隔离、不覆盖已有目录、不写入模型目录；Result返回 exact paths。
-- 允许 pull/inspect上述 official A3 images、创建 Task专属 container、停止/删除本 Task自己的临时 container，并在 Task环境内完成 package transaction。
+- 允许 pull/inspect上述 official A3 images、创建一个 Task专属 container并在其中完成 build/install/smoke闭环。失败过程中产生的无价值临时 container可以停止/删除。
+- 如果 Gate A–D全部通过，必须保留最终 PASS container、其中已安装的 standalone FL环境以及本次 wheel/必要 artifacts，等待 `Execution PASS → Codex1 formal Acceptance → User dispatch Stage 3`，并在该已验证环境基础上继续 TP2 BF16 eager。除非后续有明确 Decision，不得删除或重建该 PASS环境。
 - 禁止修改其他项目 container、删除其他 image、修改 Host全局 Python/CANN环境。长期 runtime image snapshot不是 Stage 1/2默认产物，后置 Stage 8。
 
 ### Dependency access
@@ -111,16 +131,16 @@ Task contract已 Ready。执行开始仍要求：
 - 记录 physical SoC、build/runtime effective `SOC_VERSION`、detection source、normalized family和 selected prebuilt root；不得机械设置 A2 `ascend910b`。
 - 模型只记录 path存在性与 `DOWNLOADING`/inventory状态，不等待或验证完整性。
 
-### Gate B — Clean A3-native wheel
+### Gate B — Clean A3-native wheel in the same Task container
 
-- 使用 clean source/isolated builder，不混入 A2或旧 ABI outputs。
+- 在同一个 Task container内使用 Task专属 clean source/build workspace，不混入 A2或旧 ABI outputs；`isolated`不表示另建 builder container。
 - 构建输出属于 `ascend910_93` family；保存 detection/build logs、wheel filename/hash、Python ABI和完整 inventory。
 - Control snapshot的 8 OPP / 9 schemas仅供参考。必须按 dispatch exact HEAD source重新盘点 actual expected set/count，记录与 PR prose旧 7/8的差异；当前已知新增包括 `apply_top_k_top_p_custom` / `npu_apply_top_k_top_p`。
 - 证明 wheel没有 `prebuilt/ascend910b1`或其他 A2 binary residue，不依赖 whole external vLLM-Ascend runtime tree。
 
-### Gate C — Formal standalone FL install
+### Gate C — Formal standalone FL install in the same Task container
 
-- 在 FL source tree之外完成 wheel install，并在新的 Python process验证。
+- 在完成 build的同一 Task container内离开 FL source tree，卸载 `vllm-ascend`和 old `vllm-plugin-fl`，安装本次 wheel，并在新的 Python process验证。
 - `vllm_fl.__file__`、distribution metadata、`_C_ascend`/OPP origin来自实际 wheel/site-packages；无 FL `PYTHONPATH`、editable或 source checkout shortcut。
 - `vllm-ascend` distribution absent；`vllm_ascend` module/entrypoint不可 import；runtime无 `vllm_ascend` import/call/dependency。
 - `VLLM_PLUGINS=fl`、`USE_FLAGGEMS=0`生效；记录 actual PlatformFL/dispatch/provider，无 FlagGems activation。
@@ -141,7 +161,7 @@ Task contract已 Ready。执行开始仍要求：
 3. standalone FL site-packages install，无 installed/runtime `vllm-ascend`和 FL source shortcut；
 4. FL ownership、`USE_FLAGGEMS=0`、A3 `_C_ascend`/OPP origin成立；
 5. 至少一个实际 A3 NPU custom-op通过 device/reference/sync/exit/no-fallback断言；
-6. raw Evidence、checksums、immutable Result draft和三指针完整。
+6. raw Evidence、checksums、immutable Result draft和三指针完整；最终 PASS container name/ID和 preserved状态已记录。
 
 模型下载状态不属于 PASS判断。`Execution PASS`不自动解锁 Stage 3；等待 Codex1 formal Acceptance。
 
@@ -165,7 +185,7 @@ STOP Result必须保存 last successful gate、first blocker、raw Evidence、ro
 
 - Task/run/timestamps/executor和 explicit dispatch；
 - actual target/device/owner/container/roots authorization scope；
-- selected image tag/ID/digest/OS/tuple/selection reason；
+- selected image tag/ID/digest/OS/tuple/selection reason，以及 single Task container name/ID/lifecycle；
 - hardware/driver/firmware/CANN/package/provider/HCCL/build-tool manifest；
 - repo/remote/branch/HEAD/tree/status/diff-base identity；
 - physical SoC、effective `SOC_VERSION`、detection source、family/prebuilt root；
@@ -174,7 +194,7 @@ STOP Result必须保存 last successful gate、first blocker、raw Evidence、ro
 - `vllm_fl`/`_C_ascend`/OPP/library origin、FL `PYTHONPATH`/editable audit、plugin/platform/dispatch/provider trace；
 - custom-op config/input/output/reference/device/sync/numeric exit/no-fallback Evidence；
 - model path existence/download-state inventory only；
-- cache roots/identity、last successful gate/first blocker、Evidence manifest/checksums；
+- cache roots/identity、last successful gate/first blocker、Evidence manifest/checksums；PASS时记录 container与 standalone FL环境保留位置；
 - Code/source、Control、Evidence三指针；Code PR正常应为 `N/A`。
 
 ## Result return contract
