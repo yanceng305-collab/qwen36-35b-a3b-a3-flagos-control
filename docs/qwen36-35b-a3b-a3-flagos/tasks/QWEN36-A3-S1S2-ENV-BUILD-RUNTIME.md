@@ -1,12 +1,12 @@
 # QWEN36-A3-S1S2-ENV-BUILD-RUNTIME
 
-状态：**READY / Awaiting explicit User dispatch**
+状态：**ENDED / STOP at Gate B / Formal Review NEEDS-FOLLOWUP — historical parent contract; DO NOT RESUME**
 
 执行代理：Codex2
 
 目标 Stage：Stage 1 + Stage 2
 
-本合同已由 User提供 bounded execution authorization；除 explicit dispatch外，不再要求 User预先手工设计 device号、Ubuntu/openEuler选择或服务器目录。Task文件本身不构成 dispatch。
+本合同已经执行并结束。Immutable Result见 [`RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md`](../results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)，Codex1 Review见 [`REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md`](../reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md)。不得通过重新发送旧 prompt续跑；follow-up使用新 Task。
 
 ## User-confirmed facts and bounded authorization
 
@@ -78,9 +78,9 @@ selected official A3 v0.20.2rc1 image
 
 Future Stage 3前必须用独立 model identity gate核对 config、architecture、tokenizer、`model.safetensors.index.json`、全部 shards、size、checksum/manifest和 BF16/no-quantization contract；本轮不执行。
 
-### Dispatch
+### Dispatch record
 
-- Explicit User dispatch：`<AWAITING>`。
+- Original User dispatch：completed；run ended `STOP at Gate B`。
 
 ## Objective
 

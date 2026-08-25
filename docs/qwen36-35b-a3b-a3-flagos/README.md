@@ -16,9 +16,12 @@
 ## Execution governance
 
 - [REPOSITORY-AND-EVIDENCE-RULES.md](REPOSITORY-AND-EVIDENCE-RULES.md)：三指针、immutable Result、Acceptance、Code fix规则。
-- [tasks/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME.md](tasks/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME.md)：首个 Codex2 Task，**READY / Awaiting explicit User dispatch**。
-- [tasks/CODEX2-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-PROMPT.md](tasks/CODEX2-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-PROMPT.md)：简洁 dispatch prompt。
-- [results/INDEX.md](results/INDEX.md)：Execution Result、Control Sync、Codex1 Acceptance索引；当前无 A3 run。
+- [tasks/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME.md](tasks/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME.md)：parent Task，Gate B STOP。
+- [results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)：immutable STOP Result。
+- [reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md)：Codex1 Formal Review，**NEEDS-FOLLOWUP**。
+- [tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md)：bounded follow-up，**READY / Awaiting explicit User dispatch**。
+- [tasks/CODEX2-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-PROMPT.md](tasks/CODEX2-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-PROMPT.md)：self-contained follow-up dispatch prompt。
+- [results/INDEX.md](results/INDEX.md)：Execution Result、Control Sync、Codex1 Review/Acceptance索引。
 
 ## Research snapshots
 
@@ -28,4 +31,4 @@
 
 ## Current Stage
 
-Stage 0 Control已建立。User已授权 Codex2在当前项目可访问的 A3 server上，对 device、两条 official A3 image、`/data`专属 roots、Task container和依赖获取做 bounded selection；Task当前只等待 explicit User dispatch，在此之前不得执行。
+Parent Stage 1/2 Task已在 Gate B STOP；Formal Review为 `NEEDS-FOLLOWUP`，Stage 3 locked。下一步只允许 User显式 dispatch bounded Gate B diagnostic；Codex2当前不得自动续跑。

@@ -1,6 +1,8 @@
 # Codex2 Prompt — QWEN36-A3-S1S2-ENV-BUILD-RUNTIME
 
-状态：**READY / Awaiting explicit User dispatch。未收到明确 dispatch前不得执行。**
+状态：**DO NOT DISPATCH — historical parent prompt。Run已在 Gate B STOP并完成 Formal Review；不得用本 prompt续跑。**
+
+Follow-up只能使用 `QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`及其 self-contained prompt。
 
 同步并读取 latest `AGENTS.md`、`README.md`、`STATUS.md`、本 Task合同、`BASELINE.md`、`OFFICIAL-A3-IMAGE-ROUTE.md`和 `REPOSITORY-AND-EVIDENCE-RULES.md`。GitHub moving state优先于旧 prompt/chat；dispatch时重新冻结 tracked branch exact HEAD SHA/tree/clean state。
 

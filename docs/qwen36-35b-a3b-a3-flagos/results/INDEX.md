@@ -2,11 +2,11 @@
 
 Codex2生成的 run snapshot首次 push后不可修改。Codex1 Acceptance只更新本 INDEX或 `../STATUS.md`，不修改 immutable Result。
 
-当前已有 1 个 A3 execution STOP Result；尚无 A3 Execution PASS或 Codex1 Acceptance。
+当前已有 1 个 A3 execution STOP Result；Codex1 Formal Review为 `NEEDS-FOLLOWUP`，尚无 A3 Execution PASS或 Stage 1/2 Acceptance。
 
 | Task | Run | Experiment Result | Code/source pointer | Immutable Result | Server Evidence | Control Sync | Codex1 Acceptance |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` | `2026-08-25T20:54:24+08:00` | **STOP / Gate A PASS; Gate B STOP; Gate C/D NOT RUN** | `xiemingda-1002/vllm-plugin-FL@7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82`; Code PR=`N/A` | [RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md](RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md) | `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME/evidence`; main log `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME/evidence/20260825T205100+0800/build_wheel.log` | SYNCED in the commit that adds this row | PENDING |
+| `QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` | `2026-08-25T20:54:24+08:00` | **STOP / Gate A core PASS with Evidence gap; Gate B STOP; Gate C/D NOT RUN** | `xiemingda-1002/vllm-plugin-FL@7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82`; Code PR=`N/A` | [RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md](RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md) | `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME/evidence`; main log `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME/evidence/20260825T205100+0800/build_wheel.log` | SYNCED via `beee47c91778b2b55b1ae7ae33a91aa6898ee797` | **NEEDS-FOLLOWUP**；Gate A core ACCEPT WITH EVIDENCE GAP；Gate B STOP ACCEPTED；underlying root cause LOW/unconfirmed；[Formal Review](../reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
 
 ## Status semantics
 

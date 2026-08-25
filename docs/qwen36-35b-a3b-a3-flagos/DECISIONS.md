@@ -10,11 +10,11 @@
 | D-004 | baseline为 vLLM 0.20.2 + FL release/0.2系；vLLM-Ascend 0.20.2rc1仅作 reference | Required | current source/PR与资料一致；最终 runtime必须 standalone FL | current source或 User批准 major baseline change |
 | D-005 | A2全部结果统一标记 `A2 REFERENCE ONLY — NOT A3 ACCEPTANCE` | Required | 资料中真实执行是 2×910B1，不是 910C | 不能由推断取消；A3必须另行执行 |
 | D-006 | 默认 `VERIFY FIRST / FIX ONLY WHEN EVIDENCE REQUIRES IT` | Required | 避免在没有 A3 blocker时重构/重新适配 | attributable blocker + root cause + bounded scope |
-| D-007 | 当前不创建 validation Code repo/fork | Required / current | 暂无 A3 blocker或 patch需求 | 需要自有 small A3-specific fix且同事未直接修复 |
+| D-007 | 当前不创建 validation Code repo/fork | Required / current | 已有 A3 Gate B execution blocker，但尚未证明 attributable to implementation source或需要 source patch | Confirmed root cause证明需要我方 bounded source fix |
 | D-008 | A3先走 environment/build/runtime，再 eager、graph、serve、functional expansion、performance | Required | correctness-first，隔离 A3 family/ABI/runtime风险 | Stage gate Evidence支持调整 |
 | D-009 | A3 wheel必须在 A3/compatible CANN构建，family为 `ascend910_93`；禁止复用 A2 wheel | Required | A2=`ascend910b`，A3=`ascend910_93`，binary/OPP不可外推 | current source/CANN合同改变且获批准 |
 | D-010 | standalone runtime要求 `USE_FLAGGEMS=0`、无 installed/runtime `vllm-ascend`依赖、正式 wheel/site-packages origin | Required | 证明 FL-local ownership和可重建安装，不接受 source-tree shortcut | User批准改变正式 runtime ownership（当前无） |
-| D-011 | 首任务合并 Stage 1/2，只做 environment/source identity、A3 wheel、install、custom-op smoke | **READY / Awaiting explicit User dispatch** | User已提供 bounded server/device/image/root/container/dependency授权；不把模型/graph/benchmark混入 | User dispatch或授权边界变化 |
+| D-011 | 首任务合并 Stage 1/2，只做 environment/source identity、A3 wheel、install、custom-op smoke | **STOP / Codex1 Review NEEDS-FOLLOWUP** | Gate A core accepted with Triton/provider gap；Gate B STOP accepted；C/D未运行 | Bounded Gate B diagnostic follow-up result |
 | D-012 | current exact-head source的 8 OPP / 9 schemas优先于 PR正文旧的 7/8 | Required | exact source是当前可执行事实；PR prose已过时 | tracked head改变后重新盘点 |
 | D-013 | build/runtime `SOC_VERSION`默认不对称只登记为风险，不提前写 blocker或 patch | Required | 静态 build默认 A3、loader默认 A2；实际环境可能显式提供变量 | A3执行复现 family选择/加载失败 |
 | D-014 | Qwen A3 handoff只向 GLM提供 A3真实验证过的通用 runtime/build/evidence事实 | Required | Qwen model/GDN/Mamba/graph/performance不能证明 GLM/W8A8 | 对应通用事实有 A3 Acceptance并进入 handoff |
@@ -22,6 +22,7 @@
 | D-016 | Stage 1/2 base image只允许在 official `v0.20.2rc1-a3`与`v0.20.2rc1-a3-openeuler`中 bounded selection；无后缀 `v0.20.2rc1`明确排除 | Required / User-authorized | Official matrix把无后缀route映射到A2，把两个suffix映射到A3 Ubuntu/openEuler；final runtime仍须 standalone FL | Official source出现明确反证或两候选均不兼容并由User重决策 |
 | D-017 | Codex2可在不干扰其他任务的前提下只读盘点并选择最小安全device scope、创建隔离的`/data` roots和Task container、使用可审计依赖访问 | Required / User-authorized | 用 bounded authorization替代逐项目录/设备设计；减少无价值Ready占位符 | 现场目标/owner/权限不明确或需要越界动作 |
 | D-018 | 模型路径固定为`/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`，状态`DOWNLOADING / NOT YET READY FOR STAGE 3`；不阻塞Stage 1/2 | User-confirmed | 当前Task仅允许presence/download-state inventory，不加载或等待模型 | Stage 3 task创建前完成独立model identity gate |
+| D-019 | `QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` Formal Review为`NEEDS-FOLLOWUP`；只创建 Gate B OPP metadata diagnostic，不直接创建 source fix task | Required / Codex1 Review | Immediate missing-metadata failure可信，但 underlying root cause/source attribution为LOW/unknown；Stage 3保持锁定 | Diagnostic Evidence确认 root cause并决定 Gate B closure或 bounded Code Decision |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -83,6 +84,14 @@ Image只提供匹配 environment/build toolchain。Stage 2 final runtime仍必�
 - 允许 pull/inspect两条 official A3 candidates，创建/停止/删除本 Task自己的临时 container，并在其内做 package transaction；不得改其他 container/image或 Host全局 Python/CANN。长期 image snapshot后置 Stage 8。
 - 允许使用现有 GitHub/package index/registry/CATLASS访问；离线 artifact必须可核验。CATLASS继续绑定 `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 - 已确认模型路径当前仅作 inventory。模型下载完成不是 Stage 1/2 Ready/PASS条件；Stage 3前另行验证 config、architecture、tokenizer、index、全部 shards、size、checksum/manifest和 BF16/no-quantization contract。
+
+## D-019 — Gate B STOP review boundary
+
+- Gate A core device/image/environment/source identity接受，但 `triton-ascend` distribution/module/provider identity未被 Result证明，保持 targeted Evidence gap。
+- Gate B STOP、first blocker字符串、exit 1、no wheel及 C/D未运行接受；这不是 Gate B或 Stage 1/2 PASS。
+- Exact source和 matching-version official source都静态支持 `ascend910_93`并使用相同 metadata lookup infrastructure，故不把 failure提前归因成“未适配A3 OPP”或 source defect。
+- Underlying root-cause confidence记录为 `LOW`；immutable Result缺 explicit confidence与 official PR compare-base字段错误只在 Review/STATUS/INDEX补充，不修改 Result。
+- Next Task只定位/闭合 `aic-*-ops-info.ini` first blocker并补 Triton/provider Evidence；确认 source change必要前，Code repo/fork仍 `Not needed yet`。
 
 ## 明确拒绝的路线
 

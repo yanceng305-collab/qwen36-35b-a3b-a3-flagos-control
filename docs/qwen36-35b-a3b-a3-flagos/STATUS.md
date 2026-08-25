@@ -2,7 +2,7 @@
 
 更新时间：2026-08-25
 
-总体状态：Stage 0 **COMPLETE**；A3 Stage 1/2 execution已启动并在 `QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` 中 **STOP at Gate B**；Stage gate未推进，尚无 A3 Execution PASS或 Codex1 Acceptance。
+总体状态：Stage 0 **COMPLETE**；`QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` **STOP at Gate B**，Codex1 Formal Review为 **NEEDS-FOLLOWUP**；Stage gate未推进，Stage 3 **LOCKED**。
 
 ## 当前快照
 
@@ -13,17 +13,18 @@
 | Official base | Current GitHub snapshot recorded | `release/0.2@53adefb...` / tree `9ddfd0...` |
 | PR #404 | OPEN / DRAFT / MERGEABLE / BLOCKED / REVIEW_REQUIRED | GitHub snapshot 2026-08-25 17:42 CST；状态会变化 |
 | A2 implementation evidence | **A2 REFERENCE ONLY** | User资料中的 2×910B1结果，不是 A3 Acceptance |
-| A3 environment/build/runtime | **PARTIAL: Gate A PASS; Gate B STOP; Gate C/D NOT RUN** | A3/910C environment、device、official A3 openEuler image和 source identity已记录；wheel build在 CANN OPP prepare/build处 STOP |
+| A3 environment/build/runtime | **PARTIAL / REVIEWED** | Gate A core ACCEPT WITH EVIDENCE GAP；Gate B STOP ACCEPTED；Gate C/D NOT RUN；无 wheel |
 | A3 model/graph/serve/function/performance | **UNVERIFIED** | 没有 A3 execution Evidence |
 | Official A3 base route | Bounded selection authorized | `v0.20.2rc1-a3` Ubuntu或`v0.20.2rc1-a3-openeuler`；ordinary unsuffixed A2 image excluded |
 | Model artifact | `DOWNLOADING / NOT YET READY FOR STAGE 3` | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；不阻塞Stage 1/2 |
-| First Codex2 task | **STOP / Acceptance PENDING** | Immutable Result: [RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md) |
-| Validation Code repo/fork | **Not needed yet** | 尚无 attributable A3 blocker |
+| First Codex2 task | **STOP / Codex1 Review NEEDS-FOLLOWUP** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
+| Next bounded Task | **READY / Awaiting explicit User dispatch** | [`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md)；只诊断/闭合 Gate B，不进入 C/D |
+| Validation Code repo/fork | **Not needed yet** | 已有 A3 execution blocker，但尚未证明 attributable to implementation source或需要 source change |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
 ## 当前 implementation identity
 
-核验时间：2026-08-25 17:42 CST；相对首次 Control snapshot未变化。
+核验时间：2026-08-25 22:14 CST；PR/head/base相对本次 execution identity未变化。
 
 - Tracked repo/branch：`xiemingda-1002/vllm-plugin-FL` / `feature/qwen3.6-35b-a3b-ascend-graph-migration`。
 - Current head：`7beda84f59d7b25f49cdf03bdf6efecd771067ed`。
@@ -50,20 +51,26 @@ A3 physical/environment identity
   -> minimal A3 NPU custom-op/runtime smoke
 ```
 
-首任务未运行完整 Qwen模型、graph、prefix、EP、64K 或 benchmark。Stage 1/2本次未达到 `Execution PASS`；Codex1 Acceptance仍为 `PENDING`，Stage 3未解锁。
+首任务未运行完整 Qwen模型、graph、prefix、EP、64K 或 benchmark。Stage 1/2本次未达到 `Execution PASS`；Codex1 Formal Review为 `NEEDS-FOLLOWUP`，Stage 3未解锁。
 
 本次 run 事实：
 
 - Gate A：`PASS`。
+- Gate A Codex1 Review：**ACCEPT WITH EVIDENCE GAP**；core device/image/environment/source identity接受，Triton/provider子项待补证。
 - Gate B：`STOP`。
+- Gate B Codex1 Review：**STOP ACCEPTED**；不等于 Gate B PASS。
 - First blocker：`OpFileNotExistsError: File aic-*-ops-info.ini does not exist`。
 - Source：`7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82`。
+- Official PR base correction：`flagos-ai/vllm-plugin-FL:release/0.2@53adefb269571684d83a51e997d3ba9be5f88235` / tree `9ddfd080953ad39b39772e108ff921d2973b0299`；immutable Result中的 fork `main@38e7dbc...`不是 official PR compare base，但不影响 execution HEAD/tree或 STOP事实。
 - Selected image：`quay.io/ascend/vllm-ascend:v0.20.2rc1-a3-openeuler`，image digest `sha256:442363921166771eb82baeec9c1ac0381f46fb830ead8d0e072df6e925f2a958`，arm64 platform digest `sha256:a55b2b0597f9fdd1882de9bf3b7ebc395dd77c1ca49f251d0cb759d7b2c1a807`，local image ID `sha256:8e7823878349b37d9900984555e28381c25681f88ff678cb4a86f7d1674a67c1`。
 - No wheel produced；Gate C/D `NOT RUN`。
 - Task container `qw36-a3-s1s2-env-pass-20260825190917` / `9f03ddc88115aec2865ae099596f8cd383a2647493397b72ce1f8f82d6c66adb` removed；NPU 0/1 released。
 - Code PR：`N/A`。
 - Evidence root：`/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME/evidence`；main build log `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME/evidence/20260825T205100+0800/build_wheel.log`。
-- Follow-up hypothesis only, not confirmed root cause：A3 OPP definition/build path may need bounded source change so CANN emits `aic-*-ops-info.ini` for `ascend910_93`。
+- Immediate failure confidence：**HIGH**；metadata lookup未找到 `aic-*-ops-info.ini`，exception未恢复、exit 1、no wheel。
+- Underlying root-cause confidence：**LOW / NOT CONFIRMED**；尚不能区分具体 op、CMake/opbuild、CANN behavior、SoC/path naming、selected-op flow或 lookup-directory问题，也未证明 source change必要。
+- Gate A Evidence gap：Result只记录 `Triton=3.5.0`，未记录 `triton-ascend` distribution、module origin和 active provider。ARM上 `triton-ascend 3.2.1`可以正常依赖 community `triton 3.5.0`，故不判 wrong tuple，只要求 targeted补证。
+- Immutable Result contract gap：缺显式 `Root-cause confidence`字段；只在 Review/STATUS/INDEX记录，不修改 immutable Result。
 
 ## Current authorization / dispatch gate
 
@@ -75,7 +82,7 @@ User已确认 bounded authorization：
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
-当前正常下一步是 Codex1独立审查本次 STOP Result并决定 `ACCEPTED / REJECTED / NEEDS-FOLLOWUP`。不得自行创建或执行后续 Task。
+当前正常下一步是 User决定是否 dispatch Ready Task `QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`。它只补 Triton/provider Evidence并定位/闭合 Gate B metadata first blocker；Codex2当前未运行，不得自动续跑。
 
 ## 当前已确认的高影响事实
 

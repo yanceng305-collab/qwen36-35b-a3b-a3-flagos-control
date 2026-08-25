@@ -1,6 +1,6 @@
 # Qwen3.6-35B-A3B × FlagOS × Ascend A3/910C 项目计划
 
-状态：Stage 0 **COMPLETE**；Stage 1/2 Task `QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` **READY / Awaiting explicit User dispatch**。
+状态：Stage 0 **COMPLETE**；Stage 1/2 parent Task **STOP at Gate B / Formal Review NEEDS-FOLLOWUP**；bounded Gate B diagnostic **READY / Awaiting explicit User dispatch**。
 
 ## 结果目标
 
@@ -22,8 +22,11 @@
 
 ```text
 Stage 0 Control / live baseline established
-  -> User explicitly dispatches the already-bounded Ready task
-  -> Stage 1/2 A3 environment + native wheel + standalone runtime smoke
+  -> parent Stage 1/2 execution: Gate A core PASS with Evidence gap / Gate B STOP
+  -> Codex1 Review: NEEDS-FOLLOWUP
+  -> bounded Gate B OPP metadata diagnostic
+  -> Gate B closure and Codex1 review
+  -> resume standalone install/custom-op gates only after approval
   -> Codex1 Acceptance
   -> Stage 3 TP2 eager
   -> Stage 4 FULL_DECODE_ONLY graph
@@ -40,8 +43,8 @@ Stage 0 Control / live baseline established
 | Stage | Objective | Ready / entry gate | PASS evidence boundary | Current status |
 | --- | --- | --- | --- | --- |
 | 0 — Project / Baseline | Control、GitHub current state、baseline、A2 reference、workflow、first task | User授权初始化 | 正式 docs + exact snapshot + publish | **COMPLETE** |
-| 1 — A3 Environment / Build Readiness | physical 910C、safe device、official A3 image selection、driver/CANN/Python/torch/torch-npu/vLLM/Triton/build tools/source identity；model download-state inventory only | Bounded authorization已确认；等待 explicit dispatch | selected tag/ID/digest/OS/tuple/reason + environment/source manifest | **READY / Awaiting dispatch** |
-| 2 — A3 Wheel / Standalone Runtime | clean A3 build、dispatch-head OPP/schema inventory、`_C_ascend`、wheel、formal install、FL origin、无 vllm-ascend、minimal NPU op | 同一 Task中 Stage 1 facts满足 | A3-family artifact + hash/inventory + load/register + actual A3 NPU custom-op smoke | Awaiting Gate A |
+| 1 — A3 Environment / Build Readiness | physical 910C、safe device、official A3 image selection、driver/CANN/Python/torch/torch-npu/vLLM/Triton/build tools/source identity；model download-state inventory only | Parent execution completed Gate A | selected tag/ID/digest/OS/tuple/reason + environment/source manifest | **Core ACCEPT WITH EVIDENCE GAP**；Triton/provider补证待follow-up |
+| 2 — A3 Wheel / Standalone Runtime | clean A3 build、dispatch-head OPP/schema inventory、`_C_ascend`、wheel、formal install、FL origin、无 vllm-ascend、minimal NPU op | Gate A core evidence可用；先闭合 metadata first blocker | A3-family artifact + hash/inventory + load/register + actual A3 NPU custom-op smoke | **Gate B STOP / NEEDS-FOLLOWUP**；C/D locked |
 | 3 — TP2 Eager | BF16完整权重、TP2/HCCL、Qwen/GDN/Mamba/full attention/MoE、prefill/decode/repeat | Stage 2 Accepted；另行完成model config/architecture/tokenizer/index/shards/size/checksum/BF16-no-quant gate和 TP2资源合同 | 完整 load + finite/readable repeat output + ownership/no CPU fallback | Locked；model downloading |
 | 4 — FULL_DECODE_ONLY | capture sizes、fixed-address state、replay、GDN/Attention update、repeat/state freshness | Stage 3 Accepted | capture+replay多次；无 stale state/507011/NaN/Inf；输出正常 | Locked |
 | 5 — Serve | health/models/completion/chat/repeat/bounded concurrency | Stage 4 Accepted | API/engine/model/run identity + repeated requests + bounded concurrency | Locked |

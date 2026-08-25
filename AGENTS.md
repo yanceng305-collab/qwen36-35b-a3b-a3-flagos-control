@@ -71,10 +71,13 @@ Evidence、Result、PASS、Acceptance 只对该次 exact SHA/tree 有效。分�
 
 ## Prompt / Task 约定
 
+- 每份可下发给 Codex2的 execution prompt开头必须显式写出完整 `Control repo URL`、`Implementation repo URL`、`Tracked branch`和 `Task ID`；不得要求新会话通过文件名、聊天历史或服务器本地目录猜仓库/任务身份。
 - Task只冻结 objective、boundaries、User-confirmed facts、Ready、PASS、STOP、required Evidence 与 Acceptance边界。
 - 不无必要写死普通 shell command、命令顺序或排障过程；Codex2在合同内自主检查和定位。
 - 重大路线、版本、CANN、baseline、模型、quantization 或大范围架构变化必须 `Decision requested`。
 - 当前分支/PR/SHA等移动事实必须在 dispatch 前从 GitHub重新查询，不能使用旧 prompt 或聊天 SHA。
+- Codex1交付 Ready Task时，必须在同一聊天回复中直接提供**可完整复制给 Codex2**的完整 execution prompt，不能只给 GitHub Prompt URL。
+- Ready Task的完整 prompt必须包含明确 User dispatch语句；Not Ready Task必须在 prompt开头显式写 `DO NOT DISPATCH`。
 
 ## 简单优先 / 不无故复杂化
 
