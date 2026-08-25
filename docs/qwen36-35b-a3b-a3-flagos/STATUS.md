@@ -18,7 +18,7 @@
 | Official A3 base route | Bounded selection authorized | `v0.20.2rc1-a3` Ubuntu或`v0.20.2rc1-a3-openeuler`；ordinary unsuffixed A2 image excluded |
 | Model artifact | `DOWNLOADING / NOT YET READY FOR STAGE 3` | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；不阻塞Stage 1/2 |
 | First Codex2 task | **STOP / Codex1 Review NEEDS-FOLLOWUP** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
-| Next bounded Task | **READY / Awaiting explicit User dispatch** | [`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md)；只诊断/闭合 Gate B，不进入 C/D |
+| Next bounded Task | **READY / Awaiting explicit User dispatch** | [`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md)；先确认 root cause；非源码闭合B后同container继续C/D |
 | Validation Code repo/fork | **Not needed yet** | 已有 A3 execution blocker，但尚未证明 attributable to implementation source或需要 source change |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
@@ -82,7 +82,7 @@ User已确认 bounded authorization：
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
-当前正常下一步是 User决定是否 dispatch Ready Task `QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`。它只补 Triton/provider Evidence并定位/闭合 Gate B metadata first blocker；Codex2当前未运行，不得自动续跑。
+当前正常下一步是 User决定是否 dispatch Ready Task `QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`。它先补 Triton/provider Evidence并定位 Gate B root cause：需要 source change则 STOP/Decision；non-source修正闭合 Gate B则沿用同一 container直接执行 parent Gate C/D。Codex2当前未运行，不得自动续跑；即使 Stage 1/2 Execution PASS也必须等待 Codex1 Acceptance，Stage 3仍锁定。
 
 ## 当前已确认的高影响事实
 

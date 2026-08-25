@@ -70,7 +70,7 @@ OpFileNotExistsError: File aic-*-ops-info.ini does not exist
 - 若 target不可用、owner边界变化或 image digest不匹配，在 mutation前 STOP请求 User决定。
 - 一个 Task专属 container、一个 clean source/build workspace；不拆 builder/runtime container。
 - 先 static/read-only review，再做一次最小 Gate B reproduction。
-- 不修改 source，不创建 fork/Code repo/branch/PR，不进入 Gate C/D或 Stage 3。
+- 不修改 source，不创建 fork/Code repo/branch/PR。只有 confirmed non-source correction闭合 Gate B后，才在同一 container继续 Gate C/D；任何情况下都不进入 Stage 3。
 
 ## Gate A evidence supplement
 
@@ -97,14 +97,91 @@ OpFileNotExistsError: File aic-*-ops-info.ini does not exist
 - matching-version official source对照；
 - source HEAD/tree/status/diff。
 
-如果 confirmed root cause是现有 route内非源码、可逆的 build procedure/config问题，可做一次 corrected Gate B rerun。若生成 wheel，保存 wheel hash/ABI/inventory和 A2-residue audit，然后 STOP；不要进入 Gate C/D。
+如果 confirmed root cause是现有 route内非源码、可逆的 build procedure/config问题，可做一次 corrected Gate B rerun。只有 corrected wheel满足原 Gate B全部要求，才继续下面的 Gate C/D。
+
+## Conditional execution flow
+
+A. 如果 confirmed root cause需要 source修改：
+
+- 立即 STOP / Decision requested；
+- 返回 confirmed root cause、confidence、最小 affected files/symbols、bounded fix和 regression scope；
+- 不得 patch source。
+
+B. 如果是 non-source procedure/config原因，但 corrected Gate B仍失败：
+
+- STOP并保存 Evidence；
+- 不进入 Gate C/D。
+
+C. 如果 non-source correction闭合 Gate B：
+
+先证明：
+
+- exact clean source不变；
+- `ascend910_93` A3-native wheel产生；
+- wheel path/hash/ABI/inventory完整；
+- exact-source OPP/schema reconciliation完整；
+- `_C_ascend`/OPP属于 A3；
+- 无 A2 residue；
+- 不依赖 whole external vLLM-Ascend runtime tree。
+
+然后在同一个 Task container直接继续 Gate C/D，不创建新 Task、不重建环境。
+
+### Gate C — Standalone FL install
+
+离开 FL source tree：
+
+1. uninstall `vllm-ascend`和 old `vllm-plugin-fl`；
+2. install本次 corrected wheel；
+3. new Python process验证。
+
+必须证明：
+
+- `vllm_fl`来自正式 wheel/site-packages；
+- 无 FL source `PYTHONPATH`/editable/source shortcut；
+- `vllm-ascend` distribution absent；
+- `vllm_ascend` module/entrypoint不可 import，runtime无其 dependency/call；
+- `VLLM_PLUGINS=fl`；
+- `USE_FLAGGEMS=0`；
+- PlatformFL/dispatch/provider identity正确；
+- `_C_ascend`、`prebuilt/ascend910_93`和 OPP来自本次 wheel。
+
+### Gate D — Minimal real A3 NPU custom-op smoke
+
+执行至少一个与本次 wheel匹配的真实 A3 NPU custom-op，保存：
+
+- input/output A3 device；
+- dtype/shape；
+- reference/assertion；
+- synchronize；
+- numeric exit code；
+- operator/library/OPP origin；
+- finite/correct；
+- no CPU fallback。
+
+Import/schema可见不能替代 Gate D。
+
+D. 如果 Gate C或D出现新 first blocker：
+
+- 在对应 gate STOP；
+- 保存 last successful gate、first blocker、raw Evidence、confidence和最小复现；
+- 不绕过、不进入 Stage 3。
+
+E. 如果 Gate A supplement + B + C + D全部通过：
+
+允许报告：
+
+```text
+Execution PASS — Stage 1/2
+```
+
+保留最终 Task container、standalone FL环境、wheel和必要 artifacts，记录 container name/ID与 exact paths，等待 Codex1 formal Acceptance。不得运行模型或进入 Stage 3。
 
 ## PASS / STOP
 
-`DIAGNOSTIC PASS`要求：first blocker/call path/generated metadata差异已闭合；root cause可区分类别；显式填写 `Root-cause confidence: LOW / MEDIUM / HIGH`；Triton/provider gap已补；source clean。
+`DIAGNOSTIC PASS`要求：first blocker/call path/generated metadata差异已闭合；root cause可区分类别；显式填写 `Root-cause confidence: LOW / MEDIUM / HIGH`；Triton/provider gap已补；source clean。只有 Branch E满足时才能额外报告 `Execution PASS — Stage 1/2`。
 
 如果必须修改 source或改变 CANN/vLLM/image/nightly/major route，立即 STOP，返回 confirmed root cause、最小 affected files/symbols、bounded fix proposal、regression scope和 `Decision requested`。不要直接修改。
 
-禁止完整模型、TP2、Gate C/D、graph、serve、prefix、EP、64K、benchmark、profiling、GLM和未来问题重构。
+禁止完整模型、TP2、Stage 3、graph、serve、prefix、EP、64K、benchmark、profiling、GLM、source patch、Code repo/fork和未来问题重构。Gate C/D只允许在 Branch C的 Gate B PASS后执行。
 
-生成 immutable Result并同步 INDEX，返回 Code/source、Control、Evidence三指针；Code PR=`N/A`。不得自行进入 Stage 3。
+生成 immutable Result并同步 INDEX，返回 Code/source、Control、Evidence三指针；Code PR=`N/A`。如果执行 C/D，必须返回 standalone install/provider/custom-op Evidence；如果 Stage 1/2 PASS，必须返回并保留 final container/FL environment/wheel/artifacts。不得自行进入 Stage 3。
