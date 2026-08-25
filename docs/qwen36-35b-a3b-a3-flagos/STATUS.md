@@ -2,7 +2,7 @@
 
 更新时间：2026-08-25
 
-总体状态：Stage 0 **COMPLETE**；`QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` **STOP at Gate B**，Codex1 Formal Review为 **NEEDS-FOLLOWUP**；Stage gate未推进，Stage 3 **LOCKED**。
+总体状态：Stage 0 **COMPLETE**；`QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` **STOP at Gate B**，Codex1 Formal Review为 **NEEDS-FOLLOWUP**；`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG` **STOP / DIAGNOSTIC PASS**并等待 Codex1 review；Stage gate未推进，Stage 3 **LOCKED**。
 
 ## 当前快照
 
@@ -13,12 +13,12 @@
 | Official base | Current GitHub snapshot recorded | `release/0.2@53adefb...` / tree `9ddfd0...` |
 | PR #404 | OPEN / DRAFT / MERGEABLE / BLOCKED / REVIEW_REQUIRED | GitHub snapshot 2026-08-25 17:42 CST；状态会变化 |
 | A2 implementation evidence | **A2 REFERENCE ONLY** | User资料中的 2×910B1结果，不是 A3 Acceptance |
-| A3 environment/build/runtime | **PARTIAL / REVIEWED** | Gate A core ACCEPT WITH EVIDENCE GAP；Gate B STOP ACCEPTED；Gate C/D NOT RUN；无 wheel |
+| A3 environment/build/runtime | **PARTIAL / REVIEWED + DIAGNOSED** | 首 run Gate A core ACCEPT WITH EVIDENCE GAP；Gate B STOP ACCEPTED；诊断 run补齐 Triton/provider并定位 parent metadata blocker；Gate B仍无 wheel，Gate C/D NOT RUN |
 | A3 model/graph/serve/function/performance | **UNVERIFIED** | 没有 A3 execution Evidence |
 | Official A3 base route | Bounded selection authorized | `v0.20.2rc1-a3` Ubuntu或`v0.20.2rc1-a3-openeuler`；ordinary unsuffixed A2 image excluded |
 | Model artifact | `DOWNLOADING / NOT YET READY FOR STAGE 3` | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；不阻塞Stage 1/2 |
 | First Codex2 task | **STOP / Codex1 Review NEEDS-FOLLOWUP** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
-| Next bounded Task | **READY / Awaiting explicit User dispatch** | [`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md)；先确认 root cause；非源码闭合B后同container继续C/D |
+| Latest bounded Task | **STOP / DIAGNOSTIC PASS / Review pending** | [`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md)；parent metadata blocker已定位为 path naming / CMake regex classification；corrected no-plus attempt后剩余 gitcode DNS依赖 blocker；无 wheel |
 | Validation Code repo/fork | **Not needed yet** | 已有 A3 execution blocker，但尚未证明 attributable to implementation source或需要 source change |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
@@ -82,7 +82,25 @@ User已确认 bounded authorization：
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
-当前正常下一步是 User决定是否 dispatch Ready Task `QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`。它先补 Triton/provider Evidence并定位 Gate B root cause：需要 source change则 STOP/Decision；non-source修正闭合 Gate B则沿用同一 container直接执行 parent Gate C/D。Codex2当前未运行，不得自动续跑；即使 Stage 1/2 Execution PASS也必须等待 Codex1 Acceptance，Stage 3仍锁定。
+当前正常下一步是 Codex1 review本次诊断 Result，或 User另行 dispatch有边界 follow-up来闭合 Gate B剩余 dependency/network blocker。Codex2当前不得自动续跑；即使后续 Stage 1/2 Execution PASS也必须等待 Codex1 Acceptance，Stage 3仍锁定。
+
+## Current diagnostic run — QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG
+
+Result：[`RESULT-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-20260825T224528+0800.md`](results/RESULT-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-20260825T224528+0800.md)
+
+本次 run 事实：
+
+- Gate A supplement：`PASS`；补齐 `triton-ascend 3.2.1`、community `triton 3.5.0`、imported `triton` module origin和 Ascend backend/provider identity。
+- Parent Gate B blocker：exact source/image/SoC上可复现，`OpFileNotExistsError: File aic-*-ops-info.ini does not exist`。
+- Root-cause confidence：`HIGH` for parent metadata blocker。源路径中的 `+0800`进入 `custom_build.cmake`未转义的 `string(REGEX MATCH "^${CMAKE_CURRENT_SOURCE_DIR}" ...)`正则，导致 selected op def分类失败、`opbuild_gen_default/inner/exc`不包含 `op_build`命令，进而 `ascendc_impl_build.py`在 lookup dirs找不到 `aic-*-ops-info.ini`。
+- Corrected no-plus path attempt：同一 exact SHA/tree、同一 official A3 openEuler image、无 source patch；生成了 `aic-ascend910_93-ops-info.ini`和相关 `aclnn_*.cpp/h`、`*_proto.*`文件，证明 parent metadata blocker被非源码路径修正清除。
+- Remaining Gate B blocker：corrected attempt随后因 `gitcode.com` third-party `json`/`abseil-cpp` DNS下载失败停止；无 wheel产出。
+- Gate C/D：`NOT RUN`。
+- Task container：`qw36-a3-s2-gateb-opp-diag-20260825T224528p0800` / `da11e8d0139824d72db50b6660a3818999202ea98e3688984d082fb964287497`已删除；NPU 0/1释放。
+- Code PR：`N/A`；implementation source未修改。
+- Evidence root：`/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG/evidence/20260825T224528+0800`；main build log `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG/evidence/20260825T224528+0800/logs/gate_b_corrected_no_plus_path_build_wheel.log`。
+
+Stage 1/2仍未 PASS；Stage 3仍锁定。下一步需 Codex1 review/Acceptance或 User另行 dispatch有边界 follow-up。
 
 ## 当前已确认的高影响事实
 
