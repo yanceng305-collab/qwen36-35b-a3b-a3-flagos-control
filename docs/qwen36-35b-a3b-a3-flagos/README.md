@@ -16,15 +16,16 @@
 ## Execution governance
 
 - [REPOSITORY-AND-EVIDENCE-RULES.md](REPOSITORY-AND-EVIDENCE-RULES.md)：三指针、immutable Result、Acceptance、Code fix规则。
-- [tasks/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME.md](tasks/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME.md)：首个 Codex2 Task，**Waiting User input / Not Ready**。
+- [tasks/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME.md](tasks/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME.md)：首个 Codex2 Task，**READY / Awaiting explicit User dispatch**。
 - [tasks/CODEX2-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-PROMPT.md](tasks/CODEX2-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-PROMPT.md)：简洁 dispatch prompt。
 - [results/INDEX.md](results/INDEX.md)：Execution Result、Control Sync、Codex1 Acceptance索引；当前无 A3 run。
 
 ## Research snapshots
 
 - [research/CURRENT-IMPLEMENTATION-STATE.md](research/CURRENT-IMPLEMENTATION-STATE.md)：2026-08-25 live PR/branch/source核查；dispatch前重查。
+- [research/OFFICIAL-A3-IMAGE-ROUTE.md](research/OFFICIAL-A3-IMAGE-ROUTE.md)：official v0.20.2rc1 A3 Ubuntu/openEuler image matrix、build definition和 bounded-selection边界。
 - [research/SOURCE-MATERIALS.md](research/SOURCE-MATERIALS.md)：三份 User资料的 hash、作用和解释边界。
 
 ## Current Stage
 
-Stage 0 Control已建立。Stage 1/2等待 User确认 A3 execution target、device、container、work/Evidence/artifact-cache、dependency access和正式 dispatch；在此之前不得执行。
+Stage 0 Control已建立。User已授权 Codex2在当前项目可访问的 A3 server上，对 device、两条 official A3 image、`/data`专属 roots、Task container和依赖获取做 bounded selection；Task当前只等待 explicit User dispatch，在此之前不得执行。

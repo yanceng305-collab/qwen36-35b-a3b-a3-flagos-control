@@ -1,6 +1,6 @@
 # Current Implementation State — GitHub and Static Source Verification
 
-核验时间：2026-08-25 17:02 CST / 09:02 UTC。
+核验时间：2026-08-25 17:42 CST / 09:42 UTC；PR/head/base相对首次 Control snapshot未变化。
 
 本文件记录 Control创建时的 live snapshot。它不是 A3 execution Evidence；dispatch前必须重新查询。
 

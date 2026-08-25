@@ -14,11 +14,14 @@
 | D-008 | A3先走 environment/build/runtime，再 eager、graph、serve、functional expansion、performance | Required | correctness-first，隔离 A3 family/ABI/runtime风险 | Stage gate Evidence支持调整 |
 | D-009 | A3 wheel必须在 A3/compatible CANN构建，family为 `ascend910_93`；禁止复用 A2 wheel | Required | A2=`ascend910b`，A3=`ascend910_93`，binary/OPP不可外推 | current source/CANN合同改变且获批准 |
 | D-010 | standalone runtime要求 `USE_FLAGGEMS=0`、无 installed/runtime `vllm-ascend`依赖、正式 wheel/site-packages origin | Required | 证明 FL-local ownership和可重建安装，不接受 source-tree shortcut | User批准改变正式 runtime ownership（当前无） |
-| D-011 | 首任务合并 Stage 1/2，只做 environment/source identity、A3 wheel、install、custom-op smoke | Waiting User input / Not Ready | 最小高信息量 gate；不把昂贵模型/graph/benchmark混入 | User inputs齐备并 dispatch |
+| D-011 | 首任务合并 Stage 1/2，只做 environment/source identity、A3 wheel、install、custom-op smoke | **READY / Awaiting explicit User dispatch** | User已提供 bounded server/device/image/root/container/dependency授权；不把模型/graph/benchmark混入 | User dispatch或授权边界变化 |
 | D-012 | current exact-head source的 8 OPP / 9 schemas优先于 PR正文旧的 7/8 | Required | exact source是当前可执行事实；PR prose已过时 | tracked head改变后重新盘点 |
 | D-013 | build/runtime `SOC_VERSION`默认不对称只登记为风险，不提前写 blocker或 patch | Required | 静态 build默认 A3、loader默认 A2；实际环境可能显式提供变量 | A3执行复现 family选择/加载失败 |
 | D-014 | Qwen A3 handoff只向 GLM提供 A3真实验证过的通用 runtime/build/evidence事实 | Required | Qwen model/GDN/Mamba/graph/performance不能证明 GLM/W8A8 | 对应通用事实有 A3 Acceptance并进入 handoff |
 | D-015 | GLM项目 PAUSED；恢复时先做 vLLM 0.20.2 GLM contract review，不在本项目开始 GLM port | User Decision | 当前优先级转为 Qwen A3验证；保留 GLM历史 | User明确恢复 GLM |
+| D-016 | Stage 1/2 base image只允许在 official `v0.20.2rc1-a3`与`v0.20.2rc1-a3-openeuler`中 bounded selection；无后缀 `v0.20.2rc1`明确排除 | Required / User-authorized | Official matrix把无后缀route映射到A2，把两个suffix映射到A3 Ubuntu/openEuler；final runtime仍须 standalone FL | Official source出现明确反证或两候选均不兼容并由User重决策 |
+| D-017 | Codex2可在不干扰其他任务的前提下只读盘点并选择最小安全device scope、创建隔离的`/data` roots和Task container、使用可审计依赖访问 | Required / User-authorized | 用 bounded authorization替代逐项目录/设备设计；减少无价值Ready占位符 | 现场目标/owner/权限不明确或需要越界动作 |
+| D-018 | 模型路径固定为`/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`，状态`DOWNLOADING / NOT YET READY FOR STAGE 3`；不阻塞Stage 1/2 | User-confirmed | 当前Task仅允许presence/download-state inventory，不加载或等待模型 | Stage 3 task创建前完成独立model identity gate |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -55,6 +58,31 @@ Formal run identity:
 - prefix/long context/EP/concurrency等从基础 A3结果逐项扩展，不机械复制 A2矩阵。
 - correctness、graph、serve稳定前不做 performance/capacity。
 - A3 performance必须使用 A3自己的工作负载、环境、原始数据和重复运行。
+
+## D-016 — Official A3 image bounded selection
+
+Official vLLM-Ascend `v0.20.2rc1@367b8e62...` installation matrix和 image workflow将 routes明确分开：
+
+```text
+quay.io/ascend/vllm-ascend:v0.20.2rc1             -> A2 Ubuntu / excluded
+quay.io/ascend/vllm-ascend:v0.20.2rc1-a3          -> A3 Ubuntu candidate
+quay.io/ascend/vllm-ascend:v0.20.2rc1-a3-openeuler -> A3 openEuler candidate
+```
+
+两条 A3 Dockerfile都固定 vLLM `v0.20.2`并使用 CANN 9.0.0 A3/Python 3.11 base；official compatibility tuple是 Python `>=3.10,<3.12`、torch/torch_npu `2.10.0/2.10.0`、Triton Ascend `3.2.1`。详细证据见 [OFFICIAL-A3-IMAGE-ROUTE.md](research/OFFICIAL-A3-IMAGE-ROUTE.md)。
+
+Codex2先做安全只读 inventory，再按 actual host/driver/CANN/build/runtime compatibility选择 Ubuntu或 openEuler。必须记录 selected tag、resolved digest、image ID、OS、Python、CANN、torch、torch_npu、vLLM、Triton和选择理由。两条 route均实质不兼容时 STOP / `Decision requested`；不得退回 A2 image、nightly或其他版本。
+
+Image只提供匹配 environment/build toolchain。Stage 2 final runtime仍必须证明 `vllm-ascend` distribution absent、`vllm_ascend`不可 import且无 runtime dependency，`vllm_fl`来自正式 wheel/site-packages、无 FL source `PYTHONPATH`/editable shortcut，`VLLM_PLUGINS=fl`、`USE_FLAGGEMS=0`，并加载本次 A3-native wheel的 `_C_ascend`/OPP。
+
+## D-017 / D-018 — Bounded authorization and model state
+
+- A3 target是当前项目可访问的 A3/910C server；若 Codex2面对多个无法区分的 target或没有有效 access，必须在任何 mutation前请求 User澄清。
+- Device先只读检查型号、mapping、health、occupancy和 owner，再自主选择本 Task最小安全 scope；不得 kill/pause/reset/preempt或修改其他任务。
+- Codex2可在现有 `/data`空间创建新的 Qwen A3 Validation专属 work/Evidence/artifacts/cache roots，参考 `/data/tiankuan/zyg/FL/`但不得写入模型目录或覆盖既有目录；必须返回 exact paths。
+- 允许 pull/inspect两条 official A3 candidates，创建/停止/删除本 Task自己的临时 container，并在其内做 package transaction；不得改其他 container/image或 Host全局 Python/CANN。长期 image snapshot后置 Stage 8。
+- 允许使用现有 GitHub/package index/registry/CATLASS访问；离线 artifact必须可核验。CATLASS继续绑定 `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
+- 已确认模型路径当前仅作 inventory。模型下载完成不是 Stage 1/2 Ready/PASS条件；Stage 3前另行验证 config、architecture、tokenizer、index、全部 shards、size、checksum/manifest和 BF16/no-quantization contract。
 
 ## 明确拒绝的路线
 

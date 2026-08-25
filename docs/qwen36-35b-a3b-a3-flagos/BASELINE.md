@@ -4,7 +4,7 @@
 
 ## Current GitHub snapshot
 
-核验于 2026-08-25 17:02 CST；正式 dispatch 前必须重新查询。
+核验于 2026-08-25 17:42 CST；PR/head/base相对首次 snapshot未变化，正式 dispatch 前仍必须重新查询。
 
 | Identity | Value |
 | --- | --- |
@@ -35,8 +35,10 @@ PR timeline证明 tracked branch从先前 `f9281f78...` force-push/rebase到当�
 | vLLM | `0.20.2` | Current PR/source metadata + User资料；A3 runtime尚未验证 |
 | FL | official `release/0.2`系 | base当前为 `53adefb...`；adaptation由 moving PR head提供 |
 | Adaptation | PR #404 current tracked head | 当前 snapshot `7beda84...`；run时重查 |
-| vLLM-Ascend | `0.20.2rc1` | matched-version source/oracle reference；最终 runtime不可依赖 installed package |
-| Model | `Qwen/Qwen3.6-35B-A3B` | 完整 Transformers BF16 artifact；A3 path待 User确认 |
+| vLLM-Ascend | `0.20.2rc1` | matched-version source/oracle与 official A3 environment carrier；最终 runtime不可依赖 installed package |
+| Official A3 image candidates | `v0.20.2rc1-a3` / `v0.20.2rc1-a3-openeuler` | Bounded selection；ordinary unsuffixed tag是A2 route并排除 |
+| Model | `Qwen/Qwen3.6-35B-A3B` / BF16 non-quantized | Path已确认；`DOWNLOADING / NOT YET READY FOR STAGE 3`；不阻塞Stage 1/2 |
+| Model path | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B` | User-confirmed；Stage 1/2 inventory-only |
 | Architecture | `Qwen3_5MoeForConditionalGeneration`；40层，30 GDN/linear attention + 10 full attention；256 experts/top-8 | User资料；Stage 3检查真实 artifact |
 | dtype / DP / TP | BF16 / DP1 / first TP2 | Project decision |
 | First execution | eager | Stage 3 |
@@ -63,6 +65,23 @@ MTP、quantization、initial CP、FlashComm、MC2、EPLB不在第一阶段范围
 
 详细 source anchors见 [research/CURRENT-IMPLEMENTATION-STATE.md](research/CURRENT-IMPLEMENTATION-STATE.md)。
 
+## Official A3 base image route
+
+Official tag/source核对固定两个候选：
+
+```text
+quay.io/ascend/vllm-ascend:v0.20.2rc1-a3
+quay.io/ascend/vllm-ascend:v0.20.2rc1-a3-openeuler
+```
+
+- Ubuntu route基于 `quay.io/ascend/cann:9.0.0-a3-ubuntu22.04-py3.11`。
+- openEuler route基于 `quay.io/ascend/cann:9.0.0-a3-openeuler24.03-py3.11`。
+- Matched tuple：vLLM 0.20.2、Python 3.11 base（compatibility range `>=3.10,<3.12`）、CANN 9.0.0、torch/torch_npu 2.10.0/2.10.0、Triton Ascend 3.2.1。
+- Ordinary `quay.io/ascend/vllm-ascend:v0.20.2rc1`是 official A2 Ubuntu route，明确不作为 A3 baseline。
+- Codex2只在两个 A3候选中现场选择；两者均不兼容时 STOP，不使用 A2、nightly或其他 version fallback。
+
+详细 source/registry证据见 [research/OFFICIAL-A3-IMAGE-ROUTE.md](research/OFFICIAL-A3-IMAGE-ROUTE.md)。Carrier中原有 `vllm-ascend`与 editable source状态必须在 final FL transaction后被负向审计；正式 ownership仍是 standalone FL，不由 image名称决定。
+
 ## Project tracking target vs run source
 
 `Current tracked HEAD`是 Control snapshot，不是永久冻结 baseline。正式 run必须写：
@@ -81,7 +100,8 @@ Working tree: clean | dirty (formal claim restrictions apply)
 当前以下字段全部 `A3 UNKNOWN`，由 Stage 1/2 Evidence填充：
 
 - physical SKU/device count/logical mapping、driver、firmware；
-- base image digest/name、container runtime/mount/device mapping；
+- selected official A3 tag、pull-time digest、platform digest、image ID、OS与选择理由；
+- container runtime/mount/device mapping；
 - CANN toolkit/runtime/OPP、Python/architecture；
 - torch、torch-npu、vLLM、Transformers、Triton/provider、HCCL；
 - compiler/CMake/ninja/gcc/build tools与 CATLASS source；

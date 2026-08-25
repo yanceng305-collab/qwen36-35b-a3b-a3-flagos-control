@@ -1,6 +1,6 @@
 # Qwen3.6-35B-A3B × FlagOS × Ascend A3/910C 项目计划
 
-状态：Stage 0 **COMPLETE**；Stage 1/2 Task `QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` **Waiting User input / Not Ready**。
+状态：Stage 0 **COMPLETE**；Stage 1/2 Task `QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` **READY / Awaiting explicit User dispatch**。
 
 ## 结果目标
 
@@ -13,6 +13,8 @@
 - vLLM 0.20.2、FL release/0.2系、BF16 DP1/TP2 eager是当前 baseline。
 - 最终 runtime为 standalone FL：`VLLM_PLUGINS=fl`、`USE_FLAGGEMS=0`、无 installed/runtime `vllm-ascend`依赖、无 source-tree import。
 - A3 wheel使用 `ascend910_93` family并在 compatible A3/CANN环境重建；禁止 A2 binary复用。
+- Base carrier只在 official `v0.20.2rc1-a3` / `v0.20.2rc1-a3-openeuler`中 bounded selection；ordinary A2 image、nightly或其他版本不得 silent fallback。
+- 模型路径已确认但仍在下载；Stage 1/2只做 optional inventory且不等待，完整 model identity gate后置Stage 3。
 - MTP、quantization、initial CP/FlashComm/MC2/EPLB不在第一阶段范围。
 - 没有 attributable blocker不得创建大型 Code adaptation task。
 
@@ -20,7 +22,7 @@
 
 ```text
 Stage 0 Control / live baseline established
-  -> User confirms A3 execution inputs and dispatch
+  -> User explicitly dispatches the already-bounded Ready task
   -> Stage 1/2 A3 environment + native wheel + standalone runtime smoke
   -> Codex1 Acceptance
   -> Stage 3 TP2 eager
@@ -38,9 +40,9 @@ Stage 0 Control / live baseline established
 | Stage | Objective | Ready / entry gate | PASS evidence boundary | Current status |
 | --- | --- | --- | --- | --- |
 | 0 — Project / Baseline | Control、GitHub current state、baseline、A2 reference、workflow、first task | User授权初始化 | 正式 docs + exact snapshot + publish | **COMPLETE** |
-| 1 — A3 Environment / Build Readiness | physical 910C、driver/CANN/Python/torch/torch-npu/vLLM/Triton/base image/build tools/NPU/model presence/source identity | User给 execution入口、device、container/work/Evidence权限 | 完整 environment/source manifest；无错误 tuple/source漂移 | Waiting User input |
-| 2 — A3 Wheel / Standalone Runtime | clean A3 build、8 OPP/9 schemas、`_C_ascend`、wheel、formal install、FL origin、无 vllm-ascend、minimal NPU op | Stage 1 facts满足；与 Stage 1同一首任务 | A3-family artifact + hash/inventory + load/register + actual A3 NPU custom-op smoke | Not Ready |
-| 3 — TP2 Eager | BF16完整权重、TP2/HCCL、Qwen/GDN/Mamba/full attention/MoE、prefill/decode/repeat | Stage 2 Accepted；模型路径和 TP2资源确认 | 完整 load + finite/readable repeat output + ownership/no CPU fallback | Locked |
+| 1 — A3 Environment / Build Readiness | physical 910C、safe device、official A3 image selection、driver/CANN/Python/torch/torch-npu/vLLM/Triton/build tools/source identity；model download-state inventory only | Bounded authorization已确认；等待 explicit dispatch | selected tag/ID/digest/OS/tuple/reason + environment/source manifest | **READY / Awaiting dispatch** |
+| 2 — A3 Wheel / Standalone Runtime | clean A3 build、dispatch-head OPP/schema inventory、`_C_ascend`、wheel、formal install、FL origin、无 vllm-ascend、minimal NPU op | 同一 Task中 Stage 1 facts满足 | A3-family artifact + hash/inventory + load/register + actual A3 NPU custom-op smoke | Awaiting Gate A |
+| 3 — TP2 Eager | BF16完整权重、TP2/HCCL、Qwen/GDN/Mamba/full attention/MoE、prefill/decode/repeat | Stage 2 Accepted；另行完成model config/architecture/tokenizer/index/shards/size/checksum/BF16-no-quant gate和 TP2资源合同 | 完整 load + finite/readable repeat output + ownership/no CPU fallback | Locked；model downloading |
 | 4 — FULL_DECODE_ONLY | capture sizes、fixed-address state、replay、GDN/Attention update、repeat/state freshness | Stage 3 Accepted | capture+replay多次；无 stale state/507011/NaN/Inf；输出正常 | Locked |
 | 5 — Serve | health/models/completion/chat/repeat/bounded concurrency | Stage 4 Accepted | API/engine/model/run identity + repeated requests + bounded concurrency | Locked |
 | 6 — Functional Expansion | prefix、long context、EP2、concurrency、chunked prefill、async、64K、functional matrix | Stage 5 Accepted；每项独立合同 | 每项真实 A3 raw logs/output/identity；未覆盖项不外推 | Locked |
@@ -82,6 +84,7 @@ Regression scope候选：
 | A3 `SOC_VERSION` build/runtime default不对称 | Static-confirmed；A3未复现 | 首任务记录 effective variable/family/origin；失败再形成 blocker |
 | A2 binary/build residue混入 A3 wheel | Plausible / unverified | clean source/isolated builder、wheel inventory、hash、family检查 |
 | CANN/torch-npu/vLLM ABI不匹配 | Unknown | Stage 1 environment tuple + Stage 2 extension/custom-op smoke |
+| A3 Ubuntu/openEuler route与actual host不兼容 | Official candidates confirmed；field compatibility unknown | Gate A bounded selection；两者均失败则 STOP/Decision，不 fallback |
 | runtime实际依赖 vllm-ascend或 source tree | Unknown | uninstall/negative import/new process/origin/PYTHONPATH审计 |
 | moving branch使旧结果误标新 SHA | Branch已实际 force-push | exact run identity + diff-driven regression |
 | graph stale pointer/state | A2曾修复；A3 unknown | Stage 4 repeated replay/state freshness，不提前外推 |
