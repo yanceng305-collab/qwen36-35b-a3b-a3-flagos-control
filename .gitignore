@@ -1,0 +1,8 @@
+# Local execution artifacts belong on the server Evidence volume, not in Control.
+.DS_Store
+Thumbs.db
+*.log
+*.whl
+__pycache__/
+.pytest_cache/
+.agent-work/
