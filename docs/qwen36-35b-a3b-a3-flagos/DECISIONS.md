@@ -21,10 +21,11 @@
 | D-015 | GLM项目 PAUSED；恢复时先做 vLLM 0.20.2 GLM contract review，不在本项目开始 GLM port | User Decision | 当前优先级转为 Qwen A3验证；保留 GLM历史 | User明确恢复 GLM |
 | D-016 | Stage 1/2 base image只允许在 official `v0.20.2rc1-a3`与`v0.20.2rc1-a3-openeuler`中 bounded selection；无后缀 `v0.20.2rc1`明确排除 | Required / User-authorized | Official matrix把无后缀route映射到A2，把两个suffix映射到A3 Ubuntu/openEuler；final runtime仍须 standalone FL | Official source出现明确反证或两候选均不兼容并由User重决策 |
 | D-017 | Codex2可在不干扰其他任务的前提下只读盘点并选择最小安全device scope、创建隔离的`/data` roots和Task container、使用可审计依赖访问 | Required / User-authorized | 用 bounded authorization替代逐项目录/设备设计；减少无价值Ready占位符 | 现场目标/owner/权限不明确或需要越界动作 |
-| D-018 | 模型路径固定为`/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`，状态`DOWNLOADING / NOT YET READY FOR STAGE 3`；不阻塞Stage 1/2 | User-confirmed | 当前Task仅允许presence/download-state inventory，不加载或等待模型 | Stage 3 task创建前完成独立model identity gate |
+| D-018 | 模型路径固定为`/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；模型完成状态由Stage 3 Gate M独立验证 | **Satisfied / Gate M ACCEPTED** | initial root缺4个shards时正确STOP；resume证明26/26 shards、1045/1045 BF16 tensors和no quantization/download markers | model path/content/revision变化 |
 | D-019 | `QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` Formal Review为`NEEDS-FOLLOWUP`；只创建 Gate B OPP metadata diagnostic，不直接创建 source fix task | **Satisfied / closed by D-020** | Diagnostic/follow-up chain确认non-source path/network/runtime causes并闭合B/C/D，无source patch | 保留历史Review边界 |
 | D-020 | Exact `7beda84...` A3 Stage 1/2 environment/build/standalone/custom-op foundation正式ACCEPTED；execution-proven composite container pattern成为默认runtime baseline | **Required / Codex1 ACCEPTED** | 4个immutable Results联合证明Gate A-D；无FlagGems、无vllm-ascend runtime、无source change；单项flag必要性未ablation | 新Accepted Evidence supersede或环境/source变化 |
-| D-021 | Stage 3使用 current tracked head；`7beda84...→e610a990...`无需撤销Stage1/2 Acceptance，但需在preserved container内先rebuild+bounded C/D regression | **Required / Stage 3 Ready** | 2个新增commits只改communicator/platform/model runner，和TP2 live path相关，未改OPP/build packaging | Dispatch HEAD再次变化或diff扩大 |
+| D-021 | Stage 3使用 current tracked head；`7beda84...→e610a990...`无需撤销Stage1/2 Acceptance，但需在preserved container内先rebuild+bounded C/D regression | **Satisfied / closed by D-022** | 2个新增commits只改communicator/platform/model runner，和TP2 live path相关，未改OPP/build packaging | Future HEAD再次变化或diff扩大 |
+| D-022 | Exact `e610a990...` Stage 3 TP2 BF16 eager正式ACCEPTED；Stage 4只验证`FULL_DECODE_ONLY` capture/replay/fixed-address/state correctness | **Required / Codex1 ACCEPTED** | initial Gate M STOP由resume 26/26 shards、1045/1045 BF16 tensors闭合；TP2/HCCL、完整load、prefill/decode/repeat和standalone ownership通过；两个pre-construction harness/scope失败不要求机械重跑 | source/wheel/model/runtime变化或Stage 4 Evidence形成新结论 |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -95,13 +96,16 @@ Image只提供匹配 environment/build toolchain。Stage 2 final runtime仍必�
 - Underlying root-cause confidence记录为 `LOW`；immutable Result缺 explicit confidence与 official PR compare-base字段错误只在 Review/STATUS/INDEX补充，不修改 Result。
 - Next Task只定位/闭合 `aic-*-ops-info.ini` first blocker并补 Triton/provider Evidence；确认 source change必要前，Code repo/fork仍 `Not needed yet`。
 
-## D-020 / D-021 — Stage 1/2 Acceptance and moving-head handoff
+## D-020 / D-021 / D-022 — Stage Acceptance and moving-head handoff
 
 - Stage 1/2 Acceptance绑定 `7beda84f...` / tree `a81eea55...`、wheel SHA-256 `fa33f586...`、official A3 openEuler image和 accepted composite runtime pattern。
 - Accepted scope为 A3-native wheel、standalone FL、PlatformFL import和 one real NPU custom-op smoke；不覆盖 full model、TP2/HCCL、graph、serve或performance。
 - Runtime pattern作为已验证组合整体复用；未做逐项ablation，不声称每个flag/mount独立必要。Post-launch必须验证 `torch.npu.is_available()`和实际mapped device count；失败时不得安装FlagGems掩盖。
 - Current tracked `e610a990...`比accepted source多 communicator/platform/model-runner changes，不自动继承 Acceptance。Stage 3同一Task先build/install current-head wheel并做bounded C/D regression，PASS后才加载模型。
 - Stage 3仍需 explicit User dispatch和model identity gate；Codex2不得自动进入。
+- Stage 3 Acceptance绑定`e610a990...` / tree `609ff1ad...`、wheel sha256 `2fcf788...`和完成后的26-shard BF16 model root；不自动覆盖future HEAD或变化后的model/runtime。
+- Resume首次未带visible scope的invariant probe和stdin multiprocessing attempt均发生在正式model execution前；corrected scope/file-script完成完整exit 0 Gate E，因此不构成重复执行要求。
+- Stage 4已解锁但仍需User显式dispatch；默认compatibility route为FL-local GraphWrapper + eager FX + Ascend NPUGraph，`npugraph_ex`和performance tuning不在首个graph correctness Task范围。
 
 ## 明确拒绝的路线
 
