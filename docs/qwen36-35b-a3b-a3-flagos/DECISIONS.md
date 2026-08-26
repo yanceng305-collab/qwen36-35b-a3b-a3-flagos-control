@@ -1,6 +1,6 @@
 # 技术与治理决策
 
-更新时间：2026-08-25
+更新时间：2026-08-26
 
 | ID | Decision | Status | Rationale / boundary | Revisit trigger |
 | --- | --- | --- | --- | --- |
@@ -27,6 +27,9 @@
 | D-021 | Stage 3使用 current tracked head；`7beda84...→e610a990...`无需撤销Stage1/2 Acceptance，但需在preserved container内先rebuild+bounded C/D regression | **Satisfied / closed by D-022** | 2个新增commits只改communicator/platform/model runner，和TP2 live path相关，未改OPP/build packaging | Future HEAD再次变化或diff扩大 |
 | D-022 | Exact `e610a990...` Stage 3 TP2 BF16 eager正式ACCEPTED；Stage 4只验证`FULL_DECODE_ONLY` capture/replay/fixed-address/state correctness | **Required / Codex1 ACCEPTED** | initial Gate M STOP由resume 26/26 shards、1045/1045 BF16 tensors闭合；TP2/HCCL、完整load、prefill/decode/repeat和standalone ownership通过；两个pre-construction harness/scope失败不要求机械重跑 | source/wheel/model/runtime变化或Stage 4 Evidence形成新结论 |
 | D-023 | `e610a990... → 032fddc9...`为docs/tests-only bounded movement；Stage 4复用Stage 3 Accepted wheel，不rebuild、不重跑Stage 3 | **Required / Codex1 reviewed** | exact diff仅`README.md` +11与新build-config unit test +66；production/runtime/build implementation对象未变；3/3新tests PASS。README可进入rebuilt wheel metadata，不声称字节级wheel相同 | tracked HEAD/tree再变化，或现场无法使用Accepted wheel/runtime |
+| D-024 | Exact `e610a990...` wheel的Stage 4 `FULL_DECODE_ONLY [1,2,4,8]`正式ACCEPTED | **Required / Codex1 ACCEPTED** | G0 continuity、both-rank capture、batch-1/2 real replay、repeat/state freshness、finite outputs和clean exit闭环；pre-model错误probe均由corrected exit-0 probes闭合 | source/wheel/model/runtime变化，或扩大到service/automatic capture through 64 |
+| D-025 | Stage 5只做serve correctness；通过后直接进入A2-equivalent DP1/TP2 16-cell functional reproduction，再测同矩阵performance | Required | 项目目标是A2→A3复现，不为流程本身无限拆小Stage；prefix/EP2等专项按价值补齐 | service或主矩阵出现需要独立隔离的真实blocker |
+| D-026 | A2 vs A3只作cross-platform reproduction reference；FL相对性能优先A3 FL vs A3 matched native | Required | 910B1→910C硬件代际不同，绝对TPS差不能直接归因于FL；matched A3 comparison应统一cards/model/workload/sampling/cache/graph/warm-up | 无法获得matched native时明确记录comparison limitation |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -60,8 +63,9 @@ Formal run identity:
 - Stage 2 formal Acceptance前不运行完整模型。
 - Stage 3 eager Acceptance前不进入 graph。
 - Graph正确性后再做 serve。
-- prefix/long context/EP/concurrency等从基础 A3结果逐项扩展，不机械复制 A2矩阵。
-- correctness、graph、serve稳定前不做 performance/capacity。
+- Stage 5只验证service/API、graph replay和state isolation，不做performance。
+- Stage 5通过后直接恢复A2 DP1/TP2 16-cell functional contract；prefix/EP2等专项不必全部挡住主矩阵。
+- 16/16 functional correctness通过前不做对应performance/capacity。
 - A3 performance必须使用 A3自己的工作负载、环境、原始数据和重复运行。
 
 ## D-016 — Official A3 image bounded selection
@@ -97,7 +101,7 @@ Image只提供匹配 environment/build toolchain。Stage 2 final runtime仍必�
 - Underlying root-cause confidence记录为 `LOW`；immutable Result缺 explicit confidence与 official PR compare-base字段错误只在 Review/STATUS/INDEX补充，不修改 Result。
 - Next Task只定位/闭合 `aic-*-ops-info.ini` first blocker并补 Triton/provider Evidence；确认 source change必要前，Code repo/fork仍 `Not needed yet`。
 
-## D-020 / D-021 / D-022 / D-023 — Stage Acceptance and moving-head handoff
+## D-020 / D-021 / D-022 / D-023 / D-024 — Stage Acceptance and moving-head handoff
 
 - Stage 1/2 Acceptance绑定 `7beda84f...` / tree `a81eea55...`、wheel SHA-256 `fa33f586...`、official A3 openEuler image和 accepted composite runtime pattern。
 - Accepted scope为 A3-native wheel、standalone FL、PlatformFL import和 one real NPU custom-op smoke；不覆盖 full model、TP2/HCCL、graph、serve或performance。
@@ -106,9 +110,9 @@ Image只提供匹配 environment/build toolchain。Stage 2 final runtime仍必�
 - Stage 3仍需 explicit User dispatch和model identity gate；Codex2不得自动进入。
 - Stage 3 Acceptance绑定`e610a990...` / tree `609ff1ad...`、wheel sha256 `2fcf788...`和完成后的26-shard BF16 model root；不自动覆盖future HEAD或变化后的model/runtime。
 - Resume首次未带visible scope的invariant probe和stdin multiprocessing attempt均发生在正式model execution前；corrected scope/file-script完成完整exit 0 Gate E，因此不构成重复执行要求。
-- Stage 4已解锁但仍需User显式dispatch；默认compatibility route为FL-local GraphWrapper + eager FX + Ascend NPUGraph，`npugraph_ex`和performance tuning不在首个graph correctness Task范围。
+- Stage 4以FL-local GraphWrapper + eager FX + Ascend NPUGraph完成`[1,2,4,8]` both-rank capture与batch-1/2 replay，正式ACCEPTED；`npugraph_ex`、serve、automatic capture through 64和performance不在该Acceptance范围。
 - Current tracked head已从Stage 3 Accepted `e610a990...` single-parent前进到`032fddc9...` / tree `463806ef...`。Bounded review证明只有README文档和新增build-config characterization tests，不改build implementation、Python/native runtime、graph、model或communicator语义。README由`pyproject.toml`引用为package metadata，故不声称rebuilt wheel字节级相同；Stage 4不rebuild也不使用该假设。
-- Stage 3 Acceptance仍只绑定`e610a990...`；Stage 4执行仍以该exact source/tree的Accepted wheel sha256 `2fcf788...`为runtime artifact。`032fddc9...`作为dispatch时tracked-head identity记录，不要求重build或重跑eager。若dispatch时tracked HEAD/tree不再等于`032fddc9...` / `463806ef...`，在graph/model mutation前STOP交回Codex1。
+- Stage 3/4 Acceptance仍只绑定`e610a990...` wheel sha256 `2fcf788...`。`032fddc9...`只作为dispatch-time tracked identity记录；若Stage 5 dispatch时tracked HEAD/tree再次变化，在model/service mutation前STOP交回Codex1。
 
 ## 明确拒绝的路线
 

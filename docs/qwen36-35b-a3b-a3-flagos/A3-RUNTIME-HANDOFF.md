@@ -2,7 +2,7 @@
 
 更新时间：2026-08-26
 
-当前状态：**STAGE 1/2 FOUNDATION ACCEPTED**。真实 A3/910C execution已完成 A3-native wheel、standalone FL、container/runtime access和 real NPU custom-op smoke；Acceptance只覆盖 [`Formal Review`](reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md)定义的 scope，不覆盖模型/TP2/graph/serve/performance。
+当前状态：**STAGE 1-4 ACCEPTED, SCOPE-LIMITED**。真实A3/910C execution已完成A3-native wheel、standalone FL、TP2/HCCL BF16 eager和bounded `FULL_DECODE_ONLY [1,2,4,8]` graph correctness；serve、A2-equivalent matrix和performance仍未验证。Qwen-specific模型/graph结论不得直接外推到GLM。
 
 ## Handoff admission rule
 
@@ -27,11 +27,11 @@
 | A3 wheel build flow / `ascend910_93` detection | **ACCEPTED** | A3 wheel、family inventory、hash和A2-residue audit已审查 |
 | `_C_ascend` build/package/load infrastructure | **ACCEPTED — smoke scope** | wheel origin、ABI、A3 load、one real NPU op accepted |
 | CANN OPP build/package/expose infrastructure | **ACCEPTED — smoke scope** | OPP inventory、A3 family、runtime registration/execution accepted |
-| HCCL / multiprocessing / device mapping | PARTIAL | 当前只证明2-device可见性与单NPU custom-op；TP2 eager/HCCL仍需后续 Accepted evidence |
-| PlatformFL / WorkerFL / ModelRunnerFL lifecycle | PARTIAL | PlatformFL standalone import已通过；完整 Worker/ModelRunner model path仍待 Stage 3 |
+| HCCL / multiprocessing / device mapping | **ACCEPTED — Qwen DP1/TP2 scope** | Stage 3/4证明world size 2、both workers和bounded model/graph execution；新模型/拓扑仍重验 |
+| PlatformFL / WorkerFL / ModelRunnerFL lifecycle | **ACCEPTED — Qwen Stage 3/4 scope** | standalone site-packages ownership、full model eager与bounded graph path通过 |
 | Standalone FL formal installation | **ACCEPTED** | site-packages wheel origin、no source PYTHONPATH、no installed `vllm-ascend` accepted |
-| Cache isolation / compiler identity | PARTIAL | 当前仅基础provider/build identity；model/graph cache contract待后续 Stage |
-| Evidence / immutable Result / reconstruction discipline | **ACCEPTED for Stage 1/2** | 完整三指针、checksum、immutable Results与Formal Review |
+| Cache isolation / compiler identity | **ACCEPTED — bounded Qwen graph scope** | FL-local GraphWrapper + eager FX + NPUGraph、task cache root和`[1,2,4,8]` capture/replay通过；service/other shapes待验 |
+| Evidence / immutable Result / reconstruction discipline | **ACCEPTED for Stage 1-4** | 完整三指针、checksum、immutable Results与Formal Reviews |
 | Runtime image/wheel/startup handoff | PARTIAL | wheel已保留，PASS container已保留；最终 Stage 8 freeze/reconstruction尚未完成 |
 
 ## Accepted A3 container runtime baseline
@@ -171,4 +171,5 @@ The User example that led to the fix used `nightly-main-a3` and all eight cards,
 ## Validated handoff entries
 
 - **A3 Stage 1/2 runtime/build foundation**：ACCEPTED on 2026-08-26 for exact source `7beda84...`、official A3 openEuler carrier、`ascend910_93` wheel、standalone FL和 one real custom-op smoke。Evidence/claim boundary见 Formal Review和 reconstruction。
+- **A3 Stage 3/4 Qwen execution layer**：ACCEPTED on 2026-08-26 for exact runtime source `e610a990...`、wheel SHA-256 `2fcf788...`、DP1/TP2 HCCL BF16 eager及`FULL_DECODE_ONLY [1,2,4,8]` bounded capture/replay/state correctness。可复用的是已验证的runtime ownership、two-worker lifecycle和graph infrastructure；Qwen model/GDN/Mamba/attention/MoE语义不向GLM外推。
 - 新环境或 source不得覆盖本entry；使用新的 Result/Acceptance追加验证。

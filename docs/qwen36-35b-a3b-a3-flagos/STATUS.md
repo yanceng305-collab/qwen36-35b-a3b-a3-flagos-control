@@ -2,7 +2,7 @@
 
 更新时间：2026-08-26
 
-总体状态：A3 Stage 1/2 **ACCEPTED** for exact source `7beda84...`；Stage 3 TP2 BF16 eager **ACCEPTED** identity保持`e610a990...`。Tracked branch已前进到`032fddc9...`，Codex1 bounded moving-head review确认新commit仅改README和unit tests，不改运行或build implementation语义。Stage 4 `FULL_DECODE_ONLY` graph已完成服务器 **Execution PASS**，等待Codex1 Formal Acceptance；Stage 5尚未进入。
+总体状态：A3 Stage 1/2、Stage 3 TP2 BF16 eager及Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]` graph均已 **ACCEPTED**。Runtime artifact identity保持`e610a990...` Accepted wheel；tracked `032fddc9...`只作为docs/tests-only moving head记录。Stage 5 service correctness **READY / Awaiting explicit User dispatch**。
 
 ## 当前快照
 
@@ -10,18 +10,18 @@
 | --- | --- | --- |
 | Control repo | Established | 本仓库 `main`；首次 Control commit |
 | Tracked implementation | Current GitHub snapshot reverified | `feature/qwen3.6-35b-a3b-ascend-graph-migration@032fddc9...` / tree `463806ef...`；Stage 3 Acceptance仍绑定`e610a990...` / accepted wheel |
-| Official base | Current GitHub snapshot recorded | `release/0.2@53adefb...` / tree `9ddfd0...` |
-| PR #404 | OPEN / DRAFT / MERGEABLE；REST `mergeable_state=unstable` | Moving-head Formal Review live recheck 2026-08-26；head `032fddc9...`；状态会变化 |
+| Official base | Current GitHub snapshot recorded | `release/0.2@ef78dec...` / tree `7414bac...`；moving fact |
+| PR #404 | OPEN / DRAFT；head `032fddc9...` | Stage 4 Formal Review live recheck 2026-08-26；mergeability/base是moving facts，dispatch前重查 |
 | A2 implementation evidence | **A2 REFERENCE ONLY** | User资料中的 2×910B1结果，不是 A3 Acceptance |
 | A3 environment/build/runtime | **ACCEPTED — Stage 1/2 scope** | A3 environment、native wheel、standalone FL、PlatformFL import和 one real custom-op smoke Accepted；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md) |
 | A3 model TP2 BF16 eager | **ACCEPTED — Stage 3 scope** | exact `e610a990...`完成current-head regression、模型identity、TP2/HCCL、完整BF16权重加载、prefill/decode和两次generation；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md) |
-| A3 graph | **Execution PASS — Stage 4 pending Codex1 Acceptance** | `FULL_DECODE_ONLY` graph capture/replay已完成服务器执行；[Result](results/RESULT-QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH-20260826T141740+0800.md) |
+| A3 graph | **ACCEPTED — Stage 4 bounded graph correctness** | `FULL_DECODE_ONLY [1,2,4,8]`两TP rank capture/replay/state gate通过；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE4-FULL-DECODE-ONLY-GRAPH-ACCEPTANCE-20260826.md) |
 | A3 serve/function/performance | **UNVERIFIED** | 没有 A3 serve、matrix或performance execution Evidence |
 | Official A3 base route | Bounded selection authorized | `v0.20.2rc1-a3` Ubuntu或`v0.20.2rc1-a3-openeuler`；ordinary unsuffixed A2 image excluded |
 | Model artifact | **Gate M PASS** | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；root 26/26 shards present，1045/1045 safetensors tensors BF16，no quantization，no download markers；checksum manifest saved |
 | First Codex2 task | **STOP / initial NEEDS-FOLLOWUP closed by Accepted chain** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Initial Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
-| Latest bounded Task | **Execution PASS — Stage 4 pending Codex1 Acceptance** | [`QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH`](tasks/QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH.md)；G0/G1/G2服务器执行通过 |
-| Next Task | **LOCKED / Awaiting Stage 4 Acceptance and explicit User dispatch** | Stage 5未创建/未执行 |
+| Latest bounded Task | **ACCEPTED — Stage 4** | [`QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH`](tasks/QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH.md)；G0/G1/G2 Formal Acceptance完成 |
+| Next Task | **READY / Awaiting explicit User dispatch** | [`QWEN36-A3-S5-SERVE-CORRECTNESS`](tasks/QWEN36-A3-S5-SERVE-CORRECTNESS.md)；仅service correctness，不做performance |
 | Validation Code repo/fork | **Not needed** | Stage 1/2 blockers均以 non-source route闭合；implementation source未修改 |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
@@ -34,11 +34,11 @@
 - Current tree：`463806ef18e5e31006cd4f59e6a5261fc65cea4a`。
 - Stage 1/2 Accepted execution source：`7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82`。
 - Official base/ref：`flagos-ai/vllm-plugin-FL:release/0.2`。
-- Current release HEAD/tree：`53adefb269571684d83a51e997d3ba9be5f88235` / `9ddfd080953ad39b39772e108ff921d2973b0299`。
-- PR compare：ahead 9 / behind 0；base SHA与当前 release HEAD一致。
+- Current release HEAD/tree（Stage 4 Formal Review live recheck）：`ef78dec66fea1ae858ef414584be1478929ee9b2` / `7414bac41c39bc445b0cc05dbdaecc0f08231aeb`。
+- PR #404仍以`032fddc9...`为head；PR snapshot base SHA和moving `release/0.2` branch HEAD可短暂不同，dispatch前均重新查询。
 - Branch movement：Stage 3 Accepted `e610a990...`后以1个commit前进到`032fddc9...`。Exact diff只有`README.md` +11和新增`tests/unit_tests/test_build_config.py` +66；[`Formal moving-head Review`](reviews/REVIEW-QWEN36-A3-MOVING-HEAD-032FDDC9-20260826.md)确认为docs/tests-only。
 
-上述snapshot已对`032fddc9...`完成bounded disposition。正式 Task在 User dispatch 前仍必须重新查询；若HEAD/tree继续为`032fddc9...` / `463806ef...`，按Stage 4 Task复用`e610a990...` Accepted wheel；若再次变化，先STOP并返回新diff。
+上述snapshot已对`032fddc9...`完成bounded disposition。Stage 5 dispatch前仍必须重新查询；若HEAD/tree继续为`032fddc9...` / `463806ef...`，复用`e610a990...` Accepted wheel；若再次变化，先STOP并返回新diff。
 
 ## Historical initial Stage 1/2 execution result
 
@@ -86,7 +86,7 @@ User已确认 bounded authorization：
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
-Stage 1/2和Stage 3 Formal Acceptance均已完成。Stage 4 Ready Task已由User显式dispatch并完成服务器 Execution PASS；serve、matrix和performance仍锁定，Stage 5不得在Codex1 Acceptance和User显式dispatch前进入。
+Stage 1/2、Stage 3和Stage 4 Formal Acceptance均已完成。Stage 5 serve correctness已解锁但尚未执行，只有User显式dispatch后Codex2才可进入；functional matrix和performance仍锁定。
 
 ## Current Stage 3 run — QWEN36-A3-S3-TP2-BF16-EAGER
 
@@ -116,7 +116,7 @@ Resume run事实：
 - Preserved container：`qw36-a3-s2-gatec-priv-20260826T092617p0800` / `32562c7139600c25e570ec07841713737b0407c7d1bbdc563be41b87ea105f0a`，保留current-head standalone FL环境和wheel。
 - Evidence root：`/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S3-TP2-BF16-EAGER/evidence/20260826T115234p0800`；Gate E log `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S3-TP2-BF16-EAGER/evidence/20260826T115234p0800/runtime/gate_e_tp2_bf16_eager_file.log`。
 
-Formal Review：[`REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md`](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md)。Stage 3 Acceptance绑定exact `e610a990...` / tree `609ff1ad...`和current-head wheel sha256 `2fcf788...`；不覆盖graph、serve或performance。Stage 4随后已dispatch并完成服务器Execution PASS，等待Codex1 Formal Acceptance。
+Formal Review：[`REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md`](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md)。Stage 3 Acceptance绑定exact `e610a990...` / tree `609ff1ad...`和current-head wheel sha256 `2fcf788...`；Stage 4随后完成bounded graph Acceptance。
 
 ## Current Stage 4 run — QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH
 
@@ -124,14 +124,15 @@ Result：[`RESULT-QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH-20260826T141740+0800.md`](
 
 本次 run 事实：
 
-- Execution：`Execution PASS - Stage 4 FULL_DECODE_ONLY Graph`；Codex1 Formal Acceptance为`PENDING`。
+- Execution：`Execution PASS - Stage 4 FULL_DECODE_ONLY Graph`；Codex1 Formal Acceptance为 **ACCEPTED — bounded graph correctness**。
 - Current tracked source：`032fddc91b6d013b98aed8e64ff05b54d1435648` / tree `463806ef18e5e31006cd4f59e6a5261fc65cea4a`；dispatch recheck匹配已审查docs/tests-only disposition。
 - Runtime artifact：复用Stage 3 Accepted `e610a990d785356bf51a3cad50219d4c03310a31` / tree `609ff1ad0f08239f353cb4d8774e504b4deba03b` wheel，sha256 `2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd`；未重build。
 - Gate G0：`PASS`；preserved container `qw36-a3-s2-gatec-priv-20260826T092617p0800` / `32562c7139600c25e570ec07841713737b0407c7d1bbdc563be41b87ea105f0a`继续运行，`torch_npu`可用，visible device count 2，standalone FL/site-packages、A3 `_C_ascend`/OPP、`vllm-ascend` absent、`vllm_ascend`不可import、FlagGems absent、model BF16 identity均通过。
 - Gate G1：`PASS`；`enforce_eager=False`、`compilation_config.mode=VLLM_COMPILE`、`backend=eager`、`cudagraph_mode=FULL_DECODE_ONLY`、capture sizes `[1,2,4,8]`；两个TP worker均完成四个size capture，graph type为Ascend `NPUGraph`，GraphWrapper来自 `vllm_fl`。
 - Gate G2：`PASS`；prefill/non-uniform路径为 `forward_mode=NONE` / eager passthrough，decode replay为 `forward_mode=FULL` / `phase=replay`；batch size 1和2均有多token replay，同一greedy prompt重复两次token/text一致，不同prompt输出非空且不同，logprobs finite，final `torch.npu.synchronize()`成功，process exit 0。
 - NPU 0/1 final released；NPU 2-7 unrelated workloads未触碰。
-- Stage 5：`NOT ENTERED`；serve/prefix/EP2/64K/matrix/performance仍未执行。
+- Formal Review：[`REVIEW-QWEN36-A3-STAGE4-FULL-DECODE-ONLY-GRAPH-ACCEPTANCE-20260826.md`](reviews/REVIEW-QWEN36-A3-STAGE4-FULL-DECODE-ONLY-GRAPH-ACCEPTANCE-20260826.md)。
+- Stage 5：`READY / NOT ENTERED`；serve等待User显式dispatch；prefix/EP2/64K/matrix/performance仍未执行。
 - Code PR：`N/A`。
 - Evidence root：`/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH/evidence/20260826T141740p0800`；main graph log `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH/evidence/20260826T141740p0800/runtime/gate_g1_g2_full_decode_only_graph.log`。
 

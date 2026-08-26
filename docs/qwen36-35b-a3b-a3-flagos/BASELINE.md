@@ -1,52 +1,53 @@
 # Project Baseline and Implementation Tracking
 
-更新时间：2026-08-25
+更新时间：2026-08-26
 
 ## Current GitHub snapshot
 
-核验于 2026-08-26 10:30 CST；正式 dispatch 前仍必须重新查询。
+核验于 2026-08-26 Stage 4 Formal Acceptance；正式 dispatch 前仍必须重新查询。
 
 | Identity | Value |
 | --- | --- |
 | Implementation repository | `xiemingda-1002/vllm-plugin-FL` |
 | Project tracked branch | `feature/qwen3.6-35b-a3b-ascend-graph-migration` |
-| Current tracked HEAD | `e610a990d785356bf51a3cad50219d4c03310a31` |
-| Current tracked tree | `609ff1ad0f08239f353cb4d8774e504b4deba03b` |
+| Current tracked HEAD | `032fddc91b6d013b98aed8e64ff05b54d1435648` |
+| Current tracked tree | `463806ef18e5e31006cd4f59e6a5261fc65cea4a` |
+| Stage 3/4 runtime artifact source | `e610a990d785356bf51a3cad50219d4c03310a31` / tree `609ff1ad0f08239f353cb4d8774e504b4deba03b` |
 | Stage 1/2 Accepted source | `7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82` |
 | Official PR | `flagos-ai/vllm-plugin-FL#404` |
-| PR state | OPEN, Draft, MERGEABLE, BLOCKED, REVIEW_REQUIRED |
+| PR state | OPEN, Draft；head `032fddc9...`；mergeability是moving fact |
 | Official base branch | `release/0.2` |
-| Current release HEAD | `53adefb269571684d83a51e997d3ba9be5f88235` |
-| Current release tree | `9ddfd080953ad39b39772e108ff921d2973b0299` |
-| Compare | 8 commits ahead / 0 behind |
+| Current release HEAD | `ef78dec66fea1ae858ef414584be1478929ee9b2` |
+| Current release tree | `7414bac41c39bc445b0cc05dbdaecc0f08231aeb` |
+| Compare | moving/diverged after release branch advanced；dispatch前live query |
 
 Direct anchors：
 
-- Current head commit：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/e610a990d785356bf51a3cad50219d4c03310a31>
+- Current head commit：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/032fddc91b6d013b98aed8e64ff05b54d1435648>
 - Stage 1/2 Accepted source：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/7beda84f59d7b25f49cdf03bdf6efecd771067ed>
-- Base commit：<https://github.com/flagos-ai/vllm-plugin-FL/commit/53adefb269571684d83a51e997d3ba9be5f88235>
+- Base commit：<https://github.com/flagos-ai/vllm-plugin-FL/commit/ef78dec66fea1ae858ef414584be1478929ee9b2>
 - PR：<https://github.com/flagos-ai/vllm-plugin-FL/pull/404>
 - Compare：<https://github.com/flagos-ai/vllm-plugin-FL/compare/release/0.2...xiemingda-1002:feature/qwen3.6-35b-a3b-ascend-graph-migration>
 
-PR timeline证明 tracked branch曾从 `f9281f78...` force-push/rebase到 Stage 1/2 Accepted source `7beda84...`，随后又前进到 current `e610a990...`。每次 Result仍只绑定其 exact execution identity。
+PR timeline证明 tracked branch曾从 `f9281f78...` force-push/rebase到 Stage 1/2 Accepted source `7beda84...`，随后前进到Stage 3/4 runtime source `e610a990...`及current docs/tests-only `032fddc9...`。每次 Result仍只绑定其 exact execution identity。
 
 ## Technical tuple
 
 | Component | Baseline | Evidence state / boundary |
 | --- | --- | --- |
-| vLLM | `0.20.2` | Current PR/source metadata + User资料；A3 runtime尚未验证 |
-| FL | official `release/0.2`系 | base当前为 `53adefb...`；adaptation由 moving PR head提供 |
-| Adaptation | PR #404 current tracked head | 当前 snapshot `e610a990...`；run时重查；Stage 1/2 Acceptance绑定`7beda84...` |
+| vLLM | `0.20.2` | A3 Stage 1-4 Accepted runtime tuple |
+| FL | official `release/0.2`系 | base current `ef78dec...`；adaptation由moving PR head提供 |
+| Adaptation | PR #404 current tracked head | current `032fddc9...` docs/tests-only；runtime artifact `e610a990...` |
 | vLLM-Ascend | `0.20.2rc1` | matched-version source/oracle与 official A3 environment carrier；最终 runtime不可依赖 installed package |
 | Official A3 image candidates | `v0.20.2rc1-a3` / `v0.20.2rc1-a3-openeuler` | Bounded selection；ordinary unsuffixed tag是A2 route并排除 |
-| Model | `Qwen/Qwen3.6-35B-A3B` / BF16 non-quantized | Path已确认；`DOWNLOADING / NOT YET READY FOR STAGE 3`；不阻塞Stage 1/2 |
-| Model path | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B` | User-confirmed；Stage 1/2 inventory-only |
-| Architecture | `Qwen3_5MoeForConditionalGeneration`；40层，30 GDN/linear attention + 10 full attention；256 experts/top-8 | User资料；Stage 3检查真实 artifact |
+| Model | `Qwen/Qwen3.6-35B-A3B` / BF16 non-quantized | Stage 3/4 identity Accepted；26/26 shards、1045/1045 BF16 tensors |
+| Model path | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B` | Stage 3/4 Accepted identity |
+| Architecture | `Qwen3_5MoeForConditionalGeneration`；40层，30 GDN/linear attention + 10 full attention；256 experts/top-8 | Stage 3/4 execution-verified |
 | dtype / DP / TP | BF16 / DP1 / first TP2 | Project decision |
-| First execution | eager | Stage 3 |
-| Graph | `FULL_DECODE_ONLY` | Stage 4 only after eager Acceptance |
-| Build family | A3=`ascend910_93`；A2=`ascend910b` | Current source + User资料；A3 build未验证 |
-| Required controls | `VLLM_PLUGINS=fl`、`USE_FLAGGEMS=0` | Current source/project decision；A3 runtime未验证 |
+| First execution | eager | Stage 3 Accepted |
+| Graph | `FULL_DECODE_ONLY` | Stage 4 `[1,2,4,8]` bounded correctness Accepted |
+| Build family | A3=`ascend910_93`；A2=`ascend910b` | A3 wheel build/load/custom-op Accepted |
+| Required controls | `VLLM_PLUGINS=fl`、`USE_FLAGGEMS=0` | Stage 1-4 runtime ownership Accepted |
 
 MTP、quantization、initial CP、FlashComm、MC2、EPLB不在第一阶段范围。EP2、prefix、64K与性能属于后续独立 Stage。
 
@@ -65,7 +66,7 @@ MTP、quantization、initial CP、FlashComm、MC2、EPLB不在第一阶段范围
 - `_C_ascend`当前声明 **9 schemas**。PR正文旧的 7 OPP/8 schemas不再作为当前验收计数。
 - runtime loader在 `SOC_VERSION`未设置时默认选择 `ascend910b1`，与 A3 build默认不同；Stage 1/2必须观察 actual env和 selected family。
 
-详细 source anchors见 [research/CURRENT-IMPLEMENTATION-STATE.md](research/CURRENT-IMPLEMENTATION-STATE.md)。Current `e610a990...`比 Accepted source多2个 runtime commits，涉及 NPU communicator、PlatformFL和 ModelRunnerFL，不涉及 A3 OPP/build packaging；Stage 3 Task必须先对 current head做 wheel rebuild和 bounded C/D regression。
+详细 source anchors见 [research/CURRENT-IMPLEMENTATION-STATE.md](research/CURRENT-IMPLEMENTATION-STATE.md)。`e610a990...`已构建为Stage 3/4 Accepted wheel；后续`032fddc9...`仅改README和unit tests，Formal moving-head Review允许继续复用该wheel。新HEAD仍须按diff决定重验。
 
 ## Official A3 base image route
 
