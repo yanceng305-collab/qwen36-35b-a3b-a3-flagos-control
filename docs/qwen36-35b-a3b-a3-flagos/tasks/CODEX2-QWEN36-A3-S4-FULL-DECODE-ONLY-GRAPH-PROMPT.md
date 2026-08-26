@@ -33,7 +33,19 @@ Model:
 BF16 non-quantized
 ```
 
-Dispatch时重新查询current HEAD/tree和official base。若不再等于Accepted identity，在任何graph/model mutation前STOP并返回diff给Codex1。
+## Reviewed moving head
+
+```text
+Current reviewed tracked HEAD:
+032fddc91b6d013b98aed8e64ff05b54d1435648
+tree 463806ef18e5e31006cd4f59e6a5261fc65cea4a
+parent e610a990d785356bf51a3cad50219d4c03310a31
+
+Disposition:
+docs/tests-only; reuse Stage 3 Accepted wheel/runtime
+```
+
+Dispatch时重新查询current HEAD/tree和official base。若仍为`032fddc9...` / `463806ef...`，记录tracked identity和bounded Review，直接复用`e610a990...` Accepted wheel；不要重build，不要重跑Stage 3。若HEAD/tree不再精确相等，在任何graph/model mutation前STOP，返回`032fddc9...`到新HEAD的diff给Codex1。
 
 ## Gate G0 — Runtime continuity
 
@@ -53,7 +65,7 @@ torch.npu.is_available() == True
 torch.npu.device_count() == actual visible device count
 ```
 
-同时验证wheel hash/site-packages origin、model identity、`vllm-ascend` absent、`vllm_ascend`不可import、`VLLM_PLUGINS=fl`、`USE_FLAGGEMS=0`、FlagGems absent，以及PlatformFL/WorkerFL/ModelRunnerFL和A3 `_C_ascend`/OPP origin。
+同时验证wheel hash/site-packages origin、model identity、`vllm-ascend` absent、`vllm_ascend`不可import、`VLLM_PLUGINS=fl`、`USE_FLAGGEMS=0`、FlagGems absent，以及PlatformFL/WorkerFL/ModelRunnerFL和A3 `_C_ascend`/OPP origin。Code/source证据同时记录current tracked `032fddc9...`和actual runtime artifact `e610a990...` / Accepted wheel SHA-256，不得把未重build的`032fddc9...`写成wheel build identity。
 
 ## Gate G1 — Capture
 

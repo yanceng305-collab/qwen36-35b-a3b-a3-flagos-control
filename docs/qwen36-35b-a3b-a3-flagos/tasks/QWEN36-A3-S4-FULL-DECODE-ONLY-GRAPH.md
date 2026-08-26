@@ -29,7 +29,18 @@ wheel sha256: 2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd
 model: /data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B
 ```
 
+Reviewed tracked-head identity：
+
+```text
+HEAD: 032fddc91b6d013b98aed8e64ff05b54d1435648
+tree: 463806ef18e5e31006cd4f59e6a5261fc65cea4a
+parent: e610a990d785356bf51a3cad50219d4c03310a31
+disposition: docs/tests-only; reuse Stage 3 Accepted wheel
+```
+
 Formal prerequisite：[`Stage 3 Acceptance`](../reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md)。
+
+Moving-head prerequisite：[`032fddc9 bounded Review`](../reviews/REVIEW-QWEN36-A3-MOVING-HEAD-032FDDC9-20260826.md)。
 
 ## Objective
 
@@ -44,8 +55,9 @@ Formal prerequisite：[`Stage 3 Acceptance`](../reviews/REVIEW-QWEN36-A3-STAGE3-
 ## Entry and moving identity gate
 
 - Dispatch时重新查询tracked branch HEAD/tree和official PR base。
-- 若HEAD/tree仍等于Stage 3 Accepted identity，复用current-head wheel和Accepted runtime；无需无理由rebuild或重复Stage 3 eager。
-- 若tracked HEAD/tree变化，在任何graph/model mutation前STOP，返回old-to-new diff给Codex1决定regression范围。
+- 若HEAD/tree等于已审查的`032fddc9...` / `463806ef...`，记录current tracked identity后直接复用`e610a990...` Stage 3 Accepted wheel/runtime；不重build，不重复Stage 3 eager。
+- 运行时Code/source pointer必须同时记录：当前tracked `032fddc9...`及其bounded disposition，以及实际installed runtime artifact所绑定的`e610a990...` / accepted wheel SHA-256。
+- 若tracked HEAD/tree不再等于`032fddc9...` / `463806ef...`，在任何graph/model mutation前STOP，返回`032fddc9...`到新HEAD的diff给Codex1决定regression范围。
 - 优先复用preserved container；若单纯缺失，可严格按Accepted reconstruction重建同一runtime并安装Stage 3 Accepted wheel。任何image/version/CANN/runtime mapping变化或reconstruction冲突均STOP。
 - 开始前必须验证`torch_npu` import、availability true、device count等于实际visible scope、device names，以及source/wheel/model identities。
 

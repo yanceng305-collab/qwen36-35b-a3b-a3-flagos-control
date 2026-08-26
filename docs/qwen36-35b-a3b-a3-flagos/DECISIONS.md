@@ -26,6 +26,7 @@
 | D-020 | Exact `7beda84...` A3 Stage 1/2 environment/build/standalone/custom-op foundation正式ACCEPTED；execution-proven composite container pattern成为默认runtime baseline | **Required / Codex1 ACCEPTED** | 4个immutable Results联合证明Gate A-D；无FlagGems、无vllm-ascend runtime、无source change；单项flag必要性未ablation | 新Accepted Evidence supersede或环境/source变化 |
 | D-021 | Stage 3使用 current tracked head；`7beda84...→e610a990...`无需撤销Stage1/2 Acceptance，但需在preserved container内先rebuild+bounded C/D regression | **Satisfied / closed by D-022** | 2个新增commits只改communicator/platform/model runner，和TP2 live path相关，未改OPP/build packaging | Future HEAD再次变化或diff扩大 |
 | D-022 | Exact `e610a990...` Stage 3 TP2 BF16 eager正式ACCEPTED；Stage 4只验证`FULL_DECODE_ONLY` capture/replay/fixed-address/state correctness | **Required / Codex1 ACCEPTED** | initial Gate M STOP由resume 26/26 shards、1045/1045 BF16 tensors闭合；TP2/HCCL、完整load、prefill/decode/repeat和standalone ownership通过；两个pre-construction harness/scope失败不要求机械重跑 | source/wheel/model/runtime变化或Stage 4 Evidence形成新结论 |
+| D-023 | `e610a990... → 032fddc9...`为docs/tests-only bounded movement；Stage 4复用Stage 3 Accepted wheel，不rebuild、不重跑Stage 3 | **Required / Codex1 reviewed** | exact diff仅`README.md` +11与新build-config unit test +66；production/runtime/build implementation对象未变；3/3新tests PASS。README可进入rebuilt wheel metadata，不声称字节级wheel相同 | tracked HEAD/tree再变化，或现场无法使用Accepted wheel/runtime |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -96,7 +97,7 @@ Image只提供匹配 environment/build toolchain。Stage 2 final runtime仍必�
 - Underlying root-cause confidence记录为 `LOW`；immutable Result缺 explicit confidence与 official PR compare-base字段错误只在 Review/STATUS/INDEX补充，不修改 Result。
 - Next Task只定位/闭合 `aic-*-ops-info.ini` first blocker并补 Triton/provider Evidence；确认 source change必要前，Code repo/fork仍 `Not needed yet`。
 
-## D-020 / D-021 / D-022 — Stage Acceptance and moving-head handoff
+## D-020 / D-021 / D-022 / D-023 — Stage Acceptance and moving-head handoff
 
 - Stage 1/2 Acceptance绑定 `7beda84f...` / tree `a81eea55...`、wheel SHA-256 `fa33f586...`、official A3 openEuler image和 accepted composite runtime pattern。
 - Accepted scope为 A3-native wheel、standalone FL、PlatformFL import和 one real NPU custom-op smoke；不覆盖 full model、TP2/HCCL、graph、serve或performance。
@@ -106,6 +107,8 @@ Image只提供匹配 environment/build toolchain。Stage 2 final runtime仍必�
 - Stage 3 Acceptance绑定`e610a990...` / tree `609ff1ad...`、wheel sha256 `2fcf788...`和完成后的26-shard BF16 model root；不自动覆盖future HEAD或变化后的model/runtime。
 - Resume首次未带visible scope的invariant probe和stdin multiprocessing attempt均发生在正式model execution前；corrected scope/file-script完成完整exit 0 Gate E，因此不构成重复执行要求。
 - Stage 4已解锁但仍需User显式dispatch；默认compatibility route为FL-local GraphWrapper + eager FX + Ascend NPUGraph，`npugraph_ex`和performance tuning不在首个graph correctness Task范围。
+- Current tracked head已从Stage 3 Accepted `e610a990...` single-parent前进到`032fddc9...` / tree `463806ef...`。Bounded review证明只有README文档和新增build-config characterization tests，不改build implementation、Python/native runtime、graph、model或communicator语义。README由`pyproject.toml`引用为package metadata，故不声称rebuilt wheel字节级相同；Stage 4不rebuild也不使用该假设。
+- Stage 3 Acceptance仍只绑定`e610a990...`；Stage 4执行仍以该exact source/tree的Accepted wheel sha256 `2fcf788...`为runtime artifact。`032fddc9...`作为dispatch时tracked-head identity记录，不要求重build或重跑eager。若dispatch时tracked HEAD/tree不再等于`032fddc9...` / `463806ef...`，在graph/model mutation前STOP交回Codex1。
 
 ## 明确拒绝的路线
 

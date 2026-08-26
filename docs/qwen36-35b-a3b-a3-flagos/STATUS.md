@@ -2,16 +2,16 @@
 
 更新时间：2026-08-26
 
-总体状态：A3 Stage 1/2 **ACCEPTED** for exact source `7beda84...`；current tracked head `e610a990...`的 Stage 3 TP2 BF16 eager已由Codex1正式 **ACCEPTED**。Stage 4 `FULL_DECODE_ONLY` graph已解锁，Ready Task等待User显式dispatch；graph尚未执行。
+总体状态：A3 Stage 1/2 **ACCEPTED** for exact source `7beda84...`；Stage 3 TP2 BF16 eager **ACCEPTED** identity保持`e610a990...`。Tracked branch已前进到`032fddc9...`，Codex1 bounded moving-head review确认新commit仅改README和unit tests，不改运行或build implementation语义。Stage 4 `FULL_DECODE_ONLY` graph继续READY，等待User显式dispatch；graph尚未执行。
 
 ## 当前快照
 
 | Work item | Status | Evidence boundary |
 | --- | --- | --- |
 | Control repo | Established | 本仓库 `main`；首次 Control commit |
-| Tracked implementation | Current GitHub snapshot reverified | `feature/qwen3.6-35b-a3b-ascend-graph-migration@e610a990...` / tree `609ff1ad...`；Stage 1/2 Acceptance绑定`7beda84...` |
+| Tracked implementation | Current GitHub snapshot reverified | `feature/qwen3.6-35b-a3b-ascend-graph-migration@032fddc9...` / tree `463806ef...`；Stage 3 Acceptance仍绑定`e610a990...` / accepted wheel |
 | Official base | Current GitHub snapshot recorded | `release/0.2@53adefb...` / tree `9ddfd0...` |
-| PR #404 | OPEN / DRAFT / MERGEABLE；REST `mergeable_state=unstable` | Stage 3 Formal Review live recheck 2026-08-26；状态会变化 |
+| PR #404 | OPEN / DRAFT / MERGEABLE；REST `mergeable_state=unstable` | Moving-head Formal Review live recheck 2026-08-26；head `032fddc9...`；状态会变化 |
 | A2 implementation evidence | **A2 REFERENCE ONLY** | User资料中的 2×910B1结果，不是 A3 Acceptance |
 | A3 environment/build/runtime | **ACCEPTED — Stage 1/2 scope** | A3 environment、native wheel、standalone FL、PlatformFL import和 one real custom-op smoke Accepted；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md) |
 | A3 model TP2 BF16 eager | **ACCEPTED — Stage 3 scope** | exact `e610a990...`完成current-head regression、模型identity、TP2/HCCL、完整BF16权重加载、prefill/decode和两次generation；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md) |
@@ -20,24 +20,24 @@
 | Model artifact | **Gate M PASS** | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；root 26/26 shards present，1045/1045 safetensors tensors BF16，no quantization，no download markers；checksum manifest saved |
 | First Codex2 task | **STOP / initial NEEDS-FOLLOWUP closed by Accepted chain** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Initial Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
 | Latest bounded Task | **ACCEPTED — Stage 3 TP2 BF16 Eager** | [`QWEN36-A3-S3-TP2-BF16-EAGER`](tasks/QWEN36-A3-S3-TP2-BF16-EAGER.md)；Gate R/M/E Accepted for exact `e610a990...` |
-| Next Task | **READY / Awaiting explicit User dispatch** | [`QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH`](tasks/QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH.md)；capture/replay/fixed-address/state correctness only |
+| Next Task | **READY / Awaiting explicit User dispatch** | [`QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH`](tasks/QWEN36-A3-S4-FULL-DECODE-ONLY-GRAPH.md)；`032fddc9...` moving-head disposition已闭合；capture/replay/fixed-address/state correctness only |
 | Validation Code repo/fork | **Not needed** | Stage 1/2 blockers均以 non-source route闭合；implementation source未修改 |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
 ## 当前 implementation identity
 
-核验时间：2026-08-26 Stage 3 Formal Review live recheck。
+核验时间：2026-08-26 bounded moving-head Formal Review live recheck。
 
 - Tracked repo/branch：`xiemingda-1002/vllm-plugin-FL` / `feature/qwen3.6-35b-a3b-ascend-graph-migration`。
-- Current head：`e610a990d785356bf51a3cad50219d4c03310a31`。
-- Current tree：`609ff1ad0f08239f353cb4d8774e504b4deba03b`。
+- Current head：`032fddc91b6d013b98aed8e64ff05b54d1435648`。
+- Current tree：`463806ef18e5e31006cd4f59e6a5261fc65cea4a`。
 - Stage 1/2 Accepted execution source：`7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82`。
 - Official base/ref：`flagos-ai/vllm-plugin-FL:release/0.2`。
 - Current release HEAD/tree：`53adefb269571684d83a51e997d3ba9be5f88235` / `9ddfd080953ad39b39772e108ff921d2973b0299`。
-- PR compare：ahead 8 / behind 0；base SHA与当前 release HEAD一致。
-- Branch movement：PR timeline显示此前 head `f9281f...`被force-push/rebase为 Stage 1/2 Accepted source `7beda84...`，随后以2个 runtime commits前进到 current `e610a990...`。
+- PR compare：ahead 9 / behind 0；base SHA与当前 release HEAD一致。
+- Branch movement：Stage 3 Accepted `e610a990...`后以1个commit前进到`032fddc9...`。Exact diff只有`README.md` +11和新增`tests/unit_tests/test_build_config.py` +66；[`Formal moving-head Review`](reviews/REVIEW-QWEN36-A3-MOVING-HEAD-032FDDC9-20260826.md)确认为docs/tests-only。
 
-以上只是 Control创建时的 moving GitHub snapshot。正式 Task在 User dispatch 前必须重新查询、冻结当次 exact HEAD/tree；若已变化，先做 diff review。
+上述snapshot已对`032fddc9...`完成bounded disposition。正式 Task在 User dispatch 前仍必须重新查询；若HEAD/tree继续为`032fddc9...` / `463806ef...`，按Stage 4 Task复用`e610a990...` Accepted wheel；若再次变化，先STOP并返回新diff。
 
 ## Historical initial Stage 1/2 execution result
 

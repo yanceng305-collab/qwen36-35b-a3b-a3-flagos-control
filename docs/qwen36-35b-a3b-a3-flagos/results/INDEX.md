@@ -2,7 +2,7 @@
 
 Codex2生成的 run snapshot首次 push后不可修改。Codex1 Acceptance只更新本 INDEX或 `../STATUS.md`，不修改 immutable Result。
 
-当前已有 6 个 A3 execution Result。Stage 1/2 **ACCEPTED** for exact source `7beda84...`；Stage 3 initial+resume chain已由Codex1正式审查，exact current head `e610a990...`的Gate R/M/E **ACCEPTED — Stage 3 TP2 BF16 Eager**。Stage 4 Ready Task已创建但未dispatch。
+当前已有 6 个 A3 execution Result。Stage 1/2 **ACCEPTED** for exact source `7beda84...`；Stage 3 initial+resume chain已由Codex1正式审查，exact `e610a990...`的Gate R/M/E **ACCEPTED — Stage 3 TP2 BF16 Eager**。Tracked branch后续的`032fddc9...` docs/tests-only movement已做bounded disposition，不改写历史Acceptance；Stage 4 Ready Task已更新但未dispatch。
 
 | Task | Run | Experiment Result | Code/source pointer | Immutable Result | Server Evidence | Control Sync | Codex1 Acceptance |
 | --- | --- | --- | --- | --- | --- | --- | --- |
