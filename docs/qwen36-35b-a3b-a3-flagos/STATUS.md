@@ -2,7 +2,7 @@
 
 更新时间：2026-08-26
 
-总体状态：A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和Stage 5 bounded service correctness均已 **ACCEPTED**。User已通过`D-030`冻结validation baseline为`e610a990...` / tree `609ff1ad...` / Accepted wheel SHA-256 `2fcf788...`；`032fddc9...`只作为last pre-change tracked reference。Stage 6 A2-equivalent DP1/TP2 16-cell functional matrix已Ready，等待User显式dispatch。
+总体状态：A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和Stage 5 bounded service correctness均已 **ACCEPTED**。User已通过`D-030`冻结validation baseline为`e610a990...` / tree `609ff1ad...` / Accepted wheel SHA-256 `2fcf788...`；`032fddc9...`只作为last pre-change tracked reference。Stage 6 A2-equivalent DP1/TP2 functional matrix已执行并 **STOP**：Gate F0 PASS，Gate F1 O8 warm-up输出质量验证失败，first blocker为`I1024 / C64 / O8` request index `34`出现`29`个Unicode replacement characters；不进入performance、prefix lifecycle、EP2或后续Stage。
 
 ## 当前快照
 
@@ -16,12 +16,12 @@
 | A3 environment/build/runtime | **ACCEPTED — Stage 1/2 scope** | A3 environment、native wheel、standalone FL、PlatformFL import和 one real custom-op smoke Accepted；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md) |
 | A3 model TP2 BF16 eager | **ACCEPTED — Stage 3 scope** | exact `e610a990...`完成current-head regression、模型identity、TP2/HCCL、完整BF16权重加载、prefill/decode和两次generation；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md) |
 | A3 graph | **ACCEPTED — Stage 4 bounded graph correctness** | `FULL_DECODE_ONLY [1,2,4,8]`两TP rank capture/replay/state gate通过；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE4-FULL-DECODE-ONLY-GRAPH-ACCEPTANCE-20260826.md) |
-| A3 serve/function/performance | **Stage 5 ACCEPTED — bounded service correctness** | 真实 OpenAI-compatible service/API的health/models/completion/chat/repeat/C2、both-rank replay/state isolation/clean shutdown Accepted；automatic capture through 64、16-cell functional与performance仍未验证 |
+| A3 serve/function/performance | **Stage 6 STOP / functional matrix not accepted** | Stage 5真实 OpenAI-compatible service/API已Accepted；Stage 6 F0 PASS但F1 O8输出Unicode replacement corruption；O1024也已运行但因F1 STOP和3/16 validator pass不作为PASS；performance仍未验证 |
 | Official A3 base route | Bounded selection authorized | `v0.20.2rc1-a3` Ubuntu或`v0.20.2rc1-a3-openeuler`；ordinary unsuffixed A2 image excluded |
 | Model artifact | **Gate M PASS** | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；root 26/26 shards present，1045/1045 safetensors tensors BF16，no quantization，no download markers；checksum manifest saved |
 | First Codex2 task | **STOP / initial NEEDS-FOLLOWUP closed by Accepted chain** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Initial Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
-| Latest bounded Task | **ACCEPTED — Stage 5 bounded service correctness** | [`Formal Review`](reviews/REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md)；不外推automatic capture through 64、matrix或performance |
-| Next Task | **READY / Awaiting explicit User dispatch** | [`QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX`](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)；先做16/16 functional，不做performance/prefix lifecycle/EP2 |
+| Latest bounded Task | **STOP — Stage 6 A2-equivalent functional matrix / Review pending** | [`QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX`](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)；F0 PASS；F1 STOP on O8 output-quality validation; O1024 raw evidence collected but not accepted |
+| Next Task | **Decision required / Not created** | Codex1 review of Stage 6 STOP Result and raw outputs is pending；do not enter performance/prefix lifecycle/EP2 without new User dispatch |
 | Validation Code repo/fork | **Not needed** | Stage 1/2 blockers均以 non-source route闭合；implementation source未修改 |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
@@ -86,7 +86,7 @@ User已确认 bounded authorization：
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
-Stage 1/2、Stage 3、Stage 4和Stage 5 Formal Acceptance均已完成。Stage 6 functional matrix已Ready；只有User显式dispatch后Codex2才可执行，且不得自动进入performance、prefix lifecycle或EP2。
+Stage 1/2、Stage 3、Stage 4和Stage 5 Formal Acceptance均已完成。Stage 6 functional matrix已执行并STOP，等待Codex1 review；不得自动进入performance、prefix lifecycle或EP2。
 
 ## Current Stage 3 run — QWEN36-A3-S3-TP2-BF16-EAGER
 
