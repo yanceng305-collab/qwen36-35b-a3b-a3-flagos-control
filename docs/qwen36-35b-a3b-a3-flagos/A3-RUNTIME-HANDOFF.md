@@ -2,7 +2,7 @@
 
 更新时间：2026-08-26
 
-当前状态：**STAGE 1-4 ACCEPTED, SCOPE-LIMITED**。真实A3/910C execution已完成A3-native wheel、standalone FL、TP2/HCCL BF16 eager和bounded `FULL_DECODE_ONLY [1,2,4,8]` graph correctness；serve、A2-equivalent matrix和performance仍未验证。Qwen-specific模型/graph结论不得直接外推到GLM。
+当前状态：**STAGE 1-5 ACCEPTED, SCOPE-LIMITED**。真实A3/910C execution已完成A3-native wheel、standalone FL、TP2/HCCL BF16 eager、bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和service/API correctness；A2-equivalent matrix和performance仍未验证。Qwen-specific模型/graph/service结论不得直接外推到GLM。
 
 ## Handoff admission rule
 
@@ -28,10 +28,10 @@
 | `_C_ascend` build/package/load infrastructure | **ACCEPTED — smoke scope** | wheel origin、ABI、A3 load、one real NPU op accepted |
 | CANN OPP build/package/expose infrastructure | **ACCEPTED — smoke scope** | OPP inventory、A3 family、runtime registration/execution accepted |
 | HCCL / multiprocessing / device mapping | **ACCEPTED — Qwen DP1/TP2 scope** | Stage 3/4证明world size 2、both workers和bounded model/graph execution；新模型/拓扑仍重验 |
-| PlatformFL / WorkerFL / ModelRunnerFL lifecycle | **ACCEPTED — Qwen Stage 3/4 scope** | standalone site-packages ownership、full model eager与bounded graph path通过 |
+| PlatformFL / WorkerFL / ModelRunnerFL lifecycle | **ACCEPTED — Qwen Stage 3-5 scope** | standalone site-packages ownership、full model eager、bounded graph与service/API path通过 |
 | Standalone FL formal installation | **ACCEPTED** | site-packages wheel origin、no source PYTHONPATH、no installed `vllm-ascend` accepted |
 | Cache isolation / compiler identity | **ACCEPTED — bounded Qwen graph scope** | FL-local GraphWrapper + eager FX + NPUGraph、task cache root和`[1,2,4,8]` capture/replay通过；service/other shapes待验 |
-| Evidence / immutable Result / reconstruction discipline | **ACCEPTED for Stage 1-4** | 完整三指针、checksum、immutable Results与Formal Reviews |
+| Evidence / immutable Result / reconstruction discipline | **ACCEPTED for Stage 1-5** | 完整三指针、checksum、immutable Results与Formal Reviews；Stage 6+适用final reproduction minimum |
 | Runtime image/wheel/startup handoff | PARTIAL | wheel已保留，PASS container已保留；最终 Stage 8 freeze/reconstruction尚未完成 |
 
 ## Accepted A3 container runtime baseline
@@ -171,5 +171,5 @@ The User example that led to the fix used `nightly-main-a3` and all eight cards,
 ## Validated handoff entries
 
 - **A3 Stage 1/2 runtime/build foundation**：ACCEPTED on 2026-08-26 for exact source `7beda84...`、official A3 openEuler carrier、`ascend910_93` wheel、standalone FL和 one real custom-op smoke。Evidence/claim boundary见 Formal Review和 reconstruction。
-- **A3 Stage 3/4 Qwen execution layer**：ACCEPTED on 2026-08-26 for exact runtime source `e610a990...`、wheel SHA-256 `2fcf788...`、DP1/TP2 HCCL BF16 eager及`FULL_DECODE_ONLY [1,2,4,8]` bounded capture/replay/state correctness。可复用的是已验证的runtime ownership、two-worker lifecycle和graph infrastructure；Qwen model/GDN/Mamba/attention/MoE语义不向GLM外推。
+- **A3 Stage 3/4/5 Qwen execution layer**：ACCEPTED on 2026-08-26 for exact runtime source `e610a990...`、wheel SHA-256 `2fcf788...`、DP1/TP2 HCCL BF16 eager、`FULL_DECODE_ONLY [1,2,4,8]` bounded capture/replay/state correctness及bounded service/API lifecycle。可复用的是已验证的runtime ownership、two-worker lifecycle、graph infrastructure和clean service shutdown；Qwen model/GDN/Mamba/attention/MoE/service语义不向GLM外推。
 - 新环境或 source不得覆盖本entry；使用新的 Result/Acceptance追加验证。

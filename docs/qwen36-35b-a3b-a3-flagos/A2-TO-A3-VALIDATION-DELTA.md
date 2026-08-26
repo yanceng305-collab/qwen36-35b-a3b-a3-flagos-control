@@ -2,7 +2,7 @@
 
 Last updated：2026-08-26
 
-Current formal cutoff：A3 Stage 4 `FULL_DECODE_ONLY [1,2,4,8]` **ACCEPTED — bounded graph correctness**；Stage 5 serve correctness READY / not executed。
+Current formal cutoff：A3 Stage 5 **ACCEPTED — bounded service correctness**；Stage 6 A2-equivalent DP1/TP2 16-cell functional matrix READY / not executed。
 
 ## Purpose / comparison contract
 
@@ -97,7 +97,15 @@ Stage 3 `ACCEPTED` **不等于** 完整复现A2 eager functional matrix。A3尚�
 | --- | --- | --- | --- |
 | Historical bounded capture `[1,2,4,8]` PASS；final `max_num_seqs=64` service自动capture `[1,2,4,8,16,24,32,40,48,56,64]` | Stage 4已验证`[1,2,4,8]` two-rank capture/replay/state correctness | `VALIDATION BOUNDED` | **A3 REVALIDATED / ACCEPTED — bounded graph correctness** |
 
-Stage 4 `ACCEPTED` **不等于** A2 final service graph matrix fully reproduced；automatic capture through 64、service、chunked prefill和async scheduling仍待A3复现。
+Stage 4 `ACCEPTED` **不等于** A2 final service graph matrix fully reproduced；Stage 5只补齐bounded service路径，automatic capture through 64、chunked prefill和async scheduling仍待A3复现。
+
+### 8a. Serve / API
+
+| A2 baseline | A3 validation | Delta type | A3 status |
+| --- | --- | --- | --- |
+| OpenAI-compatible service、health/models/completion/chat及最终矩阵服务路径 | Stage 5验证health/models/completion/chat/repeat、bounded C2、both-rank batch-1/2 replay/state isolation和clean shutdown；graph仍限`[1,2,4,8]`，prefix/chunked prefill关闭 | `VALIDATION BOUNDED` | **A3 REVALIDATED / ACCEPTED — bounded service correctness** |
+
+Stage 5 `ACCEPTED` **不等于** A2 final service workload fully reproduced。Automatic capture through 64、chunked prefill、async scheduling、16-cell O1024、aligned prefix lifecycle、EP2、capacity、startup/warm-up和performance A/B仍未复验。
 
 ### 9. Chunked prefill
 
@@ -137,12 +145,12 @@ Current conclusion：**IMPLEMENTATION CHANGE: NONE SO FAR**
 
 精确边界：
 
-- 截至Stage 4 Formal Acceptance，本A3 validation没有修改production runtime/model/operator/build implementation source，没有创建Code fork/patch/PR。
+- 截至Stage 5 Formal Acceptance，本A3 validation没有修改production runtime/model/operator/build implementation source，没有创建Code fork/patch/PR。Stage 5只使用Evidence-root runtime instrumentation，没有修改production artifact。
 - Stage 3在detached clean `e610a990d785356bf51a3cad50219d4c03310a31` / tree `609ff1ad0f08239f353cb4d8774e504b4deba03b`构建Accepted wheel；Code PR=`N/A`，wheel SHA-256 `2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd`。
 - Stage 1/2 Accepted source `7beda84...`到Stage 3 source `e610a990...`的变化是tracked implementation branch的既有moving-head commits；Control对diff定义了bounded regression并重建/执行，不将它写成A3 execution发现后由本项目产生的source fix。
 - 后续`e610a990... → 032fddc9...`已由[`moving-head Review`](reviews/REVIEW-QWEN36-A3-MOVING-HEAD-032FDDC9-20260826.md)确认为docs/tests-only，不改该结论。
 
-Evidence：[`Stage 3 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md)、[`Stage 4 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE4-FULL-DECODE-ONLY-GRAPH-ACCEPTANCE-20260826.md)及对应immutable Results。
+Evidence：[`Stage 3 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md)、[`Stage 4 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE4-FULL-DECODE-ONLY-GRAPH-ACCEPTANCE-20260826.md)、[`Stage 5 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md)及对应immutable Results。
 
 若未来出现真实A3-specific source change，必须在本节按下表增加，不能只写“A3 fix”：
 
@@ -165,7 +173,7 @@ Evidence：[`Stage 3 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF1
 | Chunked prefill | PASS | Disabled in current bounded Tasks; not yet | `VALIDATION BOUNDED` | Stage 3 Review / Stage 4 Task |
 | Prefix caching | PASS | Not yet | `NOT YET REVALIDATED` | - |
 | EP2 eager/graph | PASS | Not yet | `NOT YET REVALIDATED` | - |
-| Serve/API | PASS as part of A2 service results | Not yet | `NOT YET REVALIDATED` | - |
+| Serve/API | PASS as part of A2 service results | **ACCEPTED / A3 REVALIDATED**, bounded health/models/completion/chat/repeat/C2 scope | `VALIDATION BOUNDED` | [`Stage 5 Review`](reviews/REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md) |
 | 1K/4K/16K/64K × C1/C8/C32/C64 | PASS | Not yet | `NOT YET REVALIDATED` | - |
 | Long aligned-prefix lifecycle | PASS | Not yet | `NOT YET REVALIDATED` | - |
 | Functional matrix | PASS | Not yet | `NOT YET REVALIDATED` | - |
@@ -181,13 +189,14 @@ Evidence：[`Stage 3 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF1
 - bounded full-model prefill + multi-token decode covering Qwen hybrid GDN/Mamba/full-attention/MoE live paths;
 - two different short-prompt generations with nonempty/readable/distinct output, finite logprobs and final NPU synchronize.
 - bounded `FULL_DECODE_ONLY [1,2,4,8]` capture on both TP workers, real batch-1/batch-2 replay, repeat determinism and no observed cross-request state contamination.
+- bounded OpenAI-compatible service health/models/completion/chat/repeat/C2 correctness, finite recorded logprobs, both-rank replay ownership and clean shutdown.
 
 这些项只在各自Formal Acceptance的exact source/wheel/model/environment和bounded workload内成立。
 
 ## A2 capabilities not yet reproduced on A3
 
 - final service automatic capture sizes through 64；
-- serve health/models/completion/chat及bounded concurrency；
+- full A2 service workload beyond bounded Stage 5, including automatic capture through 64 and the 16-cell O1024 contract；
 - chunked prefill and async scheduling；
 - aligned Mamba prefix caching，包括short/long hit/reset lifecycle；
 - EP2 eager/graph correctness and expert sharding behavior；
@@ -210,6 +219,6 @@ Evidence：[`Stage 3 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF1
 
 ## Post-Stage-5 mainline
 
-Stage 5 serve correctness通过后，主线直接恢复A2 DP1/TP2实际合同：`FULL_DECODE_ONLY`、chunked prefill、async scheduling、`max_num_seqs=64` automatic capture、same prompt/token、sampling、cache和warm-up定义。先完成`1K/4K/16K/64K × C1/C8/C32/C64, O1024`的16/16 functional correctness，再对同一矩阵测performance。
+Stage 5 bounded serve correctness已Accepted。下一Ready主线直接恢复A2 DP1/TP2实际合同：`FULL_DECODE_ONLY`、chunked prefill、async scheduling、`max_num_seqs=64` automatic capture、same prompt-generation/token/sampling/cache/warm-up定义。先完成[`QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX`](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)的`1K/4K/16K/64K x C1/C8/C32/C64, O1024` 16/16 functional correctness，再对同一矩阵测performance。
 
 A2 colleague result与A3 FL result只作cross-platform reproduction reference。判断FL相对性能时优先A3 FL vs A3 matched native，并尽可能匹配cards/model/input/output/concurrency/prompts/order/sampling/cache/graph/warm-up；不得将910B1→910C硬件差异误算为FL implementation差异。

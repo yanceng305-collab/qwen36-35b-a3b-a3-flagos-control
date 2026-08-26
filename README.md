@@ -13,15 +13,15 @@
 更新时间：2026-08-26
 
 - Stage 0 Control / baseline establishment：**COMPLETE**。
-- A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]`：**ACCEPTED**。
+- A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]`及Stage 5 bounded serve correctness：**ACCEPTED**。
 - Current tracked implementation：`032fddc9...` / tree `463806ef...`；docs/tests-only moving-head disposition。Runtime artifact仍为`e610a990...` Accepted wheel。
-- Next Task：`QWEN36-A3-S5-SERVE-CORRECTNESS`，**READY / Awaiting explicit User dispatch**。
+- Next Task：`QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX`，**READY / Awaiting explicit User dispatch**。
 - Validation Code repo/fork：**Not needed**。
 - GLM-5.2-W8A8项目：由 User Decision 暂停；本仓库不接收 GLM Result。
 
 ## Tracked Implementation
 
-GitHub状态核验时间：2026-08-26 Stage 4 Formal Acceptance。移动状态在 dispatch 前必须重新查询。
+GitHub状态核验时间：2026-08-26 Stage 5 Formal Acceptance。移动状态在 dispatch 前必须重新查询。
 
 | Field | Current verified value |
 | --- | --- |
@@ -31,12 +31,12 @@ GitHub状态核验时间：2026-08-26 Stage 4 Formal Acceptance。移动状态�
 | Current head tree | `463806ef18e5e31006cd4f59e6a5261fc65cea4a` |
 | Stage 1/2 Accepted source | `7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82` |
 | Official review | [`flagos-ai/vllm-plugin-FL#404`](https://github.com/flagos-ai/vllm-plugin-FL/pull/404) |
-| PR state | `OPEN / DRAFT`；moving mergeability state dispatch前重查 |
+| PR state | `OPEN / DRAFT`；Stage 5 Formal Review live state `CONFLICTING / DIRTY`；dispatch前重查 |
 | Official base | `flagos-ai/vllm-plugin-FL:release/0.2` |
 | Base/release HEAD | `ef78dec66fea1ae858ef414584be1478929ee9b2` |
 | Base/release tree | `7414bac41c39bc445b0cc05dbdaecc0f08231aeb` |
 
-Tracked branch和official base均为moving facts；Stage 5 dispatch前重新查询。任何新HEAD不自动继承历史Acceptance，按diff决定最小regression。
+Tracked branch和official base均为moving facts；Stage 6 dispatch前重新查询。任何新HEAD不自动继承历史Acceptance，按diff决定最小regression。
 
 ## Technical Baseline
 
@@ -80,8 +80,9 @@ VLLM_PLUGINS=fl
 | 2 | A3-native wheel + standalone FL runtime/custom-op smoke | **ACCEPTED on `7beda84...`** |
 | 3 | TP2 BF16 eager model correctness | **ACCEPTED** |
 | 4 | `FULL_DECODE_ONLY [1,2,4,8]` capture/replay/state correctness | **ACCEPTED — bounded graph correctness** |
-| 5 | Serve health/models/completion/chat/repeat/bounded concurrency | **READY / Awaiting explicit User dispatch** |
-| Post-serve | A2-equivalent DP1/TP2 16-cell functional reproduction，然后同矩阵performance/capacity | Stage 5 Accepted后 |
+| 5 | Serve health/models/completion/chat/repeat/bounded concurrency | **ACCEPTED — bounded service correctness** |
+| 6 | A2-equivalent DP1/TP2 `1K/4K/16K/64K x C1/C8/C32/C64, O1024` functional reproduction | **READY / Awaiting explicit User dispatch** |
+| Post-functional | 同矩阵performance/capacity | Stage 6 functional 16/16 Accepted后 |
 | Specialist | Prefix、EP2及其他专项能力 | 主TP2路线稳定后按价值补齐 |
 | Handoff | Runtime freeze / reconstruction / handoff | 所需 A3范围 Accepted后 |
 
@@ -104,15 +105,16 @@ A2 baseline与本项目A3复现状态、环境差异、bounded validation差异�
 - Stage 1/2 Formal Acceptance：[REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md)
 - Stage 3 Formal Acceptance：[REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md)
 - Stage 4 Formal Acceptance：[REVIEW-QWEN36-A3-STAGE4-FULL-DECODE-ONLY-GRAPH-ACCEPTANCE-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE4-FULL-DECODE-ONLY-GRAPH-ACCEPTANCE-20260826.md)
+- Stage 5 Formal Acceptance：[REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md)
 - Accepted reconstruction：[A3-STAGE1-2-ACCEPTED-RUNTIME.md](docs/qwen36-35b-a3b-a3-flagos/reconstruction/A3-STAGE1-2-ACCEPTED-RUNTIME.md)
-- Next Task：[QWEN36-A3-S5-SERVE-CORRECTNESS.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S5-SERVE-CORRECTNESS.md)
-- Next prompt：[CODEX2-QWEN36-A3-S5-SERVE-CORRECTNESS-PROMPT.md](docs/qwen36-35b-a3b-a3-flagos/tasks/CODEX2-QWEN36-A3-S5-SERVE-CORRECTNESS-PROMPT.md)
+- Next Task：[QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)
+- Next prompt：[CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md](docs/qwen36-35b-a3b-a3-flagos/tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md)
 
 ## What Is Not Done
 
-- 尚未完成serve/API correctness、A2-equivalent 16-cell functional matrix、capacity或performance。
+- 尚未完成A2-equivalent 16-cell functional matrix、capacity或performance。
 - 尚未复现final service automatic graph capture through 64、chunked prefill、async scheduling、prefix或EP2。
-- Stage 4 Acceptance只覆盖`[1,2,4,8]` bounded graph correctness，不外推为A2 final service graph matrix。
+- Stage 5 Acceptance只覆盖`[1,2,4,8]` bounded service correctness，不外推为A2 final service graph matrix。
 
 ## Navigation
 

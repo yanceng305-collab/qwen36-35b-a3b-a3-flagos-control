@@ -30,6 +30,9 @@
 | D-024 | Exact `e610a990...` wheel的Stage 4 `FULL_DECODE_ONLY [1,2,4,8]`正式ACCEPTED | **Required / Codex1 ACCEPTED** | G0 continuity、both-rank capture、batch-1/2 real replay、repeat/state freshness、finite outputs和clean exit闭环；pre-model错误probe均由corrected exit-0 probes闭合 | source/wheel/model/runtime变化，或扩大到service/automatic capture through 64 |
 | D-025 | Stage 5只做serve correctness；通过后直接进入A2-equivalent DP1/TP2 16-cell functional reproduction，再测同矩阵performance | Required | 项目目标是A2→A3复现，不为流程本身无限拆小Stage；prefix/EP2等专项按价值补齐 | service或主矩阵出现需要独立隔离的真实blocker |
 | D-026 | A2 vs A3只作cross-platform reproduction reference；FL相对性能优先A3 FL vs A3 matched native | Required | 910B1→910C硬件代际不同，绝对TPS差不能直接归因于FL；matched A3 comparison应统一cards/model/workload/sampling/cache/graph/warm-up | 无法获得matched native时明确记录comparison limitation |
+| D-027 | Exact `e610a990...` wheel的Stage 5 bounded serve correctness正式ACCEPTED | **Required / Codex1 ACCEPTED** | S0 runtime continuity、health/models/completion/chat/repeat/C2、both-rank NPUGraph replay/state isolation和clean shutdown闭环；`<think>`格式不属于本bounded product-format contract | source/wheel/model/runtime变化，或扩大到automatic capture through 64 / chunked prefill / async / functional matrix |
+| D-028 | Stage 6及以后每个Result必须足够支持最终`A3-END-TO-END-REPRODUCTION.md`，不得依赖聊天或执行者记忆 | Required | 最终新执行者必须仅凭Control、exact source、preserved artifacts/Evidence从环境准备复现到Accepted结果；大raw不进Git但identity/command/workload/result/Evidence/deviation必须可恢复 | 仅可由User改变最终交付合同；不得因单次Result体积取消 |
+| D-029 | 下一主线为单一Stage 6 A2-equivalent DP1/TP2 16-cell functional Task；O8矩阵先warm-up，O1024做16/16 strict functional gate，performance另后置 | Required / Ready | A2正式资料冻结BF16、DP1/TP2、FULL_DECODE_ONLY、66560/64/16384、automatic capture、chunked/async、temperature=1、independent random prompts和seed公式；不再添加baseline外小correctness Stage | tracked source/runtime变化或首个真实functional blocker |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 

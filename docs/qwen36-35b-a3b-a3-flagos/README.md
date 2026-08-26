@@ -10,8 +10,8 @@
 ## Reference and handoff
 
 - [A2-REFERENCE.md](A2-REFERENCE.md)：**A2 REFERENCE ONLY — NOT A3 ACCEPTANCE**。
-- [A3-RUNTIME-HANDOFF.md](A3-RUNTIME-HANDOFF.md)：未来 GLM可继承/不可外推边界；当前 A3未验证。
-- [reconstruction/README.md](reconstruction/README.md)：A3 runtime reconstruction要求；当前无 validated entry。
+- [A3-RUNTIME-HANDOFF.md](A3-RUNTIME-HANDOFF.md)：未来 GLM可继承/不可外推边界；当前Stage 1-5 scope-limited handoff。
+- [reconstruction/README.md](reconstruction/README.md)：Accepted runtime reconstruction与最终`A3-END-TO-END-REPRODUCTION.md`生成策略。
 
 ## Execution governance
 
@@ -24,6 +24,9 @@
 - [tasks/CODEX2-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-PROMPT.md](tasks/CODEX2-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-PROMPT.md)：`DO NOT DISPATCH`。
 - [tasks/QWEN36-A3-S3-TP2-BF16-EAGER.md](tasks/QWEN36-A3-S3-TP2-BF16-EAGER.md)：Stage 3 Ready Task。
 - [tasks/CODEX2-QWEN36-A3-S3-TP2-BF16-EAGER-PROMPT.md](tasks/CODEX2-QWEN36-A3-S3-TP2-BF16-EAGER-PROMPT.md)：可复制 Stage 3 prompt。
+- [reviews/REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md](reviews/REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md)：Stage 5 **ACCEPTED — bounded service correctness**。
+- [tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)：下一Ready 16-cell functional Task。
+- [tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md](tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md)：可完整复制的Stage 6 prompt。
 - [results/INDEX.md](results/INDEX.md)：Execution Result、Control Sync、Codex1 Review/Acceptance索引。
 
 ## Research snapshots
@@ -34,4 +37,4 @@
 
 ## Current Stage
 
-Stage 1/2联合 Result chain已 `ACCEPTED`；Stage 3已解锁。Current tracked head为`e610a990...`，Ready Task先做current-head regression和model identity，再进入TP2 eager；等待User显式dispatch。
+Stage 1/2、Stage 3、Stage 4和Stage 5均已`ACCEPTED`。Current tracked head为`032fddc9...` / tree `463806ef...`，runtime artifact仍为`e610a990...` wheel。Stage 6 A2-equivalent DP1/TP2 16-cell functional matrix已Ready，等待User显式dispatch；performance、prefix lifecycle和EP2未授权。

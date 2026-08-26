@@ -1,6 +1,6 @@
 # Qwen3.6-35B-A3B × FlagOS × Ascend A3/910C 项目计划
 
-状态：Stage 1/2、Stage 3和Stage 4均已 **ACCEPTED**；Stage 5 `QWEN36-A3-S5-SERVE-CORRECTNESS` **READY / Awaiting explicit User dispatch**。
+状态：Stage 1/2、Stage 3、Stage 4和Stage 5均已 **ACCEPTED**；Stage 6 `QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX` **READY / Awaiting explicit User dispatch**。
 
 ## 结果目标
 
@@ -21,9 +21,8 @@
 ## 当前关键路径
 
 ```text
-Stage 0-4 accepted foundation
-  -> Stage 5 service/API correctness gate
-  -> A2-equivalent DP1/TP2 functional reproduction (16/16)
+Stage 0-5 accepted foundation
+  -> Stage 6 A2-equivalent DP1/TP2 functional reproduction (16/16)
   -> same-matrix A3 performance/capacity validation
   -> prefix / EP2 / other specialist capabilities as needed
   -> runtime freeze / reconstruction / handoff
@@ -42,8 +41,8 @@ Stage 5通过后不再为了流程本身拆分与A2 baseline无关的小Stage。
 | 2 — A3 Wheel / Standalone Runtime | clean A3 build、OPP/schema inventory、`_C_ascend`、wheel、formal install、FL origin、no vllm-ascend、real NPU op | Accepted Result chain | A3 artifact + hash/inventory + load/register + actual A3 NPU custom-op smoke | **ACCEPTED on `7beda84...`** |
 | 3 — TP2 Eager | current-head regression、model identity、BF16完整权重、TP2/HCCL、Qwen/GDN/Mamba/full attention/MoE、prefill/decode | Stage 1/2 Accepted | complete load + finite/readable output + ownership/no CPU fallback | **ACCEPTED on `e610a990...` wheel** |
 | 4 — FULL_DECODE_ONLY | bounded capture `[1,2,4,8]`、persistent state、replay、repeat/state freshness | Stage 3 Accepted | both ranks capture/replay；无 stale state/507011/NaN/Inf；bounded outputs正常 | **ACCEPTED — bounded graph correctness** |
-| 5 — Serve correctness | standalone FL startup、models/completion/chat、repeat、small concurrency、graph ownership/replay、clean shutdown | Stage 4 Accepted；Ready Task；explicit User dispatch | API correctness + actual FULL graph replay + state isolation + no forbidden fallback | **READY / Awaiting dispatch** |
-| Post-serve functional reproduction | 恢复A2 DP1/TP2 service合同并完成`1K/4K/16K/64K × C1/C8/C32/C64, O1024` | Stage 5 Accepted | 16/16 A3 functional correctness；A2只作reference | Locked |
+| 5 — Serve correctness | standalone FL startup、models/completion/chat、repeat、small concurrency、graph ownership/replay、clean shutdown | Stage 4 Accepted | API correctness + actual FULL graph replay + state isolation + no forbidden fallback | **ACCEPTED — bounded service correctness** |
+| 6 — A2-equivalent functional reproduction | 恢复A2 DP1/TP2 service合同并完成`1K/4K/16K/64K x C1/C8/C32/C64, O1024` | Stage 5 Accepted；[Ready Task](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)；explicit User dispatch | 16/16 A3 functional correctness；A2只作reference；不评价performance | **READY / Awaiting dispatch** |
 | Performance / Capacity | 对同一16-cell合同记录A3 FL结果；条件允许时做A3 matched native | functional 16/16 PASS | comparable raw measurements、cache/warm-up口径、capacity/variance | Locked |
 | Specialist capabilities | aligned prefix lifecycle、EP2 eager/graph、cold/persistent startup、更宽eager覆盖等 | 主TP2路线稳定；按价值解锁 | 每项独立A3 Evidence；不挡主矩阵除非成为真实依赖 | Locked |
 | Runtime Freeze / Handoff | validated image/wheel/source/environment/device/cache/HCCL/startup/Evidence/reconstruction | 所需前序范围Accepted | 可重建 manifest、hash、pointer、handoff边界 | Locked |
@@ -95,6 +94,6 @@ Regression scope候选：
 | A3 Ubuntu/openEuler route与actual host不兼容 | **Closed for accepted openEuler route** | image/driver/host变化重做 preflight |
 | runtime实际依赖 vllm-ascend或 source tree | **Closed for accepted standalone FL** | every wheel reinstall保留negative import/origin audit |
 | moving branch使旧结果误标新 SHA | Branch已实际 force-push | exact run identity + diff-driven regression |
-| graph stale pointer/state | **Closed for Stage 4 `[1,2,4,8]` bounded scope** | Stage 5验证service path；new shapes/modes单独重验 |
+| graph stale pointer/state | **Closed for Stage 5 `[1,2,4,8]` bounded service scope** | Stage 6验证automatic capture through 64、chunked prefill、async和long-context/concurrency shapes |
 | cache污染导致假失败/假成功 | A2有真实先例 | cache identity/隔离纳入每个 run manifest |
 | HCCL/CPU topology在 A3不同 | TP2/HCCL correctness Accepted；performance topology unknown | functional稳定后用A3 Evidence冻结performance合同 |

@@ -4,7 +4,7 @@
 
 ## Current GitHub snapshot
 
-核验于 2026-08-26 Stage 4 Formal Acceptance；正式 dispatch 前仍必须重新查询。
+核验于 2026-08-26 Stage 5 Formal Acceptance；正式 dispatch 前仍必须重新查询。
 
 | Identity | Value |
 | --- | --- |
@@ -15,7 +15,7 @@
 | Stage 3/4 runtime artifact source | `e610a990d785356bf51a3cad50219d4c03310a31` / tree `609ff1ad0f08239f353cb4d8774e504b4deba03b` |
 | Stage 1/2 Accepted source | `7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82` |
 | Official PR | `flagos-ai/vllm-plugin-FL#404` |
-| PR state | OPEN, Draft；head `032fddc9...`；mergeability是moving fact |
+| PR state | OPEN, Draft；head `032fddc9...`；live mergeability `CONFLICTING / DIRTY`；moving fact |
 | Official base branch | `release/0.2` |
 | Current release HEAD | `ef78dec66fea1ae858ef414584be1478929ee9b2` |
 | Current release tree | `7414bac41c39bc445b0cc05dbdaecc0f08231aeb` |
@@ -35,7 +35,7 @@ PR timeline证明 tracked branch曾从 `f9281f78...` force-push/rebase到 Stage 
 
 | Component | Baseline | Evidence state / boundary |
 | --- | --- | --- |
-| vLLM | `0.20.2` | A3 Stage 1-4 Accepted runtime tuple |
+| vLLM | `0.20.2` | A3 Stage 1-5 Accepted runtime tuple |
 | FL | official `release/0.2`系 | base current `ef78dec...`；adaptation由moving PR head提供 |
 | Adaptation | PR #404 current tracked head | current `032fddc9...` docs/tests-only；runtime artifact `e610a990...` |
 | vLLM-Ascend | `0.20.2rc1` | matched-version source/oracle与 official A3 environment carrier；最终 runtime不可依赖 installed package |
