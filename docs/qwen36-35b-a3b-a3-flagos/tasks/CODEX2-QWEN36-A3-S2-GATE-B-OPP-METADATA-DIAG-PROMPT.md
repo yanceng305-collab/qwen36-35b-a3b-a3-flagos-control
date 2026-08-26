@@ -1,6 +1,8 @@
 # Codex2 Prompt — QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG
 
-User formal dispatch：**Execute this Ready Task now.**
+状态：**DO NOT DISPATCH — historical Stage 1/2 follow-up prompt。Result chain已ACCEPTED，不得续跑。**
+
+下一执行入口：`QWEN36-A3-S3-TP2-BF16-EAGER`。
 
 ```text
 Control repo:

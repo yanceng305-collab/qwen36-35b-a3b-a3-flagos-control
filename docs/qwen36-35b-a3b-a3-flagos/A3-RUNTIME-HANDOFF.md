@@ -2,7 +2,7 @@
 
 更新时间：2026-08-26
 
-当前状态：**EXECUTION-PROVEN CANDIDATE / CODEX1 ACCEPTANCE PENDING**。Stage 1/2 已由真实 A3/910C execution 报告 `Execution PASS`，其中 container/runtime access pattern、standalone FL wheel 与 real NPU custom-op smoke 已通过；在 Codex1 Formal Acceptance 前，这些事实仍是 candidate，不得写成 `Validated handoff`。
+当前状态：**STAGE 1/2 FOUNDATION ACCEPTED**。真实 A3/910C execution已完成 A3-native wheel、standalone FL、container/runtime access和 real NPU custom-op smoke；Acceptance只覆盖 [`Formal Review`](reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md)定义的 scope，不覆盖模型/TP2/graph/serve/performance。
 
 ## Handoff admission rule
 
@@ -22,19 +22,19 @@
 
 | Candidate | Current state | Required Qwen A3 evidence before handoff |
 | --- | --- | --- |
-| Base image / container pattern | **EXECUTION PASS / ACCEPTANCE PENDING** | Gate C/D run已证明 privileged + host Ascend runtime mounts 可使 `torch.npu` 正确暴露；待 Codex1 Acceptance |
-| CANN / Python / torch / torch-npu / vLLM 0.20.2 / Triton tuple | **EXECUTION PASS / ACCEPTANCE PENDING** | Stage 1/2 tuple和Gate D smoke已记录；待 Codex1 Acceptance |
-| A3 wheel build flow / `ascend910_93` detection | **EXECUTION PASS / ACCEPTANCE PENDING** | A3 wheel、family inventory、hash已记录；待 Codex1 Acceptance |
-| `_C_ascend` build/package/load infrastructure | **EXECUTION PASS / ACCEPTANCE PENDING** | wheel origin、ABI、A3 load、real NPU op已通过；待 Codex1 Acceptance |
-| CANN OPP build/package/expose infrastructure | **EXECUTION PASS / ACCEPTANCE PENDING** | OPP inventory、A3 family、runtime registration/execution已通过；待 Codex1 Acceptance |
+| Base image / container pattern | **ACCEPTED — scope-limited** | Accepted composite runtime-access pattern；具体image/device/container按task解析 |
+| CANN / Python / torch / torch-npu / vLLM 0.20.2 / Triton tuple | **ACCEPTED — exact tuple** | Accepted exact Stage 1/2 environment；version变化需重验 |
+| A3 wheel build flow / `ascend910_93` detection | **ACCEPTED** | A3 wheel、family inventory、hash和A2-residue audit已审查 |
+| `_C_ascend` build/package/load infrastructure | **ACCEPTED — smoke scope** | wheel origin、ABI、A3 load、one real NPU op accepted |
+| CANN OPP build/package/expose infrastructure | **ACCEPTED — smoke scope** | OPP inventory、A3 family、runtime registration/execution accepted |
 | HCCL / multiprocessing / device mapping | PARTIAL | 当前只证明2-device可见性与单NPU custom-op；TP2 eager/HCCL仍需后续 Accepted evidence |
 | PlatformFL / WorkerFL / ModelRunnerFL lifecycle | PARTIAL | PlatformFL standalone import已通过；完整 Worker/ModelRunner model path仍待 Stage 3 |
-| Standalone FL formal installation | **EXECUTION PASS / ACCEPTANCE PENDING** | site-packages wheel origin、no source PYTHONPATH、no installed `vllm-ascend`已通过；待 Codex1 Acceptance |
+| Standalone FL formal installation | **ACCEPTED** | site-packages wheel origin、no source PYTHONPATH、no installed `vllm-ascend` accepted |
 | Cache isolation / compiler identity | PARTIAL | 当前仅基础provider/build identity；model/graph cache contract待后续 Stage |
-| Evidence / immutable Result / reconstruction discipline | EXECUTION-PROVEN | 已有完整三指针、checksum、immutable Result；formal Acceptance仍待 Codex1 |
+| Evidence / immutable Result / reconstruction discipline | **ACCEPTED for Stage 1/2** | 完整三指针、checksum、immutable Results与Formal Review |
 | Runtime image/wheel/startup handoff | PARTIAL | wheel已保留，PASS container已保留；最终 Stage 8 freeze/reconstruction尚未完成 |
 
-## Execution-proven A3 container runtime baseline — Acceptance pending
+## Accepted A3 container runtime baseline
 
 Source execution:
 
@@ -45,6 +45,8 @@ Source execution:
 - Manifest digest: `sha256:442363921166771eb82baeec9c1ac0381f46fb830ead8d0e072df6e925f2a958`
 - Arm64 platform digest: `sha256:a55b2b0597f9fdd1882de9bf3b7ebc395dd77c1ca49f251d0cb759d7b2c1a807`
 - Evidence: `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S2-GATE-C-FLAGGEMS-DIAG/evidence/20260826T092617p0800`
+- Formal Acceptance: [`reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md`](reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md)
+- Exact reconstruction: [`reconstruction/A3-STAGE1-2-ACCEPTED-RUNTIME.md`](reconstruction/A3-STAGE1-2-ACCEPTED-RUNTIME.md)
 
 ### Why this baseline is required
 
@@ -74,6 +76,8 @@ DeviceInfo             -> vendor=ascend, type=npu, dispatch=PrivateUse1
 
 `import vllm_fl.platform` then passed with `USE_FLAGGEMS=0` and without installing FlagGems. Gate D subsequently passed a real NPU `_C_ascend.npu_add_rms_norm_bias` smoke from the wheel-packaged `_C_ascend` and A3 OPP. Therefore the previous `flag_gems` error is classified as a **container/runtime mapping failure**, not evidence that Qwen runtime requires FlagGems.
 
+The successful run changed the composite runtime-access pattern as a group. No individual ablation proved that each flag or mount is independently necessary. Control therefore accepts the complete known-good pattern as the default operational baseline while keeping individual-causality claims out of scope.
+
 ### Required runtime-access pattern
 
 For subsequent A3 tasks, reuse this pattern unless a later Accepted Result supersedes it. The image identity, task container name, and selected `davinciN` devices remain task-specific; do not blindly copy nightly tags or expose all cards.
@@ -85,8 +89,8 @@ docker run -itd \
   --name="${CONTAINER}" \
   --privileged=true \
   --net=host \
-  --device=/dev/davinci${NPU_A} \
-  --device=/dev/davinci${NPU_B} \
+  --device=/dev/davinci${NPU_0} \
+  ${OPTIONAL_ADDITIONAL_DAVINCI_DEVICES} \
   --device=/dev/davinci_manager \
   --device=/dev/devmm_svm \
   --device=/dev/hisi_hdc \
@@ -110,20 +114,22 @@ Before FL import/build/runtime diagnosis, verify the NPU runtime itself:
 
 ```bash
 python - <<'PY'
+import os
 import torch
 import torch_npu  # noqa: F401
 
+expected = int(os.environ["EXPECTED_MAPPED_DEVICE_COUNT"])
 print("torch.npu.is_available =", torch.npu.is_available())
 print("torch.npu.device_count =", torch.npu.device_count())
 for i in range(torch.npu.device_count()):
     print(i, torch.npu.get_device_name(i))
 
 assert torch.npu.is_available()
-assert torch.npu.device_count() > 0
+assert torch.npu.device_count() == expected
 PY
 ```
 
-For a task that intentionally maps two devices, the expected count is two. If `torch_npu` imports but `torch.npu.is_available()==False` or `device_count()==0`, treat the container/runtime access pattern as the first blocker. **Do not continue into FL/FlagGems diagnosis and do not install FlagGems to mask this condition.**
+For the accepted historical run, expected count was two. Future tasks set the expected count from their actual authorized mapping. If `torch_npu` imports but availability is false or count mismatches, treat the container/runtime access pattern as the first blocker. **Do not continue into FL/FlagGems diagnosis and do not install FlagGems to mask this condition.**
 
 ### What is fixed vs task-specific
 
@@ -164,4 +170,5 @@ The User example that led to the fix used `nightly-main-a3` and all eight cards,
 
 ## Validated handoff entries
 
-当前无。新增 entry必须引用 immutable Result与 Acceptance commit，不得改写历史 entry来覆盖新 environment/source。
+- **A3 Stage 1/2 runtime/build foundation**：ACCEPTED on 2026-08-26 for exact source `7beda84...`、official A3 openEuler carrier、`ascend910_93` wheel、standalone FL和 one real custom-op smoke。Evidence/claim boundary见 Formal Review和 reconstruction。
+- 新环境或 source不得覆盖本entry；使用新的 Result/Acceptance追加验证。

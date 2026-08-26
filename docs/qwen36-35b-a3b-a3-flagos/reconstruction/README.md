@@ -1,6 +1,8 @@
 # Reconstruction Index
 
-当前没有 A3-validated runtime reconstruction。
+当前 Accepted reconstruction：
+
+- [A3-STAGE1-2-ACCEPTED-RUNTIME.md](A3-STAGE1-2-ACCEPTED-RUNTIME.md)：exact `7beda84...` A3 environment、wheel、container/runtime access、standalone FL与 custom-op smoke。
 
 从 Stage 1开始，每个 Accepted里程碑应按需记录：
 

@@ -10,11 +10,11 @@
 | D-004 | baseline为 vLLM 0.20.2 + FL release/0.2系；vLLM-Ascend 0.20.2rc1仅作 reference | Required | current source/PR与资料一致；最终 runtime必须 standalone FL | current source或 User批准 major baseline change |
 | D-005 | A2全部结果统一标记 `A2 REFERENCE ONLY — NOT A3 ACCEPTANCE` | Required | 资料中真实执行是 2×910B1，不是 910C | 不能由推断取消；A3必须另行执行 |
 | D-006 | 默认 `VERIFY FIRST / FIX ONLY WHEN EVIDENCE REQUIRES IT` | Required | 避免在没有 A3 blocker时重构/重新适配 | attributable blocker + root cause + bounded scope |
-| D-007 | 当前不创建 validation Code repo/fork | Required / current | 已有 A3 Gate B execution blocker，但尚未证明 attributable to implementation source或需要 source patch | Confirmed root cause证明需要我方 bounded source fix |
+| D-007 | 当前不创建 validation Code repo/fork | Required / current | Stage 1/2 blockers均以 non-source path/network/container route闭合，无source patch需求 | Future confirmed blocker证明需要我方 bounded source fix |
 | D-008 | A3先走 environment/build/runtime，再 eager、graph、serve、functional expansion、performance | Required | correctness-first，隔离 A3 family/ABI/runtime风险 | Stage gate Evidence支持调整 |
 | D-009 | A3 wheel必须在 A3/compatible CANN构建，family为 `ascend910_93`；禁止复用 A2 wheel | Required | A2=`ascend910b`，A3=`ascend910_93`，binary/OPP不可外推 | current source/CANN合同改变且获批准 |
 | D-010 | standalone runtime要求 `USE_FLAGGEMS=0`、无 installed/runtime `vllm-ascend`依赖、正式 wheel/site-packages origin | Required | 证明 FL-local ownership和可重建安装，不接受 source-tree shortcut | User批准改变正式 runtime ownership（当前无） |
-| D-011 | 首任务合并 Stage 1/2，只做 environment/source identity、A3 wheel、install、custom-op smoke | **STOP / Codex1 Review NEEDS-FOLLOWUP** | Gate A core accepted with Triton/provider gap；Gate B STOP accepted；C/D未运行 | Bounded Gate B diagnostic follow-up result |
+| D-011 | 首任务合并 Stage 1/2，只做 environment/source identity、A3 wheel、install、custom-op smoke | **Ended / accepted through D-020 chain** | Parent STOP由后续diagnostic/wheel/C-D Results闭合；历史Result不改写 | 保留历史task boundary |
 | D-012 | current exact-head source的 8 OPP / 9 schemas优先于 PR正文旧的 7/8 | Required | exact source是当前可执行事实；PR prose已过时 | tracked head改变后重新盘点 |
 | D-013 | build/runtime `SOC_VERSION`默认不对称只登记为风险，不提前写 blocker或 patch | Required | 静态 build默认 A3、loader默认 A2；实际环境可能显式提供变量 | A3执行复现 family选择/加载失败 |
 | D-014 | Qwen A3 handoff只向 GLM提供 A3真实验证过的通用 runtime/build/evidence事实 | Required | Qwen model/GDN/Mamba/graph/performance不能证明 GLM/W8A8 | 对应通用事实有 A3 Acceptance并进入 handoff |
@@ -22,7 +22,9 @@
 | D-016 | Stage 1/2 base image只允许在 official `v0.20.2rc1-a3`与`v0.20.2rc1-a3-openeuler`中 bounded selection；无后缀 `v0.20.2rc1`明确排除 | Required / User-authorized | Official matrix把无后缀route映射到A2，把两个suffix映射到A3 Ubuntu/openEuler；final runtime仍须 standalone FL | Official source出现明确反证或两候选均不兼容并由User重决策 |
 | D-017 | Codex2可在不干扰其他任务的前提下只读盘点并选择最小安全device scope、创建隔离的`/data` roots和Task container、使用可审计依赖访问 | Required / User-authorized | 用 bounded authorization替代逐项目录/设备设计；减少无价值Ready占位符 | 现场目标/owner/权限不明确或需要越界动作 |
 | D-018 | 模型路径固定为`/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`，状态`DOWNLOADING / NOT YET READY FOR STAGE 3`；不阻塞Stage 1/2 | User-confirmed | 当前Task仅允许presence/download-state inventory，不加载或等待模型 | Stage 3 task创建前完成独立model identity gate |
-| D-019 | `QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` Formal Review为`NEEDS-FOLLOWUP`；只创建 Gate B OPP metadata diagnostic，不直接创建 source fix task | Required / Codex1 Review | Immediate missing-metadata failure可信，但 underlying root cause/source attribution为LOW/unknown；Stage 3保持锁定 | Diagnostic Evidence确认 root cause并决定 Gate B closure或 bounded Code Decision |
+| D-019 | `QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` Formal Review为`NEEDS-FOLLOWUP`；只创建 Gate B OPP metadata diagnostic，不直接创建 source fix task | **Satisfied / closed by D-020** | Diagnostic/follow-up chain确认non-source path/network/runtime causes并闭合B/C/D，无source patch | 保留历史Review边界 |
+| D-020 | Exact `7beda84...` A3 Stage 1/2 environment/build/standalone/custom-op foundation正式ACCEPTED；execution-proven composite container pattern成为默认runtime baseline | **Required / Codex1 ACCEPTED** | 4个immutable Results联合证明Gate A-D；无FlagGems、无vllm-ascend runtime、无source change；单项flag必要性未ablation | 新Accepted Evidence supersede或环境/source变化 |
+| D-021 | Stage 3使用 current tracked head；`7beda84...→e610a990...`无需撤销Stage1/2 Acceptance，但需在preserved container内先rebuild+bounded C/D regression | **Required / Stage 3 Ready** | 2个新增commits只改communicator/platform/model runner，和TP2 live path相关，未改OPP/build packaging | Dispatch HEAD再次变化或diff扩大 |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -92,6 +94,14 @@ Image只提供匹配 environment/build toolchain。Stage 2 final runtime仍必�
 - Exact source和 matching-version official source都静态支持 `ascend910_93`并使用相同 metadata lookup infrastructure，故不把 failure提前归因成“未适配A3 OPP”或 source defect。
 - Underlying root-cause confidence记录为 `LOW`；immutable Result缺 explicit confidence与 official PR compare-base字段错误只在 Review/STATUS/INDEX补充，不修改 Result。
 - Next Task只定位/闭合 `aic-*-ops-info.ini` first blocker并补 Triton/provider Evidence；确认 source change必要前，Code repo/fork仍 `Not needed yet`。
+
+## D-020 / D-021 — Stage 1/2 Acceptance and moving-head handoff
+
+- Stage 1/2 Acceptance绑定 `7beda84f...` / tree `a81eea55...`、wheel SHA-256 `fa33f586...`、official A3 openEuler image和 accepted composite runtime pattern。
+- Accepted scope为 A3-native wheel、standalone FL、PlatformFL import和 one real NPU custom-op smoke；不覆盖 full model、TP2/HCCL、graph、serve或performance。
+- Runtime pattern作为已验证组合整体复用；未做逐项ablation，不声称每个flag/mount独立必要。Post-launch必须验证 `torch.npu.is_available()`和实际mapped device count；失败时不得安装FlagGems掩盖。
+- Current tracked `e610a990...`比accepted source多 communicator/platform/model-runner changes，不自动继承 Acceptance。Stage 3同一Task先build/install current-head wheel并做bounded C/D regression，PASS后才加载模型。
+- Stage 3仍需 explicit User dispatch和model identity gate；Codex2不得自动进入。
 
 ## 明确拒绝的路线
 

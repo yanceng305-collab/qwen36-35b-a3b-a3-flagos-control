@@ -1,6 +1,6 @@
 # Current Implementation State — GitHub and Static Source Verification
 
-核验时间：2026-08-25 17:42 CST / 09:42 UTC；PR/head/base相对首次 Control snapshot未变化。
+核验时间：2026-08-26 10:30 CST / 02:30 UTC。
 
 本文件记录 Control创建时的 live snapshot。它不是 A3 execution Evidence；dispatch前必须重新查询。
 
@@ -14,12 +14,13 @@
 | Mergeability | MERGEABLE / no reported git conflict |
 | Merge state / review | BLOCKED / REVIEW_REQUIRED |
 | Head repo/ref | `xiemingda-1002/vllm-plugin-FL:feature/qwen3.6-35b-a3b-ascend-graph-migration` |
-| Head SHA/tree | `7beda84f59d7b25f49cdf03bdf6efecd771067ed` / `a81eea55c1de548a0a1f182f51089eca0b088c82` |
+| Head SHA/tree | `e610a990d785356bf51a3cad50219d4c03310a31` / `609ff1ad0f08239f353cb4d8774e504b4deba03b` |
+| Stage 1/2 Accepted source | `7beda84f59d7b25f49cdf03bdf6efecd771067ed` / `a81eea55c1de548a0a1f182f51089eca0b088c82` |
 | Base repo/ref | `flagos-ai/vllm-plugin-FL:release/0.2` |
 | Base/release SHA/tree | `53adefb269571684d83a51e997d3ba9be5f88235` / `9ddfd080953ad39b39772e108ff921d2973b0299` |
-| Compare | ahead 6 / behind 0；base也是 merge base |
+| Compare | ahead 8 / behind 0；base也是 merge base |
 
-Current 6-commit series：
+Current 8-commit series：
 
 1. `09851fe...` migrate Qwen3.6 eager and graph runtime；
 2. `fa43a8b...` expert-parallel gates；
@@ -27,10 +28,12 @@ Current 6-commit series：
 4. `1fd84a5...` HCCL AIV default；
 5. `fb4800c...` CPU binding and shared-expert overlap；
 6. `7beda84...` graph serving alignment。
+7. `45cf799...` preserve graph mode for AllGather DP；
+8. `e610a99...` align DP/EP communication and graph metadata。
 
-PR timeline显示 branch从 `f9281f78...` force-push/rebase到 `7beda84...`，不是简单 fast-forward。当前 mergeable只说明 Git冲突状态；PR仍 Draft/Blocked/Review-required，且观察到的 labeler check不等于 adaptation CI PASS。
+PR timeline显示 branch从 `f9281f78...` force-push/rebase到 Stage 1/2 Accepted source `7beda84...`，随后以2个 commits前进到 current `e610a990...`。当前 mergeable只说明 Git冲突状态；PR仍 Draft/Blocked/Review-required，且观察到的 labeler check不等于 adaptation CI PASS。
 
-## Static source facts at `7beda84...`
+## Stage 1/2 Accepted static source facts at `7beda84...`
 
 - vLLM platform/general plugin entry points均指向 `vllm_fl`；test extra固定 `vllm[audio]==0.20.2`。
 - PR/source comments把 vLLM-Ascend `0.20.2rc1`作为 matched reference；packaging和 executable `vllm_fl`中未发现 direct runtime import requirement。
@@ -46,9 +49,21 @@ PR timeline显示 branch从 `f9281f78...` force-push/rebase到 `7beda84...`，�
 
 这可能由实际 A3 container/CANN显式环境变量解决，也可能造成 loader选择错误。当前只能登记为风险；只有 A3 execution记录 effective variable、selected prebuilt root、extension/OPP origin并复现失败后，才形成 blocker/Code Decision。
 
+## Current-head delta after Stage 1/2 Accepted source
+
+`7beda84... → e610a990...`为2个 commits，修改：
+
+- `vllm_fl/distributed/device_communicators/npu_communicator.py`；
+- `vllm_fl/platform.py`；
+- `vllm_fl/worker/model_runner.py`；
+- corresponding unit tests。
+
+未修改 `setup.py`、`csrc/ascend`、OPP definitions或 wheel packaging。该 delta与 TP2 communication/model runner live path相关，因此 Stage 3应使用 current dispatch HEAD，并先在 Accepted container内完成 A3 wheel rebuild + bounded standalone/custom-op regression；不需要撤销 `7beda84...` Stage 1/2 Acceptance。
+
 ## Evidence links
 
-- Head：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/7beda84f59d7b25f49cdf03bdf6efecd771067ed>
+- Current head：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/e610a990d785356bf51a3cad50219d4c03310a31>
+- Stage 1/2 Accepted source：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/7beda84f59d7b25f49cdf03bdf6efecd771067ed>
 - Base：<https://github.com/flagos-ai/vllm-plugin-FL/commit/53adefb269571684d83a51e997d3ba9be5f88235>
 - Compare：<https://github.com/flagos-ai/vllm-plugin-FL/compare/release/0.2...xiemingda-1002:feature/qwen3.6-35b-a3b-ascend-graph-migration>
 

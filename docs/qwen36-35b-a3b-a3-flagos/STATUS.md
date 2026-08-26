@@ -2,37 +2,39 @@
 
 更新时间：2026-08-26
 
-总体状态：Stage 0 **COMPLETE**；`QWEN36-A3-S1S2-ENV-BUILD-RUNTIME` **STOP at Gate B**，Codex1 Formal Review为 **NEEDS-FOLLOWUP**；`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG` diagnostic run **STOP / DIAGNOSTIC PASS**；Gate B follow-up 已产出 A3 `ascend910_93` wheel；最新 Gate C/D follow-up 已 **Execution PASS - Stage 1/2**，等待 Codex1 formal Acceptance；Stage gate未推进，Stage 3 **LOCKED**。
+总体状态：A3 Stage 1/2 **ACCEPTED** for exact source `7beda84...`；current tracked head为 `e610a990...`；Stage 3 **UNLOCKED / Ready Task awaiting explicit User dispatch**。
 
 ## 当前快照
 
 | Work item | Status | Evidence boundary |
 | --- | --- | --- |
 | Control repo | Established | 本仓库 `main`；首次 Control commit |
-| Tracked implementation | Current GitHub snapshot reverified | `feature/qwen3.6-35b-a3b-ascend-graph-migration@7beda84...` / tree `a81eea...`；dispatch前重查 |
+| Tracked implementation | Current GitHub snapshot reverified | `feature/qwen3.6-35b-a3b-ascend-graph-migration@e610a990...` / tree `609ff1ad...`；Stage 1/2 Acceptance绑定`7beda84...` |
 | Official base | Current GitHub snapshot recorded | `release/0.2@53adefb...` / tree `9ddfd0...` |
-| PR #404 | OPEN / DRAFT / MERGEABLE / BLOCKED / REVIEW_REQUIRED | GitHub snapshot 2026-08-25 17:42 CST；状态会变化 |
+| PR #404 | OPEN / DRAFT / MERGEABLE / BLOCKED / REVIEW_REQUIRED | GitHub snapshot 2026-08-26 10:30 CST；状态会变化 |
 | A2 implementation evidence | **A2 REFERENCE ONLY** | User资料中的 2×910B1结果，不是 A3 Acceptance |
-| A3 environment/build/runtime | **Execution PASS - Stage 1/2 / Acceptance pending** | 首 run Gate A core ACCEPT WITH EVIDENCE GAP；诊断 run补齐 Triton/provider并定位 parent metadata blocker；follow-up产出 A3 `ascend910_93` wheel；最新 Gate C/D follow-up完成 standalone FL install和真实 A3 NPU custom-op smoke；等待 Codex1 formal Acceptance |
+| A3 environment/build/runtime | **ACCEPTED — Stage 1/2 scope** | A3 environment、native wheel、standalone FL、PlatformFL import和 one real custom-op smoke Accepted；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md) |
 | A3 model/graph/serve/function/performance | **UNVERIFIED** | 没有 A3 execution Evidence |
 | Official A3 base route | Bounded selection authorized | `v0.20.2rc1-a3` Ubuntu或`v0.20.2rc1-a3-openeuler`；ordinary unsuffixed A2 image excluded |
-| Model artifact | `DOWNLOADING / NOT YET READY FOR STAGE 3` | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；不阻塞Stage 1/2 |
-| First Codex2 task | **STOP / Codex1 Review NEEDS-FOLLOWUP** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
-| Latest bounded Task | **Execution PASS - Stage 1/2 / Review pending** | [`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md)；parent metadata blocker已定位为 path naming / CMake regex classification；follow-up使用现有代理闭合 gitcode依赖下载并产出 A3 `ascend910_93` wheel；Gate C/D follow-up确认此前 `flag_gems`报错为容器runtime mapping导致的fallback表象，在privileged host Ascend runtime mapping下 standalone FL PASS且未安装FlagGems，真实 A3 NPU custom-op smoke PASS |
-| Validation Code repo/fork | **Not needed yet** | 已有 A3 execution blocker，但尚未证明 attributable to implementation source或需要 source change |
+| Model artifact | **PENDING STAGE 3 IDENTITY GATE** | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；本轮未检查shards/manifest |
+| First Codex2 task | **STOP / initial NEEDS-FOLLOWUP closed by Accepted chain** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Initial Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
+| Latest bounded Task | **ACCEPTED as Stage 1/2 chain** | [`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md) Result chain闭合 B/C/D；无source patch |
+| Next Task | **READY / Awaiting explicit User dispatch** | [`QWEN36-A3-S3-TP2-BF16-EAGER`](tasks/QWEN36-A3-S3-TP2-BF16-EAGER.md)；current-head regression + model identity + TP2 eager |
+| Validation Code repo/fork | **Not needed** | Stage 1/2 blockers均以 non-source route闭合；implementation source未修改 |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
 ## 当前 implementation identity
 
-核验时间：2026-08-25 22:14 CST；PR/head/base相对本次 execution identity未变化。
+核验时间：2026-08-26 10:30 CST。
 
 - Tracked repo/branch：`xiemingda-1002/vllm-plugin-FL` / `feature/qwen3.6-35b-a3b-ascend-graph-migration`。
-- Current head：`7beda84f59d7b25f49cdf03bdf6efecd771067ed`。
-- Current tree：`a81eea55c1de548a0a1f182f51089eca0b088c82`。
+- Current head：`e610a990d785356bf51a3cad50219d4c03310a31`。
+- Current tree：`609ff1ad0f08239f353cb4d8774e504b4deba03b`。
+- Stage 1/2 Accepted execution source：`7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82`。
 - Official base/ref：`flagos-ai/vllm-plugin-FL:release/0.2`。
 - Current release HEAD/tree：`53adefb269571684d83a51e997d3ba9be5f88235` / `9ddfd080953ad39b39772e108ff921d2973b0299`。
-- PR compare：ahead 6 / behind 0；base SHA与当前 release HEAD一致。
-- Branch movement：PR timeline显示此前 head `f9281f...` 被 force-push/rebase 为 `7beda84...`。User资料没有冻结可比较的旧 full SHA；不能声称“相对资料某 exact SHA”的普通 fast-forward。
+- PR compare：ahead 8 / behind 0；base SHA与当前 release HEAD一致。
+- Branch movement：PR timeline显示此前 head `f9281f...`被force-push/rebase为 Stage 1/2 Accepted source `7beda84...`，随后以2个 runtime commits前进到 current `e610a990...`。
 
 以上只是 Control创建时的 moving GitHub snapshot。正式 Task在 User dispatch 前必须重新查询、冻结当次 exact HEAD/tree；若已变化，先做 diff review。
 
@@ -82,7 +84,7 @@ User已确认 bounded authorization：
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
-当前正常下一步是 Codex1 review最新 Stage 1/2 Execution PASS Result。Codex2当前不得自动进入 Stage 3；Stage 1/2 Execution PASS必须等待 Codex1 Acceptance，Stage 3仍锁定。
+Stage 1/2 Formal Acceptance已完成。下一步只允许 User显式 dispatch Ready Stage 3 Task；Codex2当前不得自动执行。Stage 3 Task使用 preserved Accepted container，对 current dispatch HEAD先做 wheel rebuild + bounded C/D regression，再通过 model identity gate进入 TP2 BF16 eager。
 
 ## Current diagnostic run — QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG
 
@@ -136,7 +138,7 @@ Result：[`RESULT-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-GATEC-FOLLOWUP-20260826T
 - Main reused build log：`/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG/evidence/20260825T234607p0800/logs/gate_b_corrected_proxy_build_wheel.log`。
 - Gate D smoke log：`/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S2-GATE-C-FLAGGEMS-DIAG/evidence/20260826T092617p0800/runtime/gate_d_custom_op_smoke.log`。
 
-Stage 1/2 has an Execution PASS but no formal Acceptance yet. Stage 3 remains locked until Codex1 Acceptance and explicit User dispatch.
+Stage 1/2 Formal Acceptance：**ACCEPTED**。Acceptance绑定 exact source `7beda84...`和上述 wheel/container/Evidence；Stage 3已解锁但尚未 dispatch。
 
 ## 当前已确认的高影响事实
 

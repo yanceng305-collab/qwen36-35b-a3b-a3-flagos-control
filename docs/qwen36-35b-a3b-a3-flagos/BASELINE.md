@@ -4,29 +4,31 @@
 
 ## Current GitHub snapshot
 
-核验于 2026-08-25 17:42 CST；PR/head/base相对首次 snapshot未变化，正式 dispatch 前仍必须重新查询。
+核验于 2026-08-26 10:30 CST；正式 dispatch 前仍必须重新查询。
 
 | Identity | Value |
 | --- | --- |
 | Implementation repository | `xiemingda-1002/vllm-plugin-FL` |
 | Project tracked branch | `feature/qwen3.6-35b-a3b-ascend-graph-migration` |
-| Current tracked HEAD | `7beda84f59d7b25f49cdf03bdf6efecd771067ed` |
-| Current tracked tree | `a81eea55c1de548a0a1f182f51089eca0b088c82` |
+| Current tracked HEAD | `e610a990d785356bf51a3cad50219d4c03310a31` |
+| Current tracked tree | `609ff1ad0f08239f353cb4d8774e504b4deba03b` |
+| Stage 1/2 Accepted source | `7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82` |
 | Official PR | `flagos-ai/vllm-plugin-FL#404` |
 | PR state | OPEN, Draft, MERGEABLE, BLOCKED, REVIEW_REQUIRED |
 | Official base branch | `release/0.2` |
 | Current release HEAD | `53adefb269571684d83a51e997d3ba9be5f88235` |
 | Current release tree | `9ddfd080953ad39b39772e108ff921d2973b0299` |
-| Compare | 6 commits ahead / 0 behind |
+| Compare | 8 commits ahead / 0 behind |
 
 Direct anchors：
 
-- Head commit：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/7beda84f59d7b25f49cdf03bdf6efecd771067ed>
+- Current head commit：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/e610a990d785356bf51a3cad50219d4c03310a31>
+- Stage 1/2 Accepted source：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/7beda84f59d7b25f49cdf03bdf6efecd771067ed>
 - Base commit：<https://github.com/flagos-ai/vllm-plugin-FL/commit/53adefb269571684d83a51e997d3ba9be5f88235>
 - PR：<https://github.com/flagos-ai/vllm-plugin-FL/pull/404>
 - Compare：<https://github.com/flagos-ai/vllm-plugin-FL/compare/release/0.2...xiemingda-1002:feature/qwen3.6-35b-a3b-ascend-graph-migration>
 
-PR timeline证明 tracked branch从先前 `f9281f78...` force-push/rebase到当前 `7beda84...`；两者 diverged。User资料没有给出 previous exact full head，所以只能确认“PR timeline中发生更新”，不能制造资料版本的 exact compare anchor。
+PR timeline证明 tracked branch曾从 `f9281f78...` force-push/rebase到 Stage 1/2 Accepted source `7beda84...`，随后又前进到 current `e610a990...`。每次 Result仍只绑定其 exact execution identity。
 
 ## Technical tuple
 
@@ -34,7 +36,7 @@ PR timeline证明 tracked branch从先前 `f9281f78...` force-push/rebase到当�
 | --- | --- | --- |
 | vLLM | `0.20.2` | Current PR/source metadata + User资料；A3 runtime尚未验证 |
 | FL | official `release/0.2`系 | base当前为 `53adefb...`；adaptation由 moving PR head提供 |
-| Adaptation | PR #404 current tracked head | 当前 snapshot `7beda84...`；run时重查 |
+| Adaptation | PR #404 current tracked head | 当前 snapshot `e610a990...`；run时重查；Stage 1/2 Acceptance绑定`7beda84...` |
 | vLLM-Ascend | `0.20.2rc1` | matched-version source/oracle与 official A3 environment carrier；最终 runtime不可依赖 installed package |
 | Official A3 image candidates | `v0.20.2rc1-a3` / `v0.20.2rc1-a3-openeuler` | Bounded selection；ordinary unsuffixed tag是A2 route并排除 |
 | Model | `Qwen/Qwen3.6-35B-A3B` / BF16 non-quantized | Path已确认；`DOWNLOADING / NOT YET READY FOR STAGE 3`；不阻塞Stage 1/2 |
@@ -48,7 +50,7 @@ PR timeline证明 tracked branch从先前 `f9281f78...` force-push/rebase到当�
 
 MTP、quantization、initial CP、FlashComm、MC2、EPLB不在第一阶段范围。EP2、prefix、64K与性能属于后续独立 Stage。
 
-## Current exact-head source facts
+## Stage 1/2 Accepted exact-source facts
 
 静态核对只证明代码存在，不证明 A3运行：
 
@@ -63,7 +65,7 @@ MTP、quantization、initial CP、FlashComm、MC2、EPLB不在第一阶段范围
 - `_C_ascend`当前声明 **9 schemas**。PR正文旧的 7 OPP/8 schemas不再作为当前验收计数。
 - runtime loader在 `SOC_VERSION`未设置时默认选择 `ascend910b1`，与 A3 build默认不同；Stage 1/2必须观察 actual env和 selected family。
 
-详细 source anchors见 [research/CURRENT-IMPLEMENTATION-STATE.md](research/CURRENT-IMPLEMENTATION-STATE.md)。
+详细 source anchors见 [research/CURRENT-IMPLEMENTATION-STATE.md](research/CURRENT-IMPLEMENTATION-STATE.md)。Current `e610a990...`比 Accepted source多2个 runtime commits，涉及 NPU communicator、PlatformFL和 ModelRunnerFL，不涉及 A3 OPP/build packaging；Stage 3 Task必须先对 current head做 wheel rebuild和 bounded C/D regression。
 
 ## Official A3 base image route
 
@@ -97,7 +99,7 @@ Working tree: clean | dirty (formal claim restrictions apply)
 
 ## Environment contract to establish on A3
 
-当前以下字段全部 `A3 UNKNOWN`，由 Stage 1/2 Evidence填充：
+以下字段已有 Stage 1/2 Accepted Evidence；future Task在 environment/source变化时必须重新记录，不能只引用旧值：
 
 - physical SKU/device count/logical mapping、driver、firmware；
 - selected official A3 tag、pull-time digest、platform digest、image ID、OS与选择理由；

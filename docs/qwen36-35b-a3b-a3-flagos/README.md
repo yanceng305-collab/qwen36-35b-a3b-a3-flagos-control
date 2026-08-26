@@ -19,8 +19,11 @@
 - [tasks/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME.md](tasks/QWEN36-A3-S1S2-ENV-BUILD-RUNTIME.md)：parent Task，Gate B STOP。
 - [results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)：immutable STOP Result。
 - [reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md)：Codex1 Formal Review，**NEEDS-FOLLOWUP**。
-- [tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md)：bounded follow-up，**READY / Awaiting explicit User dispatch**。
-- [tasks/CODEX2-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-PROMPT.md](tasks/CODEX2-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-PROMPT.md)：self-contained follow-up dispatch prompt。
+- [reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md](reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md)：联合 Result chain Formal Review，Stage 1/2 **ACCEPTED**。
+- [tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md)：historical accepted Stage 1/2 follow-up；不得续跑。
+- [tasks/CODEX2-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-PROMPT.md](tasks/CODEX2-QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG-PROMPT.md)：`DO NOT DISPATCH`。
+- [tasks/QWEN36-A3-S3-TP2-BF16-EAGER.md](tasks/QWEN36-A3-S3-TP2-BF16-EAGER.md)：Stage 3 Ready Task。
+- [tasks/CODEX2-QWEN36-A3-S3-TP2-BF16-EAGER-PROMPT.md](tasks/CODEX2-QWEN36-A3-S3-TP2-BF16-EAGER-PROMPT.md)：可复制 Stage 3 prompt。
 - [results/INDEX.md](results/INDEX.md)：Execution Result、Control Sync、Codex1 Review/Acceptance索引。
 
 ## Research snapshots
@@ -31,4 +34,4 @@
 
 ## Current Stage
 
-Parent Stage 1/2 Task已在 Gate B STOP；Formal Review为 `NEEDS-FOLLOWUP`，Stage 3 locked。下一步只允许 User显式 dispatch bounded Gate B diagnostic；Codex2当前不得自动续跑。
+Stage 1/2联合 Result chain已 `ACCEPTED`；Stage 3已解锁。Current tracked head为`e610a990...`，Ready Task先做current-head regression和model identity，再进入TP2 eager；等待User显式dispatch。

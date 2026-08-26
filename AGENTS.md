@@ -52,7 +52,7 @@ User 的明确决定高于代理建议；服务器 `Execution PASS` 不自动等
 
 ## A3 container/runtime hard rule
 
-后续任何 A3/910C container 执行，在进入 FL、FlagGems、模型或算子诊断前，必须先满足 [A3-RUNTIME-HANDOFF.md](docs/qwen36-35b-a3b-a3-flagos/A3-RUNTIME-HANDOFF.md) 记录的最新 execution-proven / Accepted runtime-access pattern，并验证：
+后续任何 A3/910C container 执行，在进入 FL、FlagGems、模型或算子诊断前，必须先满足 [A3-RUNTIME-HANDOFF.md](docs/qwen36-35b-a3b-a3-flagos/A3-RUNTIME-HANDOFF.md) 记录的最新 Codex1 Accepted runtime-access pattern；exact Stage 1/2重建入口见 [A3-STAGE1-2-ACCEPTED-RUNTIME.md](docs/qwen36-35b-a3b-a3-flagos/reconstruction/A3-STAGE1-2-ACCEPTED-RUNTIME.md)。启动后必须验证：
 
 ```text
 import torch_npu succeeds

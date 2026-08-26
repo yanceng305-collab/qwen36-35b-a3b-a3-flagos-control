@@ -1,8 +1,10 @@
 # QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG
 
-状态：**READY / Awaiting explicit User dispatch**
+状态：**ENDED / Stage 1/2 ACCEPTED chain — historical contract; DO NOT RESUME**
 
 执行代理：Codex2
+
+本 Task及其 follow-ups已完成 Gate A supplement、Gate B、Gate C和 Gate D，并由 Codex1在 [`Stage 1/2 Formal Acceptance`](../reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md)中接受。不得重新发送旧 prompt续跑；下一 Task为 Stage 3。
 
 ## Unified identity
 
