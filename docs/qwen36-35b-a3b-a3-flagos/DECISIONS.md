@@ -34,6 +34,7 @@
 | D-028 | Stage 6及以后每个Result必须足够支持最终`A3-END-TO-END-REPRODUCTION.md`，不得依赖聊天或执行者记忆 | Required | 最终新执行者必须仅凭Control、exact source、preserved artifacts/Evidence从环境准备复现到Accepted结果；大raw不进Git但identity/command/workload/result/Evidence/deviation必须可恢复 | 仅可由User改变最终交付合同；不得因单次Result体积取消 |
 | D-029 | 下一主线为单一Stage 6 A2-equivalent DP1/TP2 16-cell functional Task；O8矩阵先warm-up，O1024做16/16 strict functional gate，performance另后置 | Required / Ready | A2正式资料冻结BF16、DP1/TP2、FULL_DECODE_ONLY、66560/64/16384、automatic capture、chunked/async、temperature=1、independent random prompts和seed公式；不再添加baseline外小correctness Stage | Frozen artifact/runtime/workload变化或首个真实functional blocker |
 | D-030 / FROZEN-UPSTREAM-VALIDATION-BASELINE | Stage 6及后续functional、performance/capacity、prefix、EP2和handoff统一冻结在`e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...`；停止跟踪upstream moving HEAD | **Required / User Decision** | 项目目标改为验证固定、可复现的同事实现快照；避免debug清理、rebase/squash/history rewrite或继续开发污染A3数据，保证A2-to-A3比较和最终复现文档有单一代码基准 | 只有User新的正式Decision可建立new validation baseline；必须作为新baseline/project evidence，不能覆盖本项目结果 |
+| D-031 / STAGE6-STOP-BOUNDARY-AND-DIAGNOSTIC | Preserve Stage 6 immutable STOP Result；formal boundary ends at`I1024/C64/O8` failure；post-STOP cells diagnostic-only；only Ready follow-up is artifact-first U+FFFD output-chain diagnostic | **Required / Codex1 Formal Review** | Frozen validator failure prevents Acceptance；execution incorrectly continued for 12 O8 and 16 O1024 cells；current record proves the blocker but not the underlying layer/cause | Diagnostic Result + Codex1 review；only that later Decision may authorize formal Stage 6 recovery，never performance/prefix/EP2 directly |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -144,6 +145,25 @@ Stage 3/4/5 Acceptance正好绑定该runtime artifact和wheel，因此全部保�
 - Codex1/Codex2不得自行升级、rebuild或替换为新HEAD。
 
 本项目最终结论明确适用于`e610a990... Frozen Validation Baseline`，不适用于“PR #404 future latest HEAD”。若未来需要验证新HEAD，必须由User另立new validation baseline/project evidence，不能改写或覆盖本项目Accepted Results。
+
+## D-031 — Stage 6 STOP boundary and one diagnostic
+
+Codex1 Formal Review accepts the immutable Stage 6 Result as a valid, auditable STOP record but does not accept Stage 6.
+
+Frozen formal execution boundary：
+
+```text
+formal PASS: I1024/C1/O8 -> I1024/C8/O8 -> I1024/C32/O8
+formal FAIL: I1024/C64/O8, request index 34, decoded output contains 29 U+FFFD
+last successful formal cell: I1024/C32/O8
+formal boundary: through I1024/C64/O8 failure
+```
+
+The remaining 12 O8 cells and all 16 O1024 cells ran after the mandatory STOP boundary. They remain preserved diagnostic raw evidence only and cannot count toward F1/F2/F3 Acceptance or Stage 6 PASS. The continuation is an execution-control deviation, not proof of frozen source/artifact drift.
+
+Underlying cause remains `LOW / NOT CONFIRMED / UNRESOLVED`. Positive capture/replay/chunked/async-config/negative-scan/shutdown observations remain bounded runtime-path evidence only. The Evidence-local runtime instrumentation overlay must be identified and impact-audited; it is not silently treated as production source drift or ignored.
+
+Only [`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md) is Ready. It must first read the preserved Evidence and may run at most one faithful `I1024/C64/O8` diagnostic cell only if a required raw layer is absent. It cannot change source/baseline, cannot make Stage 6 PASS, and cannot authorize performance, prefix lifecycle, EP2 or later work. Codex2 still requires explicit User dispatch.
 
 ## 明确拒绝的路线
 

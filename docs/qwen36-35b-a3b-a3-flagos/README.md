@@ -25,8 +25,11 @@
 - [tasks/QWEN36-A3-S3-TP2-BF16-EAGER.md](tasks/QWEN36-A3-S3-TP2-BF16-EAGER.md)：Stage 3 Ready Task。
 - [tasks/CODEX2-QWEN36-A3-S3-TP2-BF16-EAGER-PROMPT.md](tasks/CODEX2-QWEN36-A3-S3-TP2-BF16-EAGER-PROMPT.md)：可复制 Stage 3 prompt。
 - [reviews/REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md](reviews/REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md)：Stage 5 **ACCEPTED — bounded service correctness**。
-- [tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)：下一Ready 16-cell functional Task。
-- [tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md](tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md)：可完整复制的Stage 6 prompt。
+- [tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)：historical Stage 6 parent Task，STOP / DO NOT RESUME。
+- [results/RESULT-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-20260826T180105+0800.md](results/RESULT-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-20260826T180105+0800.md)：immutable Stage 6 STOP Result。
+- [reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md](reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)：Stage 6 STOP Formal Review，Result preserved / Stage 6 NOT ACCEPTED。
+- [tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)：唯一Ready Evidence-first follow-up Task。
+- [tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md](tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md)：historical `DO NOT DISPATCH` prompt。
 - [results/INDEX.md](results/INDEX.md)：Execution Result、Control Sync、Codex1 Review/Acceptance索引。
 
 ## Research snapshots
@@ -37,4 +40,4 @@
 
 ## Current Stage
 
-Stage 1/2、Stage 3、Stage 4和Stage 5均已`ACCEPTED`。User Decision `D-030`已将Stage 6+ Frozen Validation Baseline固定为`e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...`；`032fddc9...`只保留为last pre-change reference，future upstream变化忽略。Stage 6 A2-equivalent DP1/TP2 16-cell functional matrix已Ready，等待User显式dispatch；performance、prefix lifecycle和EP2未授权。
+Stage 1/2、Stage 3、Stage 4和Stage 5均已`ACCEPTED`。User Decision `D-030`已将Stage 6+ Frozen Validation Baseline固定为`e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...`；`032fddc9...`只保留为last pre-change reference，future upstream变化忽略。Stage 6已Formal Review为`STOP / NOT ACCEPTED`：formal boundary through `I1024/C64/O8` failure，last successful cell `I1024/C32/O8`；remaining O8和全部O1024为diagnostic-only。唯一Ready follow-up为U+FFFD output-chain diagnostic；performance、prefix lifecycle和EP2保持locked。

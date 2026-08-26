@@ -1,5 +1,7 @@
 # Codex2 Prompt — QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX
 
+状态：**DO NOT DISPATCH — historical parent prompt；Stage 6 STOP已Formal Review，不得续跑。**
+
 User formal dispatch：execute only `QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX` after this prompt is explicitly sent to you by the User. Do not enter performance, prefix-lifecycle, EP2, or any later work.
 
 ```text

@@ -2,7 +2,7 @@
 
 Last updated：2026-08-26
 
-Current formal cutoff：A3 Stage 5 **ACCEPTED — bounded service correctness**；Stage 6 A2-equivalent DP1/TP2 16-cell functional matrix READY / not executed。
+Current formal cutoff：A3 Stage 5 **ACCEPTED — bounded service correctness**；Stage 6 A2-equivalent DP1/TP2 functional matrix **STOP / NOT ACCEPTED / FORMALLY REVIEWED**。Stage 6 formal boundary ends at`I1024/C64/O8` failure；post-STOP data diagnostic-only。
 
 ## Purpose / comparison contract
 
@@ -112,9 +112,9 @@ Stage 3 `ACCEPTED` **不等于** 完整复现A2 eager functional matrix。A3尚�
 
 | A2 baseline | A3 validation | Delta type | A3 status |
 | --- | --- | --- | --- |
-| Historical bounded capture `[1,2,4,8]` PASS；final `max_num_seqs=64` service自动capture `[1,2,4,8,16,24,32,40,48,56,64]` | Stage 4已验证`[1,2,4,8]` two-rank capture/replay/state correctness | `VALIDATION BOUNDED` | **A3 REVALIDATED / ACCEPTED — bounded graph correctness** |
+| Historical bounded capture `[1,2,4,8]` PASS；final `max_num_seqs=64` service自动capture `[1,2,4,8,16,24,32,40,48,56,64]` | Stage 4已验证`[1,2,4,8]` two-rank capture/replay/state correctness；Stage 6 STOP Result观察到both-worker automatic capture及FULL replay through 64，但不形成functional/F3 Acceptance | `VALIDATION BOUNDED` | **ACCEPTED only for Stage 4 bounded scope；Stage 6 observation diagnostic-only** |
 
-Stage 4 `ACCEPTED` **不等于** A2 final service graph matrix fully reproduced；Stage 5只补齐bounded service路径，automatic capture through 64、chunked prefill和async scheduling仍待A3复现。
+Stage 4 `ACCEPTED` **不等于** A2 final service graph matrix fully reproduced。Stage 6保存了automatic capture/replay through 64的正向runtime-path Evidence，但functional gate先STOP；该Evidence不能把final service graph matrix写成Accepted reproduction。
 
 ### 8a. Serve / API
 
@@ -122,13 +122,13 @@ Stage 4 `ACCEPTED` **不等于** A2 final service graph matrix fully reproduced�
 | --- | --- | --- | --- |
 | OpenAI-compatible service、health/models/completion/chat及最终矩阵服务路径 | Stage 5验证health/models/completion/chat/repeat、bounded C2、both-rank batch-1/2 replay/state isolation和clean shutdown；graph仍限`[1,2,4,8]`，prefix/chunked prefill关闭 | `VALIDATION BOUNDED` | **A3 REVALIDATED / ACCEPTED — bounded service correctness** |
 
-Stage 5 `ACCEPTED` **不等于** A2 final service workload fully reproduced。Automatic capture through 64、chunked prefill、async scheduling、16-cell O1024、aligned prefix lifecycle、EP2、capacity、startup/warm-up和performance A/B仍未复验。
+Stage 5 `ACCEPTED` **不等于** A2 final service workload fully reproduced。Stage 6观察到automatic capture through 64、chunked-prefill events和async enabled config，但formal matrix在O8阶段STOP，且async effective use没有独立trace；16-cell O1024、aligned prefix lifecycle、EP2、capacity、startup/warm-up和performance A/B均未Accepted。
 
 ### 9. Chunked prefill
 
 | A2 baseline | A3 validation | Delta type | A3 status |
 | --- | --- | --- | --- |
-| vLLM 0.20.2自动启用，并在eager/graph/EP/concurrency多场景覆盖 | Stage 3和首个Stage 4 Task显式关闭 | `VALIDATION BOUNDED` | **NOT YET REVALIDATED** |
+| vLLM 0.20.2自动启用，并在eager/graph/EP/concurrency多场景覆盖 | Stage 3/4关闭；Stage 6 STOP Result记录enabled、`max_num_scheduled_tokens=16384`及`is_prefill_chunk=true`，但16K/64K活动位于post-STOP边界 | `NOT YET REVALIDATED` | **OBSERVED / DIAGNOSTIC-ONLY；NOT ACCEPTED** |
 
 ### 10. Prefix caching
 
@@ -146,7 +146,7 @@ Stage 5 `ACCEPTED` **不等于** A2 final service workload fully reproduced。Au
 
 | A2 baseline | A3 validation | Delta type | A3 status |
 | --- | --- | --- | --- |
-| `1K/4K/16K/64K × C1/C8/C32/C64`，O1024，16/16 strict pass | 尚未复现 | `NOT YET REVALIDATED` | A3 UNVERIFIED |
+| `1K/4K/16K/64K × C1/C8/C32/C64`，O1024，16/16 strict pass | Stage 6在O8 `I1024/C64` decoded U+FFFD validator failure处formal STOP；last success `I1024/C32/O8`；后续O8/O1024 diagnostic-only | `NOT YET REVALIDATED` | **A3 STOP / NOT ACCEPTED** |
 
 ### 13. Performance / capacity
 
@@ -187,14 +187,14 @@ Evidence：[`Stage 3 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF1
 | TP2/HCCL | PASS | **ACCEPTED**；world size 2 | `SAME` | Stage 3 Review |
 | GDN/Mamba/full-attention/MoE full-model live forward | PASS | **ACCEPTED**, bounded eager path | `VALIDATION BOUNDED` | Stage 3 Review |
 | `FULL_DECODE_ONLY` `[1,2,4,8]` | PASS | **ACCEPTED / A3 REVALIDATED**, bounded graph correctness | `VALIDATION BOUNDED` | [`Stage 4 Review`](reviews/REVIEW-QWEN36-A3-STAGE4-FULL-DECODE-ONLY-GRAPH-ACCEPTANCE-20260826.md) |
-| Final service capture through 64 | PASS | Not yet | `NOT YET REVALIDATED` | - |
-| Chunked prefill | PASS | Disabled in current bounded Tasks; not yet | `VALIDATION BOUNDED` | Stage 3 Review / Stage 4 Task |
+| Final service capture through 64 | PASS | Observed on both workers in Stage 6 STOP run；not functionally Accepted | `NOT YET REVALIDATED` | [`Stage 6 STOP Review`](reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md) |
+| Chunked prefill | PASS | Enabled/events observed in Stage 6；long cells post-STOP，not Accepted | `NOT YET REVALIDATED` | Stage 6 STOP Review |
 | Prefix caching | PASS | Not yet | `NOT YET REVALIDATED` | - |
 | EP2 eager/graph | PASS | Not yet | `NOT YET REVALIDATED` | - |
 | Serve/API | PASS as part of A2 service results | **ACCEPTED / A3 REVALIDATED**, bounded health/models/completion/chat/repeat/C2 scope | `VALIDATION BOUNDED` | [`Stage 5 Review`](reviews/REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md) |
-| 1K/4K/16K/64K × C1/C8/C32/C64 | PASS | Not yet | `NOT YET REVALIDATED` | - |
+| 1K/4K/16K/64K × C1/C8/C32/C64 | PASS | Stage 6 STOP at first I1024/C64/O8 blocker；not reproduced | `NOT YET REVALIDATED` | Stage 6 STOP Review |
 | Long aligned-prefix lifecycle | PASS | Not yet | `NOT YET REVALIDATED` | - |
-| Functional matrix | PASS | Not yet | `NOT YET REVALIDATED` | - |
+| Functional matrix | PASS | **STOP / NOT ACCEPTED**；post-STOP matrix diagnostic-only | `NOT YET REVALIDATED` | Stage 6 STOP Review |
 | Performance / capacity A/B | Recorded | Not yet | `NOT YET REVALIDATED` | - |
 
 ## What A3 has reproduced so far
@@ -210,6 +210,8 @@ Evidence：[`Stage 3 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF1
 - bounded OpenAI-compatible service health/models/completion/chat/repeat/C2 correctness, finite recorded logprobs, both-rank replay ownership and clean shutdown.
 
 这些项只在各自Formal Acceptance的exact source/wheel/model/environment和bounded workload内成立。
+
+Stage 6另外观察到automatic capture/replay through 64、chunked-prefill scheduler events、async enabled config和task-scoped shutdown。因为formal functional gate在`I1024/C64/O8` STOP，这些不加入上面的“已复现/Accepted”列表，只作为[`Stage 6 STOP Review`](reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)中的diagnostic runtime-path Evidence保留。
 
 ## A2 capabilities not yet reproduced on A3
 
@@ -236,8 +238,8 @@ Evidence：[`Stage 3 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF1
 - Stage 6起任何Frozen source修改或new upstream adoption必须先有User new-baseline Decision；否则不得写入本ledger或execution。
 - 本文不新增Stage、Gate或其他维护流程。
 
-## Post-Stage-5 mainline
+## Post-Stage-6 STOP mainline
 
-Stage 5 bounded serve correctness已Accepted。下一Ready主线直接恢复A2 DP1/TP2实际合同：`FULL_DECODE_ONLY`、chunked prefill、async scheduling、`max_num_seqs=64` automatic capture、same prompt-generation/token/sampling/cache/warm-up定义。先完成[`QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX`](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)的`1K/4K/16K/64K x C1/C8/C32/C64, O1024` 16/16 functional correctness，再对同一矩阵测performance。
+Stage 6 parent Task已STOP且不得续跑。唯一Ready主线是[`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)：先read-only审计existing Evidence，只在缺少关键raw layer时允许一个faithful `I1024/C64/O8` diagnostic cell。Diagnostic本身不能使Stage 6 PASS；其Result经Codex1 review后，才决定是否恢复正式16-cell matrix。Performance、prefix lifecycle和EP2保持locked。
 
 A2 colleague result与A3 FL result只作cross-platform reproduction reference。判断FL相对性能时优先A3 FL vs A3 matched native，并尽可能匹配cards/model/input/output/concurrency/prompts/order/sampling/cache/graph/warm-up；不得将910B1→910C硬件差异误算为FL implementation差异。
