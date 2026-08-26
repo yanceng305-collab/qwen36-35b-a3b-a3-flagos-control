@@ -2,7 +2,7 @@
 
 更新时间：2026-08-26
 
-总体状态：A3 Stage 1/2 **ACCEPTED** for exact source `7beda84...`；current tracked head为 `e610a990...`；Stage 3 **UNLOCKED / Ready Task awaiting explicit User dispatch**。
+总体状态：A3 Stage 1/2 **ACCEPTED** for exact source `7beda84...`；current tracked head `e610a990...`的 Stage 3 first run已执行到 Gate M并 **STOP**。Gate R current-head regression **PASS**；Gate M model identity **STOP**；Gate E TP2 BF16 eager **NOT RUN**。
 
 ## 当前快照
 
@@ -16,10 +16,10 @@
 | A3 environment/build/runtime | **ACCEPTED — Stage 1/2 scope** | A3 environment、native wheel、standalone FL、PlatformFL import和 one real custom-op smoke Accepted；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md) |
 | A3 model/graph/serve/function/performance | **UNVERIFIED** | 没有 A3 execution Evidence |
 | Official A3 base route | Bounded selection authorized | `v0.20.2rc1-a3` Ubuntu或`v0.20.2rc1-a3-openeuler`；ordinary unsuffixed A2 image excluded |
-| Model artifact | **PENDING STAGE 3 IDENTITY GATE** | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；本轮未检查shards/manifest |
+| Model artifact | **INCOMPLETE / Gate M STOP** | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；`model.safetensors.index.json`引用26个shards，其中 root缺少 `model-00016-of-00026.safetensors`、`model-00018-of-00026.safetensors`、`model-00022-of-00026.safetensors`、`model-00025-of-00026.safetensors`，对应文件只在 `._____temp/` |
 | First Codex2 task | **STOP / initial NEEDS-FOLLOWUP closed by Accepted chain** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Initial Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
-| Latest bounded Task | **ACCEPTED as Stage 1/2 chain** | [`QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG`](tasks/QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG.md) Result chain闭合 B/C/D；无source patch |
-| Next Task | **READY / Awaiting explicit User dispatch** | [`QWEN36-A3-S3-TP2-BF16-EAGER`](tasks/QWEN36-A3-S3-TP2-BF16-EAGER.md)；current-head regression + model identity + TP2 eager |
+| Latest bounded Task | **STOP at Gate M / Review pending** | [`QWEN36-A3-S3-TP2-BF16-EAGER`](tasks/QWEN36-A3-S3-TP2-BF16-EAGER.md)；current-head Gate R PASS and A3 wheel produced; TP2 eager not run |
+| Next Task | **BLOCKED pending external model artifact completion/replacement and User dispatch** | Resume must start from model identity boundary; Codex2 must not download/repair/move model shards or enter TP2 automatically |
 | Validation Code repo/fork | **Not needed** | Stage 1/2 blockers均以 non-source route闭合；implementation source未修改 |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
@@ -84,7 +84,22 @@ User已确认 bounded authorization：
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
-Stage 1/2 Formal Acceptance已完成。下一步只允许 User显式 dispatch Ready Stage 3 Task；Codex2当前不得自动执行。Stage 3 Task使用 preserved Accepted container，对 current dispatch HEAD先做 wheel rebuild + bounded C/D regression，再通过 model identity gate进入 TP2 BF16 eager。
+Stage 1/2 Formal Acceptance已完成。Stage 3 first run stopped at Gate M because the model artifact is incomplete relative to `model.safetensors.index.json`; Gate E was not entered. 下一步需要外部完成或替换模型artifact并由 User显式 dispatch bounded resume；Codex2当前不得自动下载、修复、移动shards或进入TP2。
+
+## Current Stage 3 run — QWEN36-A3-S3-TP2-BF16-EAGER
+
+Result：[`RESULT-QWEN36-A3-S3-TP2-BF16-EAGER-20260826T112011+0800.md`](results/RESULT-QWEN36-A3-S3-TP2-BF16-EAGER-20260826T112011+0800.md)
+
+本次 run 事实：
+
+- Gate R：`PASS`；复用 Accepted runtime container `qw36-a3-s2-gatec-priv-20260826T092617p0800` / `32562c7139600c25e570ec07841713737b0407c7d1bbdc563be41b87ea105f0a`，current-head `e610a990d785356bf51a3cad50219d4c03310a31` / tree `609ff1ad0f08239f353cb4d8774e504b4deba03b` clean rebuild成功。
+- Current-head wheel：`/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S3-TP2-BF16-EAGER/artifacts/20260826T112011p0800/wheels/vllm_plugin_fl-0.2.0+ge610a990d-cp311-cp311-linux_aarch64.whl`，sha256 `2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd`。
+- Gate R standalone：`PASS`；`vllm-ascend` absent、`vllm_ascend`不可import、`vllm_fl`来自 site-packages wheel、`USE_FLAGGEMS=0`，A3 `_C_ascend`/OPP来自 `ascend910_93` wheel。
+- Gate R custom-op：`PASS`；`torch.ops._C_ascend.npu_add_rms_norm_bias` 在 A3 NPU执行，BF16 input/output在 `npu:0`，reference/synchronize/no-fallback checks通过。
+- Gate M：`STOP`；模型路径 `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`存在，config/tokenizer/index存在，index引用26个shards，但 root缺少4个required shards：`model-00016-of-00026.safetensors`、`model-00018-of-00026.safetensors`、`model-00022-of-00026.safetensors`、`model-00025-of-00026.safetensors`；对应文件仅在 `._____temp/`。
+- Gate E：`NOT RUN`；未执行TP2/HCCL初始化、model construction、weight load、prefill/decode、generation、graph、serve、benchmark或profiling。
+- Code PR：`N/A`；implementation source未修改。
+- Evidence root：`/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S3-TP2-BF16-EAGER/evidence/20260826T112011p0800`；main build log `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S3-TP2-BF16-EAGER/evidence/20260826T112011p0800/logs/gate_r_build_wheel.log`。
 
 ## Current diagnostic run — QWEN36-A3-S2-GATE-B-OPP-METADATA-DIAG
 
