@@ -41,13 +41,23 @@ Dispatch时重新查询 current HEAD/tree。若不再是 Control snapshot，在�
 
 ## Reuse Accepted environment
 
-复用 preserved container：
+优先复用 preserved container：
 
 ```text
 qw36-a3-s2-gatec-priv-20260826T092617p0800
 ```
 
-只读确认 container/image/runtime mounts未漂移、authorized NPU无owner冲突，并先验证：
+如果 container仍存在，只读确认其 running、image/runtime mounts未漂移，且 authorized NPU无owner冲突。
+
+如果 container只是不存在/已被删除，且没有其他环境漂移，不需要 STOP。严格按照：
+
+```text
+docs/qwen36-35b-a3b-a3-flagos/reconstruction/A3-STAGE1-2-ACCEPTED-RUNTIME.md
+```
+
+重建同一 Accepted runtime，保持 Accepted image/runtime/device-mapping pattern。不得借此改变 image/version/CANN/runtime mapping，或创建未经 Acceptance的新环境路线。
+
+无论复用还是重建，都必须先验证：
 
 ```text
 import torch_npu succeeds
@@ -55,11 +65,11 @@ torch.npu.is_available() == True
 torch.npu.device_count() == actual mapped device count
 ```
 
-如果 container缺失/漂移或NPU invariant失败，STOP请求Decision。不要安装FlagGems、创建新container或重建另一套环境掩盖。
+只有在无法按 Accepted reconstruction原样重建、image/version/CANN/runtime mapping需要变化、reconstruction与现场环境发生实质冲突、NPU invariant失败，或需要未经 Acceptance的新环境路线时，才 STOP请求Decision。不要安装FlagGems或使用替代环境掩盖。
 
 ## Gate R — Current-head regression
 
-在同一 Accepted container内：
+在复用或按 Accepted reconstruction原样重建的 Accepted runtime container内：
 
 1. 以无regex-special字符的clean path checkout dispatch exact HEAD；
 2. 使用official A3 openEuler环境、`SOC_VERSION=ascend910_93`、exact CATLASS `41bf90da655bba3c66d0acd7e00abe33960ecfd6`和既有dependency route构建wheel；
@@ -122,8 +132,8 @@ Execution PASS — Stage 3 TP2 BF16 Eager
 
 ## STOP / prohibited
 
-遇到 current-head drift、runtime regression、model identity、TP2/HCCL、construction/load、GDN/Mamba/attention/MoE、prefill/decode、external runtime、CPU fallback或数值问题时，在first blocker STOP并保存Evidence。需要source/model/version/CANN/image修改时只返回Decision requested，不直接修改。
+遇到 current-head drift、无法按 Accepted reconstruction原样恢复runtime、reconstruction与现场环境实质冲突、NPU invariant或runtime regression、model identity、TP2/HCCL、construction/load、GDN/Mamba/attention/MoE、prefill/decode、external runtime、CPU fallback或数值问题时，在first blocker STOP并保存Evidence。需要source/model/version/CANN/image/runtime mapping修改时只返回Decision requested，不直接修改。
 
-禁止graph、serve、prefix、EP、64K、benchmark/performance、MTP、quantization、GLM、source patch、Code repo/fork和额外container层。
+禁止graph、serve、prefix、EP、64K、benchmark/performance、MTP、quantization、GLM、source patch、Code repo/fork，以及除 container单纯缺失时按 Accepted reconstruction原样重建外的额外container/environment层。
 
 生成immutable Result并同步INDEX，返回完整三指针、exit codes、last successful gate/first blocker和preserved paths。不得自行进入 Stage 4。

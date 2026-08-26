@@ -28,7 +28,7 @@ tree: 609ff1ad0f08239f353cb4d8774e504b4deba03b
 Official PR base: release/0.2@53adefb269571684d83a51e997d3ba9be5f88235
 ```
 
-Stage 1/2 Accepted source：`7beda84f...` / tree `a81eea55...`。Current target比accepted source多2个 communicator/platform/model-runner commits，不修改 A3 OPP/build packaging；因此本 Task先在 Accepted container中完成 current-head wheel rebuild与 bounded C/D regression，再进入模型。
+Stage 1/2 Accepted source：`7beda84f...` / tree `a81eea55...`。Current target比accepted source多2个 communicator/platform/model-runner commits，不修改 A3 OPP/build packaging；因此本 Task先在 Accepted runtime（优先复用 preserved container，单纯缺失时按 Accepted reconstruction原样重建）中完成 current-head wheel rebuild与 bounded C/D regression，再进入模型。
 
 ## Objective
 
@@ -41,10 +41,11 @@ Stage 1/2 Accepted source：`7beda84f...` / tree `a81eea55...`。Current target�
 
 ## Accepted runtime prerequisite
 
-- 复用 preserved Accepted container `qw36-a3-s2-gatec-priv-20260826T092617p0800`及 [Accepted reconstruction](../reconstruction/A3-STAGE1-2-ACCEPTED-RUNTIME.md)。
-- 开始前只读确认 container仍存在、running且 image/runtime mounts未漂移；NPU scope仍获授权、无其他owner冲突。
-- 必须先验证 `torch_npu` import、`torch.npu.is_available()==True`、`device_count==实际映射数量`和 device names。
-- 如果 preserved environment缺失、被修改或 NPU invariant失败，STOP请求 Decision；不得安装FlagGems或自行重建另一套环境掩盖。
+- 优先复用 preserved Accepted container `qw36-a3-s2-gatec-priv-20260826T092617p0800`及 [Accepted reconstruction](../reconstruction/A3-STAGE1-2-ACCEPTED-RUNTIME.md)。
+- 如果 container仍存在，开始前只读确认其 running、image/runtime mounts未漂移，且 NPU scope仍获授权、无其他owner冲突。
+- 如果 container只是不存在/已被删除，且没有其他环境漂移，不需要 STOP；允许严格按照 Accepted reconstruction重建同一 runtime，并保持 Accepted image/runtime/device-mapping pattern。不得借此改变 image/version/CANN/runtime mapping或创建未经 Acceptance的新环境路线。
+- 无论复用还是重建，都必须先验证 `torch_npu` import、`torch.npu.is_available()==True`、`device_count==实际映射数量`和 device names，PASS后才可进入 Gate R。
+- 如果无法按 Accepted reconstruction原样重建、reconstruction与现场环境发生实质冲突、需要改变 image/version/CANN/runtime mapping、NPU invariant失败，或需要未经 Acceptance的新环境路线，STOP请求 Decision；不得安装FlagGems或使用替代环境掩盖。
 
 ## Moving branch gate
 
@@ -54,7 +55,7 @@ Stage 1/2 Accepted source：`7beda84f...` / tree `a81eea55...`。Current target�
 
 ## Gate R — Current-head Stage 1/2 regression
 
-在同一 Accepted container中：
+在复用或按 Accepted reconstruction原样重建的 Accepted runtime container中：
 
 1. 使用无 regex-special timestamp的 clean source/build path checkout dispatch exact HEAD。
 2. 使用 official A3 openEuler image环境、`SOC_VERSION=ascend910_93`、exact CATLASS `41bf90da655bba3c66d0acd7e00abe33960ecfd6`和既有可审计 dependency route构建 current-head wheel。
@@ -118,7 +119,8 @@ prefix caching=off for first eager
 在 first attributable blocker处 STOP，包括：
 
 - current branch identity漂移；
-- Accepted container/runtime/NPU invariant失效；
+- Accepted runtime已漂移，或 container缺失后无法按 Accepted reconstruction原样重建；
+- reconstruction与现场环境发生实质冲突，或 NPU invariant失败；
 - current-head wheel build/C-D regression失败；
 - model identity/shards/BF16 contract不完整；
 - TP2/HCCL、construction、weight load、GDN/Mamba/attention/MoE、prefill/decode失败；
@@ -135,7 +137,7 @@ prefix caching=off for first eager
 - MTP、quantization、CP/FlashComm/MC2/EPLB；
 - GLM；
 - source patch、Code repo/fork/PR；
-- 新container/environment层或无Evidence重构。
+- 除 container单纯缺失时按 Accepted reconstruction原样重建外的新container/environment层，或无Evidence重构。
 
 ## Required Evidence and return
 
