@@ -43,11 +43,24 @@ User 的明确决定高于代理建议；服务器 `Execution PASS` 不自动等
 2. `README.md`
 3. `docs/qwen36-35b-a3b-a3-flagos/STATUS.md`
 4. User 已下发的当前 task 与 prompt
-5. `REPOSITORY-AND-EVIDENCE-RULES.md`
-6. 当前 run/work/container/Evidence 状态
-7. implementation tracked branch 的实时 HEAD/tree/clean state
+5. `docs/qwen36-35b-a3b-a3-flagos/A3-RUNTIME-HANDOFF.md`，尤其是最新 A3 container/runtime baseline 与 post-launch invariant
+6. `REPOSITORY-AND-EVIDENCE-RULES.md`
+7. 当前 run/work/container/Evidence 状态
+8. implementation tracked branch 的实时 HEAD/tree/clean state
 
 没有 User 下发的 `Ready` task 时，Codex2不得把计划、历史 prompt 或聊天摘录当作执行授权。
+
+## A3 container/runtime hard rule
+
+后续任何 A3/910C container 执行，在进入 FL、FlagGems、模型或算子诊断前，必须先满足 [A3-RUNTIME-HANDOFF.md](docs/qwen36-35b-a3b-a3-flagos/A3-RUNTIME-HANDOFF.md) 记录的最新 execution-proven / Accepted runtime-access pattern，并验证：
+
+```text
+import torch_npu succeeds
+torch.npu.is_available() == True
+torch.npu.device_count() == 当前任务实际映射的 device 数量
+```
+
+如果 `torch_npu` 能 import 但 `torch.npu.is_available()==False` 或 `device_count()==0`，先把 **container/runtime mapping** 视为 first blocker；不得继续把后续 `flag_gems` import错误当成根因，也不得通过安装 FlagGems掩盖该问题。镜像、container name、具体 `davinciN` 和 visible-device设置仍按当前 task/preflight动态解析，不能机械复制历史 nightly或全卡示例。
 
 ## Moving branch 与 execution identity
 
