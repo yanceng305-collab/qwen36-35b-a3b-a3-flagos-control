@@ -5,8 +5,8 @@
 | ID | Decision | Status | Rationale / boundary | Revisit trigger |
 | --- | --- | --- | --- | --- |
 | D-001 | 本项目是 A3 Validation Control Project，不重新开发 Qwen3.6 fork | Required | 同事 PR #404 implementation已基本完成；当前主要未知是 A3真实构建/运行 | 真实 Evidence证明当前路线根本不可行 |
-| D-002 | implementation source of truth持续跟踪同事 feature branch及官方 PR #404 | Required | 验证当前同事主线，避免无理由长期分叉 | PR合并/关闭、branch替换或 User改变 source of truth |
-| D-003 | moving branch与 execution identity分离；每次正式结果绑定 exact SHA/tree/clean state | Required | branch会继续更新，旧 PASS不能覆盖新 commit | 不取消；只按 diff选择重验范围 |
+| D-002 | implementation source of truth持续跟踪同事 feature branch及官方 PR #404 | **Historical / superseded for Stage 6+ by D-030** | Stage 1-5用于验证当时同事主线 | 保留历史；不再作为future execution rule |
+| D-003 | moving branch与 execution identity分离；每次正式结果绑定 exact SHA/tree/clean state | **Historical / superseded for Stage 6+ by D-030** | Stage 1-5保证旧PASS不错误覆盖新commit | 保留历史Result语义；Stage 6+改为Frozen artifact identity |
 | D-004 | baseline为 vLLM 0.20.2 + FL release/0.2系；vLLM-Ascend 0.20.2rc1仅作 reference | Required | current source/PR与资料一致；最终 runtime必须 standalone FL | current source或 User批准 major baseline change |
 | D-005 | A2全部结果统一标记 `A2 REFERENCE ONLY — NOT A3 ACCEPTANCE` | Required | 资料中真实执行是 2×910B1，不是 910C | 不能由推断取消；A3必须另行执行 |
 | D-006 | 默认 `VERIFY FIRST / FIX ONLY WHEN EVIDENCE REQUIRES IT` | Required | 避免在没有 A3 blocker时重构/重新适配 | attributable blocker + root cause + bounded scope |
@@ -15,7 +15,7 @@
 | D-009 | A3 wheel必须在 A3/compatible CANN构建，family为 `ascend910_93`；禁止复用 A2 wheel | Required | A2=`ascend910b`，A3=`ascend910_93`，binary/OPP不可外推 | current source/CANN合同改变且获批准 |
 | D-010 | standalone runtime要求 `USE_FLAGGEMS=0`、无 installed/runtime `vllm-ascend`依赖、正式 wheel/site-packages origin | Required | 证明 FL-local ownership和可重建安装，不接受 source-tree shortcut | User批准改变正式 runtime ownership（当前无） |
 | D-011 | 首任务合并 Stage 1/2，只做 environment/source identity、A3 wheel、install、custom-op smoke | **Ended / accepted through D-020 chain** | Parent STOP由后续diagnostic/wheel/C-D Results闭合；历史Result不改写 | 保留历史task boundary |
-| D-012 | current exact-head source的 8 OPP / 9 schemas优先于 PR正文旧的 7/8 | Required | exact source是当前可执行事实；PR prose已过时 | tracked head改变后重新盘点 |
+| D-012 | current exact-head source的 8 OPP / 9 schemas优先于 PR正文旧的 7/8 | **Historical / frozen at e610 by D-030** | exact tested source优先于旧PR prose | 只有User建立new baseline后重新盘点 |
 | D-013 | build/runtime `SOC_VERSION`默认不对称只登记为风险，不提前写 blocker或 patch | Required | 静态 build默认 A3、loader默认 A2；实际环境可能显式提供变量 | A3执行复现 family选择/加载失败 |
 | D-014 | Qwen A3 handoff只向 GLM提供 A3真实验证过的通用 runtime/build/evidence事实 | Required | Qwen model/GDN/Mamba/graph/performance不能证明 GLM/W8A8 | 对应通用事实有 A3 Acceptance并进入 handoff |
 | D-015 | GLM项目 PAUSED；恢复时先做 vLLM 0.20.2 GLM contract review，不在本项目开始 GLM port | User Decision | 当前优先级转为 Qwen A3验证；保留 GLM历史 | User明确恢复 GLM |
@@ -26,13 +26,14 @@
 | D-020 | Exact `7beda84...` A3 Stage 1/2 environment/build/standalone/custom-op foundation正式ACCEPTED；execution-proven composite container pattern成为默认runtime baseline | **Required / Codex1 ACCEPTED** | 4个immutable Results联合证明Gate A-D；无FlagGems、无vllm-ascend runtime、无source change；单项flag必要性未ablation | 新Accepted Evidence supersede或环境/source变化 |
 | D-021 | Stage 3使用 current tracked head；`7beda84...→e610a990...`无需撤销Stage1/2 Acceptance，但需在preserved container内先rebuild+bounded C/D regression | **Satisfied / closed by D-022** | 2个新增commits只改communicator/platform/model runner，和TP2 live path相关，未改OPP/build packaging | Future HEAD再次变化或diff扩大 |
 | D-022 | Exact `e610a990...` Stage 3 TP2 BF16 eager正式ACCEPTED；Stage 4只验证`FULL_DECODE_ONLY` capture/replay/fixed-address/state correctness | **Required / Codex1 ACCEPTED** | initial Gate M STOP由resume 26/26 shards、1045/1045 BF16 tensors闭合；TP2/HCCL、完整load、prefill/decode/repeat和standalone ownership通过；两个pre-construction harness/scope失败不要求机械重跑 | source/wheel/model/runtime变化或Stage 4 Evidence形成新结论 |
-| D-023 | `e610a990... → 032fddc9...`为docs/tests-only bounded movement；Stage 4复用Stage 3 Accepted wheel，不rebuild、不重跑Stage 3 | **Required / Codex1 reviewed** | exact diff仅`README.md` +11与新build-config unit test +66；production/runtime/build implementation对象未变；3/3新tests PASS。README可进入rebuilt wheel metadata，不声称字节级wheel相同 | tracked HEAD/tree再变化，或现场无法使用Accepted wheel/runtime |
+| D-023 | `e610a990... → 032fddc9...`为docs/tests-only bounded movement；Stage 4复用Stage 3 Accepted wheel，不rebuild、不重跑Stage 3 | **Historical / Codex1 reviewed** | exact diff仅`README.md` +11与新build-config unit test +66；production/runtime/build implementation对象未变；3/3新tests PASS | D-030将`032fddc9...`固定为last pre-change reference；future HEAD不再触发review |
 | D-024 | Exact `e610a990...` wheel的Stage 4 `FULL_DECODE_ONLY [1,2,4,8]`正式ACCEPTED | **Required / Codex1 ACCEPTED** | G0 continuity、both-rank capture、batch-1/2 real replay、repeat/state freshness、finite outputs和clean exit闭环；pre-model错误probe均由corrected exit-0 probes闭合 | source/wheel/model/runtime变化，或扩大到service/automatic capture through 64 |
 | D-025 | Stage 5只做serve correctness；通过后直接进入A2-equivalent DP1/TP2 16-cell functional reproduction，再测同矩阵performance | Required | 项目目标是A2→A3复现，不为流程本身无限拆小Stage；prefix/EP2等专项按价值补齐 | service或主矩阵出现需要独立隔离的真实blocker |
 | D-026 | A2 vs A3只作cross-platform reproduction reference；FL相对性能优先A3 FL vs A3 matched native | Required | 910B1→910C硬件代际不同，绝对TPS差不能直接归因于FL；matched A3 comparison应统一cards/model/workload/sampling/cache/graph/warm-up | 无法获得matched native时明确记录comparison limitation |
 | D-027 | Exact `e610a990...` wheel的Stage 5 bounded serve correctness正式ACCEPTED | **Required / Codex1 ACCEPTED** | S0 runtime continuity、health/models/completion/chat/repeat/C2、both-rank NPUGraph replay/state isolation和clean shutdown闭环；`<think>`格式不属于本bounded product-format contract | source/wheel/model/runtime变化，或扩大到automatic capture through 64 / chunked prefill / async / functional matrix |
 | D-028 | Stage 6及以后每个Result必须足够支持最终`A3-END-TO-END-REPRODUCTION.md`，不得依赖聊天或执行者记忆 | Required | 最终新执行者必须仅凭Control、exact source、preserved artifacts/Evidence从环境准备复现到Accepted结果；大raw不进Git但identity/command/workload/result/Evidence/deviation必须可恢复 | 仅可由User改变最终交付合同；不得因单次Result体积取消 |
-| D-029 | 下一主线为单一Stage 6 A2-equivalent DP1/TP2 16-cell functional Task；O8矩阵先warm-up，O1024做16/16 strict functional gate，performance另后置 | Required / Ready | A2正式资料冻结BF16、DP1/TP2、FULL_DECODE_ONLY、66560/64/16384、automatic capture、chunked/async、temperature=1、independent random prompts和seed公式；不再添加baseline外小correctness Stage | tracked source/runtime变化或首个真实functional blocker |
+| D-029 | 下一主线为单一Stage 6 A2-equivalent DP1/TP2 16-cell functional Task；O8矩阵先warm-up，O1024做16/16 strict functional gate，performance另后置 | Required / Ready | A2正式资料冻结BF16、DP1/TP2、FULL_DECODE_ONLY、66560/64/16384、automatic capture、chunked/async、temperature=1、independent random prompts和seed公式；不再添加baseline外小correctness Stage | Frozen artifact/runtime/workload变化或首个真实functional blocker |
+| D-030 / FROZEN-UPSTREAM-VALIDATION-BASELINE | Stage 6及后续functional、performance/capacity、prefix、EP2和handoff统一冻结在`e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...`；停止跟踪upstream moving HEAD | **Required / User Decision** | 项目目标改为验证固定、可复现的同事实现快照；避免debug清理、rebase/squash/history rewrite或继续开发污染A3数据，保证A2-to-A3比较和最终复现文档有单一代码基准 | 只有User新的正式Decision可建立new validation baseline；必须作为新baseline/project evidence，不能覆盖本项目结果 |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -116,6 +117,33 @@ Image只提供匹配 environment/build toolchain。Stage 2 final runtime仍必�
 - Stage 4以FL-local GraphWrapper + eager FX + Ascend NPUGraph完成`[1,2,4,8]` both-rank capture与batch-1/2 replay，正式ACCEPTED；`npugraph_ex`、serve、automatic capture through 64和performance不在该Acceptance范围。
 - Current tracked head已从Stage 3 Accepted `e610a990...` single-parent前进到`032fddc9...` / tree `463806ef...`。Bounded review证明只有README文档和新增build-config characterization tests，不改build implementation、Python/native runtime、graph、model或communicator语义。README由`pyproject.toml`引用为package metadata，故不声称rebuilt wheel字节级相同；Stage 4不rebuild也不使用该假设。
 - Stage 3/4 Acceptance仍只绑定`e610a990...` wheel sha256 `2fcf788...`。`032fddc9...`只作为dispatch-time tracked identity记录；若Stage 5 dispatch时tracked HEAD/tree再次变化，在model/service mutation前STOP交回Codex1。
+
+## D-030 — Frozen upstream validation baseline
+
+User于2026-08-26主动将项目目标从“持续验证同事moving development branch”调整为“在A3/910C上完整验证一个固定、可复现的同事Qwen3.6 Ascend实现快照”。
+
+Frozen Validation Baseline：
+
+```text
+source: e610a990d785356bf51a3cad50219d4c03310a31
+tree: 609ff1ad0f08239f353cb4d8774e504b4deba03b
+wheel: vllm_plugin_fl-0.2.0+ge610a990d-cp311-cp311-linux_aarch64.whl
+wheel SHA-256: 2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd
+last pre-change tracked reference: 032fddc91b6d013b98aed8e64ff05b54d1435648
+last reference tree: 463806ef18e5e31006cd4f59e6a5261fc65cea4a
+```
+
+Stage 3/4/5 Acceptance正好绑定该runtime artifact和wheel，因此全部保持原样，无需因upstream变化重跑eager、graph或serve。`032fddc9...`已有Formal Review证明仅为README/docs+tests变化，只保留为冻结时最后的pre-change reference，不是wheel build source，不rebuild。
+
+从Stage 6开始：
+
+- feature branch、PR #404和official base只作历史/reference URL；
+- 后续debug删除/增加、rebase、squash、history rewrite、PR冲突或branch移动一律`OUT OF SCOPE / IGNORE FOR EXECUTION`；
+- 不live-query future tracked HEAD作为execution gate，不做moving-head diff/review，不因upstream变化STOP；
+- 只对Frozen source/artifact、Accepted image/runtime、model、container/device mapping、cache、workload和config漂移STOP；
+- Codex1/Codex2不得自行升级、rebuild或替换为新HEAD。
+
+本项目最终结论明确适用于`e610a990... Frozen Validation Baseline`，不适用于“PR #404 future latest HEAD”。若未来需要验证新HEAD，必须由User另立new validation baseline/project evidence，不能改写或覆盖本项目Accepted Results。
 
 ## 明确拒绝的路线
 

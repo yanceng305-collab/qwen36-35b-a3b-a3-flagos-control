@@ -37,4 +37,4 @@
 
 ## Current Stage
 
-Stage 1/2、Stage 3、Stage 4和Stage 5均已`ACCEPTED`。Current tracked head为`032fddc9...` / tree `463806ef...`，runtime artifact仍为`e610a990...` wheel。Stage 6 A2-equivalent DP1/TP2 16-cell functional matrix已Ready，等待User显式dispatch；performance、prefix lifecycle和EP2未授权。
+Stage 1/2、Stage 3、Stage 4和Stage 5均已`ACCEPTED`。User Decision `D-030`已将Stage 6+ Frozen Validation Baseline固定为`e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...`；`032fddc9...`只保留为last pre-change reference，future upstream变化忽略。Stage 6 A2-equivalent DP1/TP2 16-cell functional matrix已Ready，等待User显式dispatch；performance、prefix lifecycle和EP2未授权。

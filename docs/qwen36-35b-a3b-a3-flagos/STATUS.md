@@ -2,16 +2,16 @@
 
 更新时间：2026-08-26
 
-总体状态：A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和Stage 5 bounded service correctness均已 **ACCEPTED**。Runtime artifact identity保持`e610a990...` Accepted wheel；tracked `032fddc9...`只作为docs/tests-only moving head记录。Stage 6 A2-equivalent DP1/TP2 16-cell functional matrix已Ready，等待User显式dispatch。
+总体状态：A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和Stage 5 bounded service correctness均已 **ACCEPTED**。User已通过`D-030`冻结validation baseline为`e610a990...` / tree `609ff1ad...` / Accepted wheel SHA-256 `2fcf788...`；`032fddc9...`只作为last pre-change tracked reference。Stage 6 A2-equivalent DP1/TP2 16-cell functional matrix已Ready，等待User显式dispatch。
 
 ## 当前快照
 
 | Work item | Status | Evidence boundary |
 | --- | --- | --- |
 | Control repo | Established | 本仓库 `main`；首次 Control commit |
-| Tracked implementation | Current GitHub snapshot reverified | `feature/qwen3.6-35b-a3b-ascend-graph-migration@032fddc9...` / tree `463806ef...`；Stage 3 Acceptance仍绑定`e610a990...` / accepted wheel |
-| Official base | Current GitHub snapshot recorded | `release/0.2@ef78dec...` / tree `7414bac...`；moving fact |
-| PR #404 | OPEN / DRAFT；head `032fddc9...`；`CONFLICTING / DIRTY` | Stage 5 Formal Review live recheck 2026-08-26；mergeability/base是moving facts，dispatch前重查 |
+| Frozen implementation baseline | **Required / User Decision** | `e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...`；Stage 6+所有execution统一使用 |
+| Last pre-change tracked reference | Historical/reference only | `032fddc9...` / tree `463806ef...`；不作为wheel source，不rebuild |
+| Feature branch / PR #404 / official base | Historical/reference only | Future movement `OUT OF SCOPE / IGNORE FOR EXECUTION`；不live-query、不STOP、不做moving-head review |
 | A2 implementation evidence | **A2 REFERENCE ONLY** | User资料中的 2×910B1结果，不是 A3 Acceptance |
 | A3 environment/build/runtime | **ACCEPTED — Stage 1/2 scope** | A3 environment、native wheel、standalone FL、PlatformFL import和 one real custom-op smoke Accepted；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md) |
 | A3 model TP2 BF16 eager | **ACCEPTED — Stage 3 scope** | exact `e610a990...`完成current-head regression、模型identity、TP2/HCCL、完整BF16权重加载、prefill/decode和两次generation；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md) |
@@ -25,20 +25,20 @@
 | Validation Code repo/fork | **Not needed** | Stage 1/2 blockers均以 non-source route闭合；implementation source未修改 |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
-## 当前 implementation identity
+## Frozen implementation identity
 
-核验时间：2026-08-26 Stage 5 Formal Review live recheck。
+冻结时间：2026-08-26；Decision：`D-030 / FROZEN-UPSTREAM-VALIDATION-BASELINE`。
 
-- Tracked repo/branch：`xiemingda-1002/vllm-plugin-FL` / `feature/qwen3.6-35b-a3b-ascend-graph-migration`。
-- Current head：`032fddc91b6d013b98aed8e64ff05b54d1435648`。
-- Current tree：`463806ef18e5e31006cd4f59e6a5261fc65cea4a`。
+- Frozen source：`e610a990d785356bf51a3cad50219d4c03310a31`。
+- Frozen tree：`609ff1ad0f08239f353cb4d8774e504b4deba03b`。
+- Accepted wheel：`vllm_plugin_fl-0.2.0+ge610a990d-cp311-cp311-linux_aarch64.whl`。
+- Wheel SHA-256：`2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd`。
+- Last pre-change tracked reference/tree：`032fddc91b6d013b98aed8e64ff05b54d1435648` / `463806ef18e5e31006cd4f59e6a5261fc65cea4a`。
+- Historical repo/branch：`xiemingda-1002/vllm-plugin-FL` / `feature/qwen3.6-35b-a3b-ascend-graph-migration`；reference only。
 - Stage 1/2 Accepted execution source：`7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82`。
-- Official base/ref：`flagos-ai/vllm-plugin-FL:release/0.2`。
-- Current release HEAD/tree（Stage 5 Formal Review live recheck）：`ef78dec66fea1ae858ef414584be1478929ee9b2` / `7414bac41c39bc445b0cc05dbdaecc0f08231aeb`。
-- PR #404仍以`032fddc9...`为head，当前GitHub mergeability为`CONFLICTING / DIRTY`；PR snapshot base SHA和moving `release/0.2` branch HEAD可不同，dispatch前均重新查询。
 - Branch movement：Stage 3 Accepted `e610a990...`后以1个commit前进到`032fddc9...`。Exact diff只有`README.md` +11和新增`tests/unit_tests/test_build_config.py` +66；[`Formal moving-head Review`](reviews/REVIEW-QWEN36-A3-MOVING-HEAD-032FDDC9-20260826.md)确认为docs/tests-only。
 
-上述snapshot已对`032fddc9...`完成bounded disposition。Stage 6 dispatch前仍必须重新查询；若HEAD/tree继续为`032fddc9...` / `463806ef...`，复用`e610a990...` Accepted wheel；若再次变化，先STOP并返回新diff。
+Stage 6及后续不再查询或审查`032fddc9...`之后的upstream变化。只检查Frozen wheel/runtime、Accepted image tuple、model、container/device、cache、workload和config是否漂移。只有User新的Decision可以改变baseline。
 
 ## Historical initial Stage 1/2 execution result
 
@@ -82,7 +82,7 @@ User已确认 bounded authorization：
 
 - Codex2可在当前项目可访问的 A3/910C server上执行；若实际可见 target不唯一或 access无效，任何 mutation前 STOP并请求澄清。
 - 先只读盘点 NPU型号、logical mapping、health、occupancy和 owner，再选择不干扰其他任务的最小 safe scope；不得 kill/pause/reset/preempt。
-- 只在 official `v0.20.2rc1-a3`与`v0.20.2rc1-a3-openeuler`中做 base selection；可 pull/inspect、创建和清理本 Task自己的 container。两者均不兼容时 STOP / Decision requested。
+- Stage 6复用Accepted `v0.20.2rc1-a3-openeuler` exact image/runtime identity；不重新做base selection。若Accepted image/runtime不可重建或漂移，STOP / Decision requested。
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 

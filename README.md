@@ -1,10 +1,10 @@
 # Qwen3.6-35B-A3B × FlagOS × Ascend A3/910C Validation Control
 
-本仓库是 Qwen3.6-35B-A3B A3 Validation Control Project 的正式 truth source。它管理目标、moving implementation、exact execution identity、Stage gate、Task、Evidence、immutable Result、Codex1 Acceptance 与 A3 Runtime Handoff。
+本仓库是 Qwen3.6-35B-A3B A3 Validation Control Project 的正式 truth source。它管理目标、Frozen Validation Baseline、exact execution identity、Stage gate、Task、Evidence、immutable Result、Codex1 Acceptance 与 A3 Runtime Handoff。
 
 ## Project Goal
 
-> 在 Ascend A3/910C 上验证当前 PR #404 / Qwen3.6-35B-A3B Ascend adaptation，在 vLLM 0.20.2 + FL release/0.2 系上完成 A3-native wheel build、standalone FL runtime、TP2 eager、FULL_DECODE_ONLY graph、serve 及必要功能验证，并形成可供未来 GLM-5.2-W8A8 复用的 A3 runtime / container / build / reconstruction 基础。
+> 在 Ascend A3/910C 上验证同事Qwen3.6-35B-A3B Ascend adaptation的Frozen Validation Baseline，在 vLLM 0.20.2 + FL release/0.2 系上完成 A3-native wheel build、standalone FL runtime、TP2 eager、FULL_DECODE_ONLY graph、serve、功能/性能及最终复现，并形成可供未来 GLM-5.2-W8A8 复用的 A3 runtime / container / build / reconstruction 基础。
 
 本项目不是重新开发一个 Qwen3.6 fork；当前路线是 `VERIFY FIRST / FIX ONLY WHEN EVIDENCE REQUIRES IT`。
 
@@ -14,38 +14,42 @@
 
 - Stage 0 Control / baseline establishment：**COMPLETE**。
 - A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]`及Stage 5 bounded serve correctness：**ACCEPTED**。
-- Current tracked implementation：`032fddc9...` / tree `463806ef...`；docs/tests-only moving-head disposition。Runtime artifact仍为`e610a990...` Accepted wheel。
+- Frozen Validation Baseline：source `e610a990...` / tree `609ff1ad...`；Accepted wheel SHA-256 `2fcf788...`。`032fddc9...`仅为冻结时最后一个pre-change tracked reference。
 - Next Task：`QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX`，**READY / Awaiting explicit User dispatch**。
 - Validation Code repo/fork：**Not needed**。
 - GLM-5.2-W8A8项目：由 User Decision 暂停；本仓库不接收 GLM Result。
 
-## Tracked Implementation
+## Frozen Validation Baseline
 
-GitHub状态核验时间：2026-08-26 Stage 5 Formal Acceptance。移动状态在 dispatch 前必须重新查询。
+冻结日期：2026-08-26；User Decision `D-030 / FROZEN-UPSTREAM-VALIDATION-BASELINE`。
 
 | Field | Current verified value |
 | --- | --- |
 | Implementation repo | [`xiemingda-1002/vllm-plugin-FL`](https://github.com/xiemingda-1002/vllm-plugin-FL) |
-| Tracked branch | `feature/qwen3.6-35b-a3b-ascend-graph-migration` |
-| Current head | `032fddc91b6d013b98aed8e64ff05b54d1435648` |
-| Current head tree | `463806ef18e5e31006cd4f59e6a5261fc65cea4a` |
+| Frozen source | `e610a990d785356bf51a3cad50219d4c03310a31` |
+| Frozen source tree | `609ff1ad0f08239f353cb4d8774e504b4deba03b` |
+| Accepted wheel | `vllm_plugin_fl-0.2.0+ge610a990d-cp311-cp311-linux_aarch64.whl` |
+| Wheel SHA-256 | `2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd` |
+| Historical reference branch | `feature/qwen3.6-35b-a3b-ascend-graph-migration` |
+| Last pre-change tracked reference | `032fddc91b6d013b98aed8e64ff05b54d1435648` |
+| Last reference tree | `463806ef18e5e31006cd4f59e6a5261fc65cea4a` |
 | Stage 1/2 Accepted source | `7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82` |
 | Official review | [`flagos-ai/vllm-plugin-FL#404`](https://github.com/flagos-ai/vllm-plugin-FL/pull/404) |
-| PR state | `OPEN / DRAFT`；Stage 5 Formal Review live state `CONFLICTING / DIRTY`；dispatch前重查 |
+| PR/base role | Historical/reference only；future state不作为execution gate |
 | Official base | `flagos-ai/vllm-plugin-FL:release/0.2` |
 | Base/release HEAD | `ef78dec66fea1ae858ef414584be1478929ee9b2` |
 | Base/release tree | `7414bac41c39bc445b0cc05dbdaecc0f08231aeb` |
 
-Tracked branch和official base均为moving facts；Stage 6 dispatch前重新查询。任何新HEAD不自动继承历史Acceptance，按diff决定最小regression。
+Stage 6及所有后续A3 execution只核对Frozen source/artifact/runtime/environment/model/workload是否漂移。Later upstream/PR/base movement一律忽略，不STOP、不rebuild、不触发moving-head review。
 
 ## Technical Baseline
 
 | Item | Baseline / boundary |
 | --- | --- |
 | vLLM | `0.20.2` |
-| FL | `release/0.2` line；adaptation以 PR #404 current tracked head为准 |
+| FL | `release/0.2` line；adaptation固定为`e610a990...` Frozen source / Accepted wheel |
 | vLLM-Ascend | `0.20.2rc1`，matched-version implementation/oracle reference；不是最终 runtime dependency |
-| Stage 1/2 base candidates | `quay.io/ascend/vllm-ascend:v0.20.2rc1-a3` / `...:v0.20.2rc1-a3-openeuler`；only bounded selection |
+| Frozen accepted image | `quay.io/ascend/vllm-ascend:v0.20.2rc1-a3-openeuler` exact accepted digest/ID；不重新selection |
 | Model | `Qwen/Qwen3.6-35B-A3B` |
 | Model path/state | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；Stage 3 identity Accepted |
 | dtype / DP / first TP | BF16 / DP1 / TP2 |
@@ -123,10 +127,10 @@ A2 baseline与本项目A3复现状态、环境差异、bounded validation差异�
 | 当前状态、门禁、User待确认输入 | [STATUS.md](docs/qwen36-35b-a3b-a3-flagos/STATUS.md) |
 | 技术/治理决策 | [DECISIONS.md](docs/qwen36-35b-a3b-a3-flagos/DECISIONS.md) |
 | Stage与关键路径 | [PLAN.md](docs/qwen36-35b-a3b-a3-flagos/PLAN.md) |
-| 版本、分支、SHA/tree、baseline | [BASELINE.md](docs/qwen36-35b-a3b-a3-flagos/BASELINE.md) |
+| Frozen source/tree/wheel、historical reference、runtime baseline | [BASELINE.md](docs/qwen36-35b-a3b-a3-flagos/BASELINE.md) |
 | A2 oracle/reference | [A2-REFERENCE.md](docs/qwen36-35b-a3b-a3-flagos/A2-REFERENCE.md) |
 | A2 → A3差异与复现状态 | [A2-TO-A3-VALIDATION-DELTA.md](docs/qwen36-35b-a3b-a3-flagos/A2-TO-A3-VALIDATION-DELTA.md) |
 | 未来 GLM可继承/不可外推边界 | [A3-RUNTIME-HANDOFF.md](docs/qwen36-35b-a3b-a3-flagos/A3-RUNTIME-HANDOFF.md) |
 | Task/Evidence/Result/Acceptance规则 | [REPOSITORY-AND-EVIDENCE-RULES.md](docs/qwen36-35b-a3b-a3-flagos/REPOSITORY-AND-EVIDENCE-RULES.md) |
-| 当前 GitHub/source核查 | [CURRENT-IMPLEMENTATION-STATE.md](docs/qwen36-35b-a3b-a3-flagos/research/CURRENT-IMPLEMENTATION-STATE.md) |
+| Historical GitHub/source snapshot | [CURRENT-IMPLEMENTATION-STATE.md](docs/qwen36-35b-a3b-a3-flagos/research/CURRENT-IMPLEMENTATION-STATE.md) |
 | Result与Acceptance索引 | [results/INDEX.md](docs/qwen36-35b-a3b-a3-flagos/results/INDEX.md) |

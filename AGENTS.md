@@ -2,7 +2,7 @@
 
 ## 项目一句话
 
-本项目在 Ascend A3/910C 上验证同事当前 PR #404 / Qwen3.6-35B-A3B Ascend adaptation，形成可审计的 A3 build、standalone FL runtime、模型正确性、graph、serve 与交接证据；默认先验证，只有真实 blocker 才触发有边界的小修复。
+本项目在 Ascend A3/910C 上验证同事 Qwen3.6-35B-A3B Ascend adaptation的Frozen Validation Baseline，形成可审计的 A3 build、standalone FL runtime、模型正确性、graph、serve、功能、性能与交接证据。Stage 6起固定使用`e610a990...` Accepted wheel/runtime，不继续跟踪PR #404 future HEAD。
 
 面向人的项目地图见 [README.md](README.md)。动态状态以 [STATUS.md](docs/qwen36-35b-a3b-a3-flagos/STATUS.md) 和 [results/INDEX.md](docs/qwen36-35b-a3b-a3-flagos/results/INDEX.md) 为准。
 
@@ -18,8 +18,8 @@ User 的明确决定高于代理建议；服务器 `Execution PASS` 不自动等
 ## 仓库边界
 
 - **Control repo（本仓库）**：项目目标、状态、决策、计划、task/prompt、research、Evidence pointer、immutable result、Acceptance 与 reconstruction/handoff。
-- **Implementation repo**：[`xiemingda-1002/vllm-plugin-FL`](https://github.com/xiemingda-1002/vllm-plugin-FL)，持续跟踪 `feature/qwen3.6-35b-a3b-ascend-graph-migration`。
-- **Official review/base**：[`flagos-ai/vllm-plugin-FL#404`](https://github.com/flagos-ai/vllm-plugin-FL/pull/404) / `release/0.2`。
+- **Frozen implementation baseline**：[`xiemingda-1002/vllm-plugin-FL@e610a990d785356bf51a3cad50219d4c03310a31`](https://github.com/xiemingda-1002/vllm-plugin-FL/commit/e610a990d785356bf51a3cad50219d4c03310a31)，tree `609ff1ad...`，Accepted wheel SHA-256 `2fcf788...`。
+- **Historical upstream reference**：feature branch、[`flagos-ai/vllm-plugin-FL#404`](https://github.com/flagos-ai/vllm-plugin-FL/pull/404)和`release/0.2`只保留为来源/reference URL；Stage 6起其后续变化不是execution gate。
 - **Validation Code repo/fork**：当前 `Not needed yet`。只有真实 A3 blocker、root-cause Evidence 和 bounded fix scope 成立后，由 User/Codex1决定。
 - **Server Evidence**：原始日志、环境 manifest、命令与 exit code、checksum、wheel、runtime facts。大文件留在服务器 Evidence 目录；Control 保存稳定指针和 immutable result。
 
@@ -35,7 +35,7 @@ User 的明确决定高于代理建议；服务器 `Execution PASS` 不自动等
 4. `docs/qwen36-35b-a3b-a3-flagos/DECISIONS.md`
 5. `docs/qwen36-35b-a3b-a3-flagos/results/INDEX.md`
 6. 当前 task、对应 immutable result 与 Evidence pointer
-7. `BASELINE.md`、必要的 research/reconstruction/handoff；移动 GitHub 状态必须重新查询
+7. `BASELINE.md`、必要的 research/reconstruction/handoff；Stage 6+以Frozen source/tree/wheel为准，不查询future upstream HEAD作为执行条件
 
 ### Codex2
 
@@ -46,7 +46,7 @@ User 的明确决定高于代理建议；服务器 `Execution PASS` 不自动等
 5. `docs/qwen36-35b-a3b-a3-flagos/A3-RUNTIME-HANDOFF.md`，尤其是最新 A3 container/runtime baseline 与 post-launch invariant
 6. `REPOSITORY-AND-EVIDENCE-RULES.md`
 7. 当前 run/work/container/Evidence 状态
-8. implementation tracked branch 的实时 HEAD/tree/clean state
+8. Frozen source/tree、Accepted wheel hash及实际runtime artifact/container/cache identity
 
 没有 User 下发的 `Ready` task 时，Codex2不得把计划、历史 prompt 或聊天摘录当作执行授权。
 
@@ -62,33 +62,36 @@ torch.npu.device_count() == 当前任务实际映射的 device 数量
 
 如果 `torch_npu` 能 import 但 `torch.npu.is_available()==False` 或 `device_count()==0`，先把 **container/runtime mapping** 视为 first blocker；不得继续把后续 `flag_gems` import错误当成根因，也不得通过安装 FlagGems掩盖该问题。镜像、container name、具体 `davinciN` 和 visible-device设置仍按当前 task/preflight动态解析，不能机械复制历史 nightly或全卡示例。
 
-## Moving branch 与 execution identity
+## Frozen validation baseline 与 execution identity
 
-项目持续跟踪：
-
-```text
-xiemingda-1002/vllm-plugin-FL
-  feature/qwen3.6-35b-a3b-ascend-graph-migration
-```
-
-每次正式执行在 dispatch 时必须记录：
+Stage 6及后续所有functional、performance/capacity、prefix、EP2和handoff工作固定使用：
 
 ```text
-tracked branch
-exact HEAD SHA
-exact tree
-working tree clean/dirty
+source: e610a990d785356bf51a3cad50219d4c03310a31
+tree: 609ff1ad0f08239f353cb4d8774e504b4deba03b
+wheel: vllm_plugin_fl-0.2.0+ge610a990d-cp311-cp311-linux_aarch64.whl
+wheel SHA-256: 2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd
+last pre-change tracked reference: 032fddc91b6d013b98aed8e64ff05b54d1435648
+last reference tree: 463806ef18e5e31006cd4f59e6a5261fc65cea4a
 ```
 
-Evidence、Result、PASS、Acceptance 只对该次 exact SHA/tree 有效。分支更新后，Codex1先审查旧验证 SHA到新 HEAD 的 diff，再决定 tiny regression、eager、graph 或完整 functional matrix 的重验范围；不得把旧 PASS 自动转移给新 commit。
+每次正式执行必须记录并核对Frozen artifact/runtime identity：
+
+```text
+Frozen source/tree
+actual installed wheel filename/hash/origin
+image/runtime/model/container/device/cache/workload identity
+```
+
+Implementation branch、PR或official base的后续rebase/squash/debug清理/开发变化统一`OUT OF SCOPE / IGNORE FOR EXECUTION`，不得触发STOP、moving-head review、rebuild或Stage 3/4/5重验。Codex1/Codex2不得自行升级到新HEAD。只有User新的正式Decision才能建立新的validation baseline；新baseline不得覆盖本项目历史Result/Acceptance。
 
 ## Prompt / Task 约定
 
-- 每份可下发给 Codex2的 execution prompt开头必须显式写出完整 `Control repo URL`、`Implementation repo URL`、`Tracked branch`和 `Task ID`；不得要求新会话通过文件名、聊天历史或服务器本地目录猜仓库/任务身份。
+- 每份可下发给 Codex2的 execution prompt开头必须显式写出完整 `Control repo URL`、`Implementation repo URL`、Frozen source/tree/wheel SHA-256、historical reference branch和 `Task ID`；不得要求新会话通过文件名、聊天历史或服务器本地目录猜身份。
 - Task只冻结 objective、boundaries、User-confirmed facts、Ready、PASS、STOP、required Evidence 与 Acceptance边界。
 - 不无必要写死普通 shell command、命令顺序或排障过程；Codex2在合同内自主检查和定位。
 - 重大路线、版本、CANN、baseline、模型、quantization 或大范围架构变化必须 `Decision requested`。
-- 当前分支/PR/SHA等移动事实必须在 dispatch 前从 GitHub重新查询，不能使用旧 prompt 或聊天 SHA。
+- Stage 6+不得把current branch/PR/base状态作为dispatch gate；只核对Frozen source/artifact/runtime是否漂移。
 - Codex1交付 Ready Task时，必须在同一聊天回复中直接提供**可完整复制给 Codex2**的完整 execution prompt，不能只给 GitHub Prompt URL。
 - Ready Task的完整 prompt必须包含明确 User dispatch语句；Not Ready Task必须在 prompt开头显式写 `DO NOT DISPATCH`。
 
@@ -118,7 +121,7 @@ Evidence、Result、PASS、Acceptance 只对该次 exact SHA/tree 有效。分�
 
 ## VERIFY FIRST / FIX ONLY WHEN EVIDENCE REQUIRES IT
 
-Codex2可以检查、build、install、run、debug、收集 traceback/log、缩小 first blocker。任何源码修改必须遵循：
+Codex2可以检查、install、run、debug、收集 traceback/log、缩小 first blocker。Frozen wheel无需重build。任何源码修改或切换source都先要求User发布新的baseline Decision，并遵循：
 
 ```text
 first attributable blocker

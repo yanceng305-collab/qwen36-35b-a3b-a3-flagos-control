@@ -1,45 +1,47 @@
-# Project Baseline and Implementation Tracking
+# Project Frozen Validation Baseline
 
 更新时间：2026-08-26
 
-## Current GitHub snapshot
+## Frozen validation identity
 
-核验于 2026-08-26 Stage 5 Formal Acceptance；正式 dispatch 前仍必须重新查询。
+冻结日期：2026-08-26。依据：`D-030 / FROZEN-UPSTREAM-VALIDATION-BASELINE` User Decision。Stage 6及以后不再跟踪upstream moving HEAD作为execution gate。
 
 | Identity | Value |
 | --- | --- |
 | Implementation repository | `xiemingda-1002/vllm-plugin-FL` |
-| Project tracked branch | `feature/qwen3.6-35b-a3b-ascend-graph-migration` |
-| Current tracked HEAD | `032fddc91b6d013b98aed8e64ff05b54d1435648` |
-| Current tracked tree | `463806ef18e5e31006cd4f59e6a5261fc65cea4a` |
-| Stage 3/4 runtime artifact source | `e610a990d785356bf51a3cad50219d4c03310a31` / tree `609ff1ad0f08239f353cb4d8774e504b4deba03b` |
+| Frozen source/tree | `e610a990d785356bf51a3cad50219d4c03310a31` / `609ff1ad0f08239f353cb4d8774e504b4deba03b` |
+| Accepted wheel | `vllm_plugin_fl-0.2.0+ge610a990d-cp311-cp311-linux_aarch64.whl` |
+| Accepted wheel SHA-256 | `2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd` |
+| Historical reference branch | `feature/qwen3.6-35b-a3b-ascend-graph-migration` |
+| Last pre-change tracked reference/tree | `032fddc91b6d013b98aed8e64ff05b54d1435648` / `463806ef18e5e31006cd4f59e6a5261fc65cea4a` |
 | Stage 1/2 Accepted source | `7beda84f59d7b25f49cdf03bdf6efecd771067ed` / tree `a81eea55c1de548a0a1f182f51089eca0b088c82` |
 | Official PR | `flagos-ai/vllm-plugin-FL#404` |
-| PR state | OPEN, Draft；head `032fddc9...`；live mergeability `CONFLICTING / DIRTY`；moving fact |
+| PR/base status | Historical snapshot/reference only；future movement intentionally out of scope |
 | Official base branch | `release/0.2` |
 | Current release HEAD | `ef78dec66fea1ae858ef414584be1478929ee9b2` |
 | Current release tree | `7414bac41c39bc445b0cc05dbdaecc0f08231aeb` |
-| Compare | moving/diverged after release branch advanced；dispatch前live query |
+| Stage 6+ execution gate | Frozen source/wheel/runtime/environment/model/workload identity only |
 
 Direct anchors：
 
-- Current head commit：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/032fddc91b6d013b98aed8e64ff05b54d1435648>
+- Frozen source commit：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/e610a990d785356bf51a3cad50219d4c03310a31>
+- Last pre-change tracked reference：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/032fddc91b6d013b98aed8e64ff05b54d1435648>
 - Stage 1/2 Accepted source：<https://github.com/xiemingda-1002/vllm-plugin-FL/commit/7beda84f59d7b25f49cdf03bdf6efecd771067ed>
 - Base commit：<https://github.com/flagos-ai/vllm-plugin-FL/commit/ef78dec66fea1ae858ef414584be1478929ee9b2>
 - PR：<https://github.com/flagos-ai/vllm-plugin-FL/pull/404>
 - Compare：<https://github.com/flagos-ai/vllm-plugin-FL/compare/release/0.2...xiemingda-1002:feature/qwen3.6-35b-a3b-ascend-graph-migration>
 
-PR timeline证明 tracked branch曾从 `f9281f78...` force-push/rebase到 Stage 1/2 Accepted source `7beda84...`，随后前进到Stage 3/4 runtime source `e610a990...`及current docs/tests-only `032fddc9...`。每次 Result仍只绑定其 exact execution identity。
+历史PR timeline证明branch曾从`f9281f78...`前进到Stage 1/2 source `7beda84...`、Stage 3/4/5 runtime source `e610a990...`及最后pre-change reference `032fddc9...`。已有moving-head Review确认`e610a990... -> 032fddc9...`仅为README/docs+tests变化。Stage 6起该timeline只作来源历史，不再驱动执行。
 
 ## Technical tuple
 
 | Component | Baseline | Evidence state / boundary |
 | --- | --- | --- |
 | vLLM | `0.20.2` | A3 Stage 1-5 Accepted runtime tuple |
-| FL | official `release/0.2`系 | base current `ef78dec...`；adaptation由moving PR head提供 |
-| Adaptation | PR #404 current tracked head | current `032fddc9...` docs/tests-only；runtime artifact `e610a990...` |
+| FL | official `release/0.2`系 | adaptation固定为Frozen `e610a990...` artifact |
+| Adaptation | Frozen source / Accepted wheel | `e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...` |
 | vLLM-Ascend | `0.20.2rc1` | matched-version source/oracle与 official A3 environment carrier；最终 runtime不可依赖 installed package |
-| Official A3 image candidates | `v0.20.2rc1-a3` / `v0.20.2rc1-a3-openeuler` | Bounded selection；ordinary unsuffixed tag是A2 route并排除 |
+| Frozen accepted image | `v0.20.2rc1-a3-openeuler` exact digest/ID | Stage 6+只核对identity，不重新selection；ordinary unsuffixed tag仍排除 |
 | Model | `Qwen/Qwen3.6-35B-A3B` / BF16 non-quantized | Stage 3/4 identity Accepted；26/26 shards、1045/1045 BF16 tensors |
 | Model path | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B` | Stage 3/4 Accepted identity |
 | Architecture | `Qwen3_5MoeForConditionalGeneration`；40层，30 GDN/linear attention + 10 full attention；256 experts/top-8 | Stage 3/4 execution-verified |
@@ -66,9 +68,9 @@ MTP、quantization、initial CP、FlashComm、MC2、EPLB不在第一阶段范围
 - `_C_ascend`当前声明 **9 schemas**。PR正文旧的 7 OPP/8 schemas不再作为当前验收计数。
 - runtime loader在 `SOC_VERSION`未设置时默认选择 `ascend910b1`，与 A3 build默认不同；Stage 1/2必须观察 actual env和 selected family。
 
-详细 source anchors见 [research/CURRENT-IMPLEMENTATION-STATE.md](research/CURRENT-IMPLEMENTATION-STATE.md)。`e610a990...`已构建为Stage 3/4 Accepted wheel；后续`032fddc9...`仅改README和unit tests，Formal moving-head Review允许继续复用该wheel。新HEAD仍须按diff决定重验。
+详细历史source anchors见 [research/CURRENT-IMPLEMENTATION-STATE.md](research/CURRENT-IMPLEMENTATION-STATE.md)。`e610a990...`已构建为Stage 3/4/5 Accepted wheel；`032fddc9...`仅改README和unit tests。Later upstream HEAD不再查询、diff或重验，除非User另立new validation baseline。
 
-## Official A3 base image route
+## Official A3 base image route — historical selection and frozen result
 
 Official tag/source核对固定两个候选：
 
@@ -81,26 +83,27 @@ quay.io/ascend/vllm-ascend:v0.20.2rc1-a3-openeuler
 - openEuler route基于 `quay.io/ascend/cann:9.0.0-a3-openeuler24.03-py3.11`。
 - Matched tuple：vLLM 0.20.2、Python 3.11 base（compatibility range `>=3.10,<3.12`）、CANN 9.0.0、torch/torch_npu 2.10.0/2.10.0、Triton Ascend 3.2.1。
 - Ordinary `quay.io/ascend/vllm-ascend:v0.20.2rc1`是 official A2 Ubuntu route，明确不作为 A3 baseline。
-- Codex2只在两个 A3候选中现场选择；两者均不兼容时 STOP，不使用 A2、nightly或其他 version fallback。
+- Stage 1/2已从候选中接受`quay.io/ascend/vllm-ascend:v0.20.2rc1-a3-openeuler`，manifest digest `sha256:442363921166771eb82baeec9c1ac0381f46fb830ead8d0e072df6e925f2a958`、arm64 platform digest `sha256:a55b2b0597f9fdd1882de9bf3b7ebc395dd77c1ca49f251d0cb759d7b2c1a807`、local image ID `sha256:8e7823878349b37d9900984555e28381c25681f88ff678cb4a86f7d1674a67c1`。Stage 6+核对该Accepted image/runtime，不重新做candidate selection。
 
 详细 source/registry证据见 [research/OFFICIAL-A3-IMAGE-ROUTE.md](research/OFFICIAL-A3-IMAGE-ROUTE.md)。Carrier中原有 `vllm-ascend`与 editable source状态必须在 final FL transaction后被负向审计；正式 ownership仍是 standalone FL，不由 image名称决定。
 
-## Project tracking target vs run source
+## Frozen source vs historical upstream reference
 
-`Current tracked HEAD`是 Control snapshot，不是永久冻结 baseline。正式 run必须写：
+Stage 6及后续正式run必须写：
 
 ```text
-Tracked branch: feature/qwen3.6-35b-a3b-ascend-graph-migration
-Run source SHA: <dispatch-time exact HEAD>
-Run source tree: <exact tree>
-Working tree: clean | dirty (formal claim restrictions apply)
+Frozen source: e610a990d785356bf51a3cad50219d4c03310a31
+Frozen tree: 609ff1ad0f08239f353cb4d8774e504b4deba03b
+Installed wheel SHA-256: 2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd
+Wheel/site-packages origin: <actual evidence>
+Last pre-change tracked reference: 032fddc91b6d013b98aed8e64ff05b54d1435648 (reference only)
 ```
 
-如果 branch更新，last accepted/tested SHA仍保持其结果；新 HEAD必须根据 diff决定重验，不能自动继承 Acceptance。
+如果branch/PR/base更新，记录为`OUT OF SCOPE / IGNORE FOR EXECUTION`即可，不查询diff、不STOP、不rebuild。若未来要验证新HEAD，User必须建立新的validation baseline/project evidence；不得覆盖本项目Frozen results。
 
 ## Environment contract to establish on A3
 
-以下字段已有 Stage 1/2 Accepted Evidence；future Task在 environment/source变化时必须重新记录，不能只引用旧值：
+以下字段已有 Accepted Evidence；future Task必须验证Frozen source/artifact及environment continuity，不能只引用旧值：
 
 - physical SKU/device count/logical mapping、driver、firmware；
 - selected official A3 tag、pull-time digest、platform digest、image ID、OS与选择理由；

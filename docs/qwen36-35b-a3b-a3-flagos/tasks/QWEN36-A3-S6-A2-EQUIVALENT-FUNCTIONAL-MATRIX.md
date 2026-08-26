@@ -13,7 +13,7 @@ https://github.com/yanceng305-collab/qwen36-35b-a3b-a3-flagos-control
 Implementation repo:
 https://github.com/xiemingda-1002/vllm-plugin-FL
 
-Tracked branch:
+Historical reference branch (not an execution gate):
 feature/qwen3.6-35b-a3b-ascend-graph-migration
 
 Task ID:
@@ -31,15 +31,16 @@ wheel sha256: 2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd
 model: /data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B
 ```
 
-Reviewed tracked state at Task creation：
+Frozen Validation Baseline：
 
 ```text
-HEAD: 032fddc91b6d013b98aed8e64ff05b54d1435648
-tree: 463806ef18e5e31006cd4f59e6a5261fc65cea4a
-disposition: docs/tests-only; reuse Stage 5 Accepted wheel/runtime
-official release/0.2 HEAD: ef78dec66fea1ae858ef414584be1478929ee9b2
-official release/0.2 tree: 7414bac41c39bc445b0cc05dbdaecc0f08231aeb
-PR #404: OPEN / DRAFT; head unchanged; mergeability CONFLICTING / DIRTY at Task creation
+source: e610a990d785356bf51a3cad50219d4c03310a31
+tree: 609ff1ad0f08239f353cb4d8774e504b4deba03b
+wheel: vllm_plugin_fl-0.2.0+ge610a990d-cp311-cp311-linux_aarch64.whl
+wheel SHA-256: 2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd
+last pre-change tracked reference: 032fddc91b6d013b98aed8e64ff05b54d1435648
+last reference tree: 463806ef18e5e31006cd4f59e6a5261fc65cea4a
+later upstream/tracked branch movement: OUT OF SCOPE / IGNORE FOR EXECUTION
 ```
 
 ## Objective
@@ -61,7 +62,7 @@ The contract below is frozen from:
 
 - [`A2-REFERENCE.md`](../A2-REFERENCE.md);
 - the three SHA-256-registered A2 source documents in [`research/SOURCE-MATERIALS.md`](../research/SOURCE-MATERIALS.md), especially deployment guide section 8.2;
-- PR #404 current body/source;
+- PR #404 historical body/source preserved by the frozen project evidence;
 - upstream vLLM `v0.20.2@bc150f50299199599673614f80d12a196f377655` random-dataset and `vllm bench serve` implementation.
 
 The A2 documents do not freeze a total order for the 16 cells. This A3 Task therefore freezes an explicit resource-escalating order below for reproducibility; it is an A3 procedural contract, not a claim about the colleague's historical cell order.
@@ -69,9 +70,9 @@ The A2 documents do not freeze a total order for the 16 cells. This A3 Task ther
 ## Entry and identity gate
 
 - Sync latest Control and follow `AGENTS.md` navigation.
-- Live-query tracked branch HEAD/tree, PR #404, and official `release/0.2` before any A3 mutation.
-- If tracked HEAD/tree remain `032fddc9...` / `463806ef...`, reuse the Stage 5 Accepted `e610a990...` wheel/runtime; never label `032fddc9...` as wheel source.
-- If tracked HEAD/tree changed, STOP before model/service mutation and return the exact diff from `032fddc9...`; Codex1 decides regression scope.
+- Stage 6 uses the Frozen Validation Baseline above. Do not live-query future tracked HEAD/PR/base as an execution gate; do not inspect later upstream diffs.
+- Always reuse the Stage 5 Accepted `e610a990...` wheel/runtime. Never label `032fddc9...` as wheel source; do not rebuild `032fddc9...` or any later upstream commit.
+- Later branch/PR/base movement is intentionally out of scope and must not trigger STOP, moving-head review, eager/graph/serve rerun, source switch, or rebuild.
 - Reuse the Accepted container/runtime if it remains present and exact. If it is absent, reconstruct only from the Accepted reconstruction; stop on image/CANN/Python/torch/torch_npu/vLLM/Triton/wheel/device-mapping drift.
 - Read-only preflight the current authorized idle two-device scope. Do not kill, pause, reset, preempt, or inspect unrelated workload content.
 
@@ -79,6 +80,7 @@ The A2 documents do not freeze a total order for the 16 cells. This A3 Task ther
 
 Before service launch, prove continuity of all Stage 5 S0 invariants:
 
+- Frozen source/tree and exact Accepted wheel filename/SHA-256 match this Task;
 - `torch_npu` import, NPU available, device count 2, both device identities;
 - accepted wheel hash and site-packages origin; no source-tree/editable shortcut;
 - no installed/importable `vllm-ascend` / `vllm_ascend`; no FlagGems; `USE_FLAGGEMS=0`;
@@ -261,7 +263,7 @@ This PASS proves A3 functional reproduction only. It does not prove performance,
 
 ## STOP
 
-STOP at the first attributable blocker, including identity/runtime drift, service/capture failure, chunked-prefill or async path disabled, any failed/inexact cell, non-finite/corrupt/pathological output, graph fallback, state contamination, illegal address/OOM, or dirty production source.
+STOP at the first attributable blocker, including Frozen source/artifact/runtime/environment/model/workload drift, service/capture failure, chunked-prefill or async path disabled, any failed/inexact cell, non-finite/corrupt/pathological output, graph fallback, state contamination, illegal address/OOM, or dirty Frozen production source. Upstream branch/PR/base movement is never a blocker for this Task.
 
 Return the completed-cell set, last successful gate/cell, first blocker, root-cause confidence, and one minimum follow-up. Do not silently lower input/output/concurrency, disable prefix/chunked/async/graph, reuse a different source/wheel, restart with changed parameters, or modify production source.
 
@@ -271,6 +273,7 @@ Return the completed-cell set, last successful gate/cell, first blocker, root-ca
 - prefix hit/reset lifecycle beyond recording that the main matrix does not depend on reuse;
 - EP2, MTP, quantization, CP, FlashComm, MC2, EPLB, or GLM;
 - source patch, Code fork/PR, unrecorded harness correction, or parameter deviation;
+- checkout/rebuild/adoption of `032fddc9...` or any later upstream HEAD;
 - operations on unrelated NPU/container/process/cache/workload.
 
 ## Required Evidence and Result contract
@@ -280,7 +283,7 @@ The Result must be sufficient raw material for the final A3 end-to-end reproduct
 ### Identity
 
 - Task/run/timestamps; Control parent/current commit;
-- tracked implementation HEAD/tree/clean state; actual runtime source/tree;
+- Frozen source/tree, last pre-change tracked reference, actual installed wheel/runtime origin;
 - wheel filename/SHA-256/inventory; image tag/digests/ID; container ID;
 - runtime tuple; host/device family; exact visible-device scope; model identity.
 

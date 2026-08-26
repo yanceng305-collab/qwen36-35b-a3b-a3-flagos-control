@@ -3,13 +3,23 @@
 ## Repository roles
 
 - Control：本仓库，保存 contracts、pointers、immutable Result、Acceptance和 handoff。
-- Implementation：同事 feature branch / PR #404，当前 source of truth。
+- Implementation：Frozen source `e610a990d785356bf51a3cad50219d4c03310a31` / tree `609ff1ad0f08239f353cb4d8774e504b4deba03b`及Accepted wheel是Stage 6+ source of truth；feature branch/PR #404仅作历史reference。
 - Validation Code：当前 N/A；只有 blocker-backed Code Decision后创建。
 - Server Evidence：原始 logs/manifests/checksums/wheels/runtime facts；不等于长期 source working tree。
 
-## Moving branch and run freeze
+## Frozen baseline and run freeze
 
-正式执行前同步 GitHub并记录：tracked repo/branch、exact HEAD SHA、exact tree、worktree clean/dirty、remote URL。Result只对 actual run identity有效。
+Stage 6及以后正式执行固定使用：
+
+```text
+source: e610a990d785356bf51a3cad50219d4c03310a31
+tree: 609ff1ad0f08239f353cb4d8774e504b4deba03b
+wheel: vllm_plugin_fl-0.2.0+ge610a990d-cp311-cp311-linux_aarch64.whl
+wheel SHA-256: 2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd
+last pre-change tracked reference: 032fddc91b6d013b98aed8e64ff05b54d1435648
+```
+
+正式run只核对Frozen source/artifact与实际installed/runtime identity。Feature branch、PR #404或official base的future变化不再查询为entry gate，不触发STOP、diff、moving-head review或rebuild。Result只对Frozen baseline及该次actual runtime/environment/workload identity有效。
 
 Dirty working tree如果影响 source/build/runtime，只能作为 exploratory诊断，不能形成正式 PASS/Acceptance。若 dirty仅为明确列出的 non-source Evidence output，必须保存 diff/status并由 Codex1裁定。
 
@@ -17,7 +27,7 @@ Dirty working tree如果影响 source/build/runtime，只能作为 exploratory�
 
 每个正式 run必须保留：
 
-1. **Code/source pointer**：repo、branch、SHA、tree、clean/dirty、Code PR或 `N/A`。
+1. **Code/source pointer**：repo、Frozen SHA/tree、wheel filename/hash/origin、last pre-change reference、Code PR或 `N/A`。
 2. **Control pointer**：task、immutable Result路径/commit、results index/Acceptance commit。
 3. **Evidence pointer**：server absolute path、manifest、checksum/index、raw log入口。
 
@@ -26,7 +36,7 @@ Dirty working tree如果影响 source/build/runtime，只能作为 exploratory�
 每个正式 Result至少能定位：
 
 - Task ID、run ID、UTC/local timestamps；
-- tracked branch与 exact SHA/tree/clean state；
+- Frozen source/tree、Accepted wheel filename/hash/origin及last pre-change tracked reference；
 - environment、image/container、device、model path/identity；
 - command/effective config和关键环境变量；
 - per-gate exit code、last successful gate、first attributable blocker；
@@ -72,13 +82,13 @@ Codex1独立审查：task contract、exact identities、Evidence completeness、
 
 `ACCEPTED`必须写明环境、版本、run、SHA/tree、覆盖 scope和重验条件。没有 A3 field execution不得写 A3 Acceptance。
 
-## Source update and regression
+## Upstream updates and new-baseline rule
 
-tracked branch更新后，保留 old Result不变。Codex1审查 `last-tested-SHA..new-HEAD`并新建 regression task；新 Result引用新 SHA/tree。不得用 branch name本身代替 execution identity。
+Stage 6起upstream branch/PR/base更新一律不进入本项目execution planning。Codex1不得审查future diff，Codex2不得切换或rebuild future HEAD。若User未来要求验证新HEAD，必须先建立新的validation baseline/project evidence，并保留本项目Frozen Results不变；不得用新HEAD覆盖、继承或改写本项目Acceptance。
 
 ## Code fixes
 
-发生 A3 blocker时先保存 root-cause Evidence。需要源码修改则先建立 Control Decision和 bounded Code task，再选择同事新 commit、User fork/task branch或 validation Code repo。任何 Code change都必须有 branch、diff、tests、commit/PR、rollback与 source pointer。
+发生 A3 blocker时先保存 root-cause Evidence。需要修改Frozen production source或采用upstream新commit时必须先由User发布new baseline Decision，再建立bounded Code task。任何Code change都必须有branch、diff、tests、commit/PR、rollback与source pointer；Codex1/Codex2不得自行改变Frozen baseline。
 
 ## Reconstruction discipline
 
@@ -95,6 +105,17 @@ tracked branch更新后，保留 old Result不变。Codex1审查 `last-tested-SH
 
 即可编写并执行最终 [`reconstruction/A3-END-TO-END-REPRODUCTION.md`](reconstruction/README.md)。现在不提前冻结尚未完成的 functional/performance/prefix/EP2合同；项目收尾时再从 Accepted Results、Formal Reviews、A2-to-A3 delta、reconstruction和 preserved Evidence生成完整文档。
 
+最终文档必须在开头明确：
+
+```text
+This document reproduces the frozen validation baseline:
+e610a990d785356bf51a3cad50219d4c03310a31
+tree: 609ff1ad0f08239f353cb4d8774e504b4deba03b
+wheel SHA-256: 2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd
+```
+
+不得自动替换为PR #404 future HEAD。Future HEAD validation必须建立新的baseline/project evidence，不能覆盖本项目文档或结果。
+
 最终文档必须能让一个新执行者从环境准备一路复现到最终Accepted功能/性能范围，至少覆盖：hardware/device family、image exact tag/digest/ID、Driver/CANN/Python/torch/torch_npu/vLLM/Triton版本、implementation repo/branch/SHA/tree、official base/PR、build target/prerequisites、wheel identity/inventory、standalone FL install、no vllm-ascend/no FlagGems、container invocation/mount/device mapping、NPU invariant、model identity、env、cache isolation、eager/graph/serve/API、functional matrix、performance workload、prompt/token generation、sampling、warm-up/cache/cold-start、concurrency/input/output、prefix/EP2、success criteria、known pitfalls、A2-to-A3 delta、A3-specific source changes和 final accepted limitations。
 
 ## Stage 6+ Result minimum for reproduction
@@ -104,7 +125,7 @@ tracked branch更新后，保留 old Result不变。Codex1审查 `last-tested-SH
 ### Identity
 
 - exact Task ID、run ID、timestamps、Control parent/current commit；
-- implementation tracked HEAD/tree/clean state、actual runtime artifact source/tree；
+- Frozen source/tree、last pre-change tracked reference、actual runtime artifact/wheel identity；
 - wheel filename/SHA-256/inventory；image tag/manifest/platform digest/image ID；
 - runtime tuple、host/device family和 exact visible-device scope。
 

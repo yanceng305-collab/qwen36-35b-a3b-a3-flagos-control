@@ -4,16 +4,16 @@
 
 ## 结果目标
 
-在 A3/910C上对当前 PR #404 implementation建立从 native wheel到模型、graph、serve、功能扩展、性能和可重建 handoff的完整证据链；每项结论绑定 exact source/environment/run identity。
+在 A3/910C上对`e610a990...` Frozen Validation Baseline建立从native wheel到模型、graph、serve、功能扩展、性能和可重建handoff的完整证据链；每项结论绑定exact Frozen source/artifact/environment/run identity。
 
 ## 硬约束
 
-- implementation跟踪 moving feature branch；每次执行冻结 exact SHA/tree/clean state。
+- Stage 6+ implementation固定为Frozen `e610a990...` / tree `609ff1ad...` / Accepted wheel SHA-256 `2fcf788...`；upstream future movement不是execution gate。
 - A2只作 reference oracle；A3 Acceptance只来自 A3 execution。
 - vLLM 0.20.2、FL release/0.2系、BF16 DP1/TP2 eager是当前 baseline。
 - 最终 runtime为 standalone FL：`VLLM_PLUGINS=fl`、`USE_FLAGGEMS=0`、无 installed/runtime `vllm-ascend`依赖、无 source-tree import。
-- A3 wheel使用 `ascend910_93` family并在 compatible A3/CANN环境重建；禁止 A2 binary复用。
-- Base carrier只在 official `v0.20.2rc1-a3` / `v0.20.2rc1-a3-openeuler`中 bounded selection；ordinary A2 image、nightly或其他版本不得 silent fallback。
+- Frozen A3 wheel已在compatible A3/CANN环境以`ascend910_93` family构建并Accepted；Stage 6+核对exact SHA-256/inventory/origin，不重build、不复用A2 binary。
+- Frozen carrier为Accepted `v0.20.2rc1-a3-openeuler` exact digest/ID；不重新做candidate selection，不silent fallback到A2、nightly或其他版本。
 - 模型identity已在Stage 3 Accepted；26/26 shards、1045/1045 tensors BF16，后续Task继续核对identity continuity。
 - MTP、quantization、initial CP/FlashComm/MC2/EPLB不在第一阶段范围。
 - 没有 attributable blocker不得创建大型 Code adaptation task。
@@ -66,34 +66,30 @@ Stage 5通过后不再为了流程本身拆分与A2 baseline无关的小Stage。
 4. `Standalone import/origin/dependency PASS` 后才运行 minimal A3 NPU custom-op；
 5. 任一步失败都在 first attributable blocker处 STOP，不继续完整模型。
 
-## Source branch更新处理
+## Frozen baseline change control
 
-如果 dispatch 前 tracked branch已从 Control snapshot更新：
+Stage 6及后续不再处理source branch更新：不live-query future HEAD、不获取diff、不做moving-head review、不rebuild、不重跑Stage 3/4/5。Feature branch、PR #404和official base只作历史reference。
 
-1. 记录旧 snapshot和新 HEAD/tree；
-2. 获取 diff与 commit说明；
-3. Codex1判断 task contract是否仍成立；
-4. 在 task/result中冻结 actual run SHA/tree；
-5. future update从最后 accepted/tested SHA做 diff，不从任意旧聊天 SHA做比较。
+当前唯一execution source/artifact是：
 
-Regression scope候选：
+```text
+e610a990d785356bf51a3cad50219d4c03310a31
+tree 609ff1ad0f08239f353cb4d8774e504b4deba03b
+wheel SHA-256 2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd
+```
 
-- 与 A3/build/runtime无关：identity检查或 no rerun decision；
-- packaging/SoC/ABI微调：Stage 1/2 tiny regression；
-- model/eager path变化：重跑 Stage 3；
-- graph/state变化：重跑 Stage 4，必要时回 Stage 3；
-- broad Qwen/runtime变化：重新定义 functional scope。
+只有User发布new baseline Decision后，才可为新HEAD建立新的计划、Evidence和Acceptance；不得覆盖本项目Frozen results。
 
 ## Risk register
 
 | Risk | Current evidence state | Control |
 | --- | --- | --- |
-| A3 `SOC_VERSION` build/runtime family | **ACCEPTED on `7beda84...`** | future source/wheel变化时重验 effective family/origin |
-| A2 binary/build residue混入 A3 wheel | **Closed for accepted wheel** | current-head rebuild继续严格 inventory/search |
+| A3 `SOC_VERSION` build/runtime family | **ACCEPTED / Frozen artifact continuity required** | source/wheel family/origin漂移即STOP；不切换upstream或rebuild |
+| A2 binary/build residue混入 A3 wheel | **Closed for Frozen accepted wheel** | future run只核对exact wheel SHA-256/inventory/origin；不rebuild |
 | CANN/torch-npu/vLLM ABI不匹配 | **Closed for Stage 4 bounded model/graph scope** | tuple变化时重验 |
 | A3 Ubuntu/openEuler route与actual host不兼容 | **Closed for accepted openEuler route** | image/driver/host变化重做 preflight |
 | runtime实际依赖 vllm-ascend或 source tree | **Closed for accepted standalone FL** | every wheel reinstall保留negative import/origin audit |
-| moving branch使旧结果误标新 SHA | Branch已实际 force-push | exact run identity + diff-driven regression |
+| upstream变化污染固定A3数据 | User已冻结baseline | future branch/PR/base movement ignore for execution；只核对Frozen artifact/runtime identity |
 | graph stale pointer/state | **Closed for Stage 5 `[1,2,4,8]` bounded service scope** | Stage 6验证automatic capture through 64、chunked prefill、async和long-context/concurrency shapes |
 | cache污染导致假失败/假成功 | A2有真实先例 | cache identity/隔离纳入每个 run manifest |
 | HCCL/CPU topology在 A3不同 | TP2/HCCL correctness Accepted；performance topology unknown | functional稳定后用A3 Evidence冻结performance合同 |

@@ -4,6 +4,8 @@
 
 当前状态：**STAGE 1-5 ACCEPTED, SCOPE-LIMITED**。真实A3/910C execution已完成A3-native wheel、standalone FL、TP2/HCCL BF16 eager、bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和service/API correctness；A2-equivalent matrix和performance仍未验证。Qwen-specific模型/graph/service结论不得直接外推到GLM。
 
+Stage 6及后续handoff统一绑定User Decision `D-030` Frozen Validation Baseline：source `e610a990d785356bf51a3cad50219d4c03310a31`、tree `609ff1ad0f08239f353cb4d8774e504b4deba03b`、Accepted wheel SHA-256 `2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd`。PR/branch future HEAD不得自动替换该identity。
+
 ## Handoff admission rule
 
 每个可继承事实至少记录：

@@ -23,6 +23,23 @@ bounded A3 correctness ACCEPTED
 
 本文不创建新Stage、Gate、Result或Acceptance，也不修改已有immutable Result的事实边界。
 
+## Frozen validation baseline
+
+Freeze date：2026-08-26。Decision：`D-030 / FROZEN-UPSTREAM-VALIDATION-BASELINE`。
+
+```text
+Frozen runtime/source: e610a990d785356bf51a3cad50219d4c03310a31
+Frozen tree: 609ff1ad0f08239f353cb4d8774e504b4deba03b
+Accepted wheel: vllm_plugin_fl-0.2.0+ge610a990d-cp311-cp311-linux_aarch64.whl
+Wheel SHA-256: 2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd
+Last pre-change tracked reference: 032fddc91b6d013b98aed8e64ff05b54d1435648
+Last reference tree: 463806ef18e5e31006cd4f59e6a5261fc65cea4a
+```
+
+已有Formal moving-head Review确认`e610a990... -> 032fddc9...`仅为README/docs+tests变化，没有production/runtime/build-selection semantic change。Stage 3/4/5 Acceptance正好绑定Frozen runtime artifact和wheel，因此保持原样，无需重跑。
+
+Stage 6及后续functional、performance/capacity、prefix、EP2和handoff全部使用同一Frozen baseline。Feature branch、PR #404和official base只作历史reference；later upstream变化明确`OUT OF SCOPE / IGNORE FOR EXECUTION`，不是本ledger的A3 implementation change，也不触发moving-head review或regression。
+
 ## Difference classification
 
 | Classification | Meaning |
@@ -146,6 +163,7 @@ Current conclusion：**IMPLEMENTATION CHANGE: NONE SO FAR**
 精确边界：
 
 - 截至Stage 5 Formal Acceptance，本A3 validation没有修改production runtime/model/operator/build implementation source，没有创建Code fork/patch/PR。Stage 5只使用Evidence-root runtime instrumentation，没有修改production artifact。
+- Stage 6起本结论专指：为了A3 validation，本项目没有修改Frozen `e610a990...` production source。Later upstream commits不被本项目采用，因此不属于本项目`IMPLEMENTATION CHANGE`。
 - Stage 3在detached clean `e610a990d785356bf51a3cad50219d4c03310a31` / tree `609ff1ad0f08239f353cb4d8774e504b4deba03b`构建Accepted wheel；Code PR=`N/A`，wheel SHA-256 `2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd`。
 - Stage 1/2 Accepted source `7beda84...`到Stage 3 source `e610a990...`的变化是tracked implementation branch的既有moving-head commits；Control对diff定义了bounded regression并重建/执行，不将它写成A3 execution发现后由本项目产生的source fix。
 - 后续`e610a990... → 032fddc9...`已由[`moving-head Review`](reviews/REVIEW-QWEN36-A3-MOVING-HEAD-032FDDC9-20260826.md)确认为docs/tests-only，不改该结论。
@@ -215,6 +233,7 @@ Evidence：[`Stage 3 Formal Acceptance`](reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF1
 - 当A3参数只因阶段性Task关闭时，记`VALIDATION BOUNDED`，不误写为最终配置差异。
 - 当环境差异只是SoC/image/runtime access要求时，记`PLATFORM REQUIRED`，不误写为implementation change。
 - 只有A3 blocker导致production source修改并形成commit/PR/Evidence时，才新增`IMPLEMENTATION CHANGE`。
+- Stage 6起任何Frozen source修改或new upstream adoption必须先有User new-baseline Decision；否则不得写入本ledger或execution。
 - 本文不新增Stage、Gate或其他维护流程。
 
 ## Post-Stage-5 mainline

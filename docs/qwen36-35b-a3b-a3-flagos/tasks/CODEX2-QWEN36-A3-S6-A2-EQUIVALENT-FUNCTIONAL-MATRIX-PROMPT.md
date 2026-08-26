@@ -9,14 +9,14 @@ https://github.com/yanceng305-collab/qwen36-35b-a3b-a3-flagos-control
 Implementation repo:
 https://github.com/xiemingda-1002/vllm-plugin-FL
 
-Tracked branch:
+Historical reference branch (not an execution gate):
 feature/qwen3.6-35b-a3b-ascend-graph-migration
 
 Task ID:
 QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX
 ```
 
-This is a new Codex2 execution session. Do not reconstruct facts from prior chat or agent memory. Sync latest Control main, read root `AGENTS.md`, root `README.md`, `STATUS.md`, the exact Stage 6 Task, Stage 5 Formal Acceptance, `A2-REFERENCE.md`, `A2-TO-A3-VALIDATION-DELTA.md`, `A3-RUNTIME-HANDOFF.md`, `REPOSITORY-AND-EVIDENCE-RULES.md`, and reconstruction docs. Control/GitHub/exact source and preserved A3 Evidence are the truth sources.
+This is a new Codex2 execution session. Do not reconstruct facts from prior chat or agent memory. Sync latest Control main, read root `AGENTS.md`, root `README.md`, `STATUS.md`, the exact Stage 6 Task, Stage 5 Formal Acceptance, `A2-REFERENCE.md`, `A2-TO-A3-VALIDATION-DELTA.md`, `A3-RUNTIME-HANDOFF.md`, `REPOSITORY-AND-EVIDENCE-RULES.md`, and reconstruction docs. Control, the exact Frozen commit/artifact, and preserved A3 Evidence are the truth sources; moving upstream is not.
 
 ## Objective and non-objective
 
@@ -33,29 +33,31 @@ This is not a performance benchmark. `vllm bench serve` may emit timing fields, 
 
 Do not run prefix hit/reset lifecycle, EP2, MTP, quantization, profiling/tuning, A3 matched-native comparison, or any later Stage.
 
-## Accepted entry identity
+## Frozen Validation Baseline
 
 ```text
-tracked HEAD/tree at Task creation:
-032fddc91b6d013b98aed8e64ff05b54d1435648
-463806ef18e5e31006cd4f59e6a5261fc65cea4a
-
-accepted runtime artifact source/tree:
+frozen source/tree:
 e610a990d785356bf51a3cad50219d4c03310a31
 609ff1ad0f08239f353cb4d8774e504b4deba03b
 
-accepted wheel SHA-256:
+accepted wheel:
+vllm_plugin_fl-0.2.0+ge610a990d-cp311-cp311-linux_aarch64.whl
+
+wheel SHA-256:
 2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd
 
 model:
 /data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B
 
-official release/0.2 at Task creation:
-ef78dec66fea1ae858ef414584be1478929ee9b2
-tree 7414bac41c39bc445b0cc05dbdaecc0f08231aeb
+last pre-change tracked reference/tree:
+032fddc91b6d013b98aed8e64ff05b54d1435648
+463806ef18e5e31006cd4f59e6a5261fc65cea4a
+
+later upstream/tracked branch movement:
+OUT OF SCOPE / IGNORE FOR EXECUTION
 ```
 
-Before any A3 mutation, live-query tracked HEAD/tree, PR #404, and official base. If tracked HEAD/tree changed, STOP and return the exact `032fddc9... -> new HEAD` diff. If unchanged, reuse the Stage 5 Accepted `e610a990...` wheel/runtime and never label `032fddc9...` as wheel source.
+Stage 6 uses this Frozen Validation Baseline. Do not live-query future tracked HEAD, PR #404 mergeability, or official base as an execution gate; do not inspect later upstream diffs. Always reuse the Stage 5 Accepted `e610a990...` wheel/runtime. Never label `032fddc9...` as wheel source, and do not rebuild `032fddc9...` or any later upstream commit. Later upstream movement must not trigger STOP or Stage 3/4/5 reruns.
 
 Reuse the exact Accepted container/runtime if present. If absent, reconstruct only from the Accepted reconstruction. STOP on image/CANN/Python/torch/torch_npu/vLLM/Triton/wheel/model/device mapping drift. Read-only preflight and use only the current authorized idle two-device scope; do not kill, pause, reset, preempt, or alter other workloads.
 
@@ -63,6 +65,7 @@ Reuse the exact Accepted container/runtime if present. If absent, reconstruct on
 
 Prove and save:
 
+- Frozen source/tree and exact Accepted wheel filename/SHA-256 match this prompt;
 - `torch_npu` import; NPU available; device count 2; exact device names;
 - accepted wheel hash and site-packages origin; no editable/source-tree shortcut;
 - `vllm-ascend` absent, `vllm_ascend` not importable, FlagGems absent, `USE_FLAGGEMS=0`;
@@ -242,14 +245,14 @@ Execution PASS — Stage 6 A2-equivalent DP1/TP2 Functional Matrix (16/16)
 
 This proves functional reproduction only.
 
-STOP at the first attributable identity, runtime, service, capture, chunked/async, per-cell, output, graph/state, illegal-address/OOM, or source-cleanliness blocker. Return completed cells, last successful gate/cell, first blocker, root-cause confidence, and one minimum follow-up. Do not silently lower workload parameters, disable required features, change source/wheel, restart with changed parameters, or patch production source.
+STOP at the first attributable Frozen source/artifact/runtime/environment/model/workload, service, capture, chunked/async, per-cell, output, graph/state, illegal-address/OOM, or Frozen-source cleanliness blocker. Upstream branch/PR/base movement is not a blocker. Return completed cells, last successful gate/cell, first blocker, root-cause confidence, and one minimum follow-up. Do not silently lower workload parameters, disable required features, change source/wheel, restart with changed parameters, inspect/adopt later upstream, or patch production source.
 
 ## Evidence and immutable Result
 
 The Result must support the final A3 end-to-end reproduction document without chat memory. Preserve:
 
 - Task/run/timestamps, Control parent/current commit;
-- tracked HEAD/tree/clean state, actual runtime source/tree, wheel filename/hash/inventory;
+- Frozen source/tree, last pre-change tracked reference, actual wheel filename/hash/origin/inventory;
 - image tag/digests/ID, container ID, full runtime tuple, host/device/visible scope, model identity;
 - actual container/env/serve/benchmark commands, configs, port, cache roots/state, exit codes;
 - exact prompt-generation method, vLLM tool source/version, tokenizer, seed formula/per-cell seeds, request order/IDs, prompt hash/token manifest, token-length verification and independence checks;
