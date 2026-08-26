@@ -97,6 +97,8 @@ A2 REFERENCE ONLY — NOT A3 ACCEPTANCE
 
 任何 A3 PASS/Acceptance必须来自真实 A3/910C execution evidence。
 
+A2 baseline与本项目A3复现状态、环境差异、bounded validation差异及A3-specific source change ledger见 [A2-TO-A3-VALIDATION-DELTA.md](docs/qwen36-35b-a3b-a3-flagos/A2-TO-A3-VALIDATION-DELTA.md)。
+
 ## Current Acceptance / Next Task
 
 - Stage 1/2 Formal Acceptance：[REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md)
@@ -119,6 +121,7 @@ A2 REFERENCE ONLY — NOT A3 ACCEPTANCE
 | Stage与关键路径 | [PLAN.md](docs/qwen36-35b-a3b-a3-flagos/PLAN.md) |
 | 版本、分支、SHA/tree、baseline | [BASELINE.md](docs/qwen36-35b-a3b-a3-flagos/BASELINE.md) |
 | A2 oracle/reference | [A2-REFERENCE.md](docs/qwen36-35b-a3b-a3-flagos/A2-REFERENCE.md) |
+| A2 → A3差异与复现状态 | [A2-TO-A3-VALIDATION-DELTA.md](docs/qwen36-35b-a3b-a3-flagos/A2-TO-A3-VALIDATION-DELTA.md) |
 | 未来 GLM可继承/不可外推边界 | [A3-RUNTIME-HANDOFF.md](docs/qwen36-35b-a3b-a3-flagos/A3-RUNTIME-HANDOFF.md) |
 | Task/Evidence/Result/Acceptance规则 | [REPOSITORY-AND-EVIDENCE-RULES.md](docs/qwen36-35b-a3b-a3-flagos/REPOSITORY-AND-EVIDENCE-RULES.md) |
 | 当前 GitHub/source核查 | [CURRENT-IMPLEMENTATION-STATE.md](docs/qwen36-35b-a3b-a3-flagos/research/CURRENT-IMPLEMENTATION-STATE.md) |
