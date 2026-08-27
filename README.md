@@ -15,7 +15,8 @@
 - Stage 0 Control / baseline establishment：**COMPLETE**。
 - A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]`及Stage 5 bounded serve correctness：**ACCEPTED**。
 - Frozen Validation Baseline：source `e610a990...` / tree `609ff1ad...`；Accepted wheel SHA-256 `2fcf788...`。`032fddc9...`仅为冻结时最后一个pre-change tracked reference。
-- Next Task：`QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX`，**READY / Awaiting explicit User dispatch**。
+- Stage 6 A2-equivalent functional matrix：**STOP / NOT ACCEPTED / FORMALLY REVIEWED**；U+FFFD output-chain diagnostic：**DIAGNOSTIC STOP — D / UNRESOLVED / Codex1 Acceptance PENDING**。
+- Next Task：**Decision required / Not created**。
 - Validation Code repo/fork：**Not needed**。
 - GLM-5.2-W8A8项目：由 User Decision 暂停；本仓库不接收 GLM Result。
 
@@ -85,7 +86,7 @@ VLLM_PLUGINS=fl
 | 3 | TP2 BF16 eager model correctness | **ACCEPTED** |
 | 4 | `FULL_DECODE_ONLY [1,2,4,8]` capture/replay/state correctness | **ACCEPTED — bounded graph correctness** |
 | 5 | Serve health/models/completion/chat/repeat/bounded concurrency | **ACCEPTED — bounded service correctness** |
-| 6 | A2-equivalent DP1/TP2 `1K/4K/16K/64K x C1/C8/C32/C64, O1024` functional reproduction | **READY / Awaiting explicit User dispatch** |
+| 6 | A2-equivalent DP1/TP2 `1K/4K/16K/64K x C1/C8/C32/C64, O1024` functional reproduction | **STOP / NOT ACCEPTED**；diagnostic D unresolved |
 | Post-functional | 同矩阵performance/capacity | Stage 6 functional 16/16 Accepted后 |
 | Specialist | Prefix、EP2及其他专项能力 | 主TP2路线稳定后按价值补齐 |
 | Handoff | Runtime freeze / reconstruction / handoff | 所需 A3范围 Accepted后 |
@@ -104,15 +105,16 @@ A2 REFERENCE ONLY — NOT A3 ACCEPTANCE
 
 A2 baseline与本项目A3复现状态、环境差异、bounded validation差异及A3-specific source change ledger见 [A2-TO-A3-VALIDATION-DELTA.md](docs/qwen36-35b-a3b-a3-flagos/A2-TO-A3-VALIDATION-DELTA.md)。
 
-## Current Acceptance / Next Task
+## Current Acceptance / Diagnostic Status
 
 - Stage 1/2 Formal Acceptance：[REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE1-2-ACCEPTANCE-20260826.md)
 - Stage 3 Formal Acceptance：[REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE3-TP2-BF16-EAGER-ACCEPTANCE-20260826.md)
 - Stage 4 Formal Acceptance：[REVIEW-QWEN36-A3-STAGE4-FULL-DECODE-ONLY-GRAPH-ACCEPTANCE-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE4-FULL-DECODE-ONLY-GRAPH-ACCEPTANCE-20260826.md)
 - Stage 5 Formal Acceptance：[REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE5-SERVE-CORRECTNESS-ACCEPTANCE-20260826.md)
 - Accepted reconstruction：[A3-STAGE1-2-ACCEPTED-RUNTIME.md](docs/qwen36-35b-a3b-a3-flagos/reconstruction/A3-STAGE1-2-ACCEPTED-RUNTIME.md)
-- Next Task：[QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)
-- Next prompt：[CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md](docs/qwen36-35b-a3b-a3-flagos/tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md)
+- Stage 6 STOP Review：[REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)
+- U+FFFD diagnostic Result：[RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md](docs/qwen36-35b-a3b-a3-flagos/results/RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md)
+- Next Task：Decision required / Not created；do not resume Stage 6 or enter performance/prefix/EP2 without new User dispatch.
 
 ## What Is Not Done
 

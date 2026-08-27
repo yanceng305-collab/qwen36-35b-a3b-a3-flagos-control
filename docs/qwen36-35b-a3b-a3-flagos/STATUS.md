@@ -2,7 +2,7 @@
 
 更新时间：2026-08-26
 
-总体状态：A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和Stage 5 bounded service correctness均已 **ACCEPTED**。User已通过`D-030`冻结validation baseline为`e610a990...` / tree `609ff1ad...` / Accepted wheel SHA-256 `2fcf788...`；`032fddc9...`只作为last pre-change tracked reference。Stage 6 STOP Result已 **FORMALLY REVIEWED / preserved**，但Stage 6仍 **STOP / NOT ACCEPTED**：formal boundary through `I1024 / C64 / O8` failure，last successful formal cell为`I1024 / C32 / O8`，first blocker为request index `34` decoded output含`29`个U+FFFD并违反frozen validator；post-STOP剩余12个O8和全部16个O1024只作diagnostic raw evidence。Underlying root cause unresolved；performance、prefix lifecycle、EP2及后续Stage保持locked。
+总体状态：A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和Stage 5 bounded service correctness均已 **ACCEPTED**。User已通过`D-030`冻结validation baseline为`e610a990...` / tree `609ff1ad...` / Accepted wheel SHA-256 `2fcf788...`；`032fddc9...`只作为last pre-change tracked reference。Stage 6 STOP Result已 **FORMALLY REVIEWED / preserved**，但Stage 6仍 **STOP / NOT ACCEPTED**：formal boundary through `I1024 / C64 / O8` failure，last successful formal cell为`I1024 / C32 / O8`，first blocker为request index `34` decoded output含`29`个U+FFFD并违反frozen validator；post-STOP剩余12个O8和全部16个O1024只作diagnostic raw evidence。U+FFFD output-chain diagnostic已执行，结论为 **D / UNRESOLVED**，Codex1 Acceptance **PENDING**；performance、prefix lifecycle、EP2及后续Stage保持locked。
 
 ## 当前快照
 
@@ -20,8 +20,9 @@
 | Official A3 base route | Bounded selection authorized | `v0.20.2rc1-a3` Ubuntu或`v0.20.2rc1-a3-openeuler`；ordinary unsuffixed A2 image excluded |
 | Model artifact | **Gate M PASS** | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；root 26/26 shards present，1045/1045 safetensors tensors BF16，no quantization，no download markers；checksum manifest saved |
 | First Codex2 task | **STOP / initial NEEDS-FOLLOWUP closed by Accepted chain** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Initial Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
-| Latest bounded Task | **STOP / FORMALLY REVIEWED — Stage 6 NOT ACCEPTED** | [`QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX`](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)；first blocker `I1024/C64/O8`，last formal success `I1024/C32/O8` |
-| Next Task | **READY / Awaiting explicit User dispatch — ONLY NEXT TASK** | [`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)；existing Evidence first，at most one conditional faithful `I1024/C64/O8` cell；cannot produce Stage 6 PASS |
+| Parent Stage 6 STOP | **STOP / FORMALLY REVIEWED — Stage 6 NOT ACCEPTED** | [`QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX`](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)；first blocker `I1024/C64/O8`，last formal success `I1024/C32/O8` |
+| Latest bounded Task | **DIAGNOSTIC STOP — D / UNRESOLVED / Codex1 Acceptance PENDING** | [`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)；Phase A found missing raw generated-token/raw HTTP/parsed API/client in-memory layers；Phase B not run；cannot produce Stage 6 PASS |
+| Next Task | **Decision required / Not created** | Await Codex1 review of diagnostic Result；do not resume Stage 6, create a new task, or enter performance/prefix lifecycle/EP2 without new User dispatch |
 | Validation Code repo/fork | **Not needed** | Stage 1/2 blockers均以 non-source route闭合；implementation source未修改 |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
@@ -86,7 +87,7 @@ User已确认 bounded authorization：
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
-Stage 1/2、Stage 3、Stage 4和Stage 5 Formal Acceptance均已完成。Stage 6 functional matrix已执行、STOP并完成Codex1 Formal Review；Stage 6未Accepted。只有U+FFFD output-chain diagnostic在explicit User dispatch后可执行；不得自动进入performance、prefix lifecycle或EP2。
+Stage 1/2、Stage 3、Stage 4和Stage 5 Formal Acceptance均已完成。Stage 6 functional matrix已执行、STOP并完成Codex1 Formal Review；Stage 6未Accepted。U+FFFD output-chain diagnostic已执行并以D/UNRESOLVED停止，Codex1 Acceptance PENDING；不得自动恢复Stage 6、进入performance、prefix lifecycle或EP2。
 
 ## Current Stage 6 STOP review — QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX
 
@@ -106,7 +107,7 @@ Formal Review：[`REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md`](reviews/REVIEW-QWEN
 - Positive runtime-path Evidence：capture through 64、two-worker FULL NPUGraph replay、prefill `NONE`/eager与decode `FULL`/NPUGraph、chunked-prefill events、async enabled、bounded negative scan和task-scoped shutdown均保留为observed/diagnostic evidence，不构成Stage 6 PASS。Async effective use未由Result单独trace证明；16K/64K chunking来自post-STOP边界。
 - Root cause：observed blocker `HIGH`；underlying cause `LOW / NOT CONFIRMED / UNRESOLVED`。不得定性为FL/NPUGraph corruption bug。
 - Existing Evidence sufficiency：Control-visible内容不足；original server Evidence是否含完整raw wire/token chain为`UNKNOWN`，须先read-only audit。
-- Only Ready Task：[`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)。不dispatch、不完整matrix rerun、不改source/baseline。
+- Follow-up status：[`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)已执行，诊断Result等待Codex1 review；不完整matrix rerun、不改source/baseline。
 
 ## Current Stage 3 run — QWEN36-A3-S3-TP2-BF16-EAGER
 

@@ -28,7 +28,8 @@
 - [tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)：historical Stage 6 parent Task，STOP / DO NOT RESUME。
 - [results/RESULT-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-20260826T180105+0800.md](results/RESULT-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-20260826T180105+0800.md)：immutable Stage 6 STOP Result。
 - [reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md](reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)：Stage 6 STOP Formal Review，Result preserved / Stage 6 NOT ACCEPTED。
-- [tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)：唯一Ready Evidence-first follow-up Task。
+- [tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)：Evidence-first follow-up Task，已执行一次诊断。
+- [results/RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md](results/RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md)：diagnostic STOP D / unresolved Result，Codex1 Acceptance PENDING。
 - [tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md](tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md)：historical `DO NOT DISPATCH` prompt。
 - [results/INDEX.md](results/INDEX.md)：Execution Result、Control Sync、Codex1 Review/Acceptance索引。
 
@@ -40,4 +41,4 @@
 
 ## Current Stage
 
-Stage 1/2、Stage 3、Stage 4和Stage 5均已`ACCEPTED`。User Decision `D-030`已将Stage 6+ Frozen Validation Baseline固定为`e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...`；`032fddc9...`只保留为last pre-change reference，future upstream变化忽略。Stage 6已Formal Review为`STOP / NOT ACCEPTED`：formal boundary through `I1024/C64/O8` failure，last successful cell `I1024/C32/O8`；remaining O8和全部O1024为diagnostic-only。唯一Ready follow-up为U+FFFD output-chain diagnostic；performance、prefix lifecycle和EP2保持locked。
+Stage 1/2、Stage 3、Stage 4和Stage 5均已`ACCEPTED`。User Decision `D-030`已将Stage 6+ Frozen Validation Baseline固定为`e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...`；`032fddc9...`只保留为last pre-change reference，future upstream变化忽略。Stage 6已Formal Review为`STOP / NOT ACCEPTED`：formal boundary through `I1024/C64/O8` failure，last successful cell `I1024/C32/O8`；remaining O8和全部O1024为diagnostic-only。U+FFFD output-chain diagnostic已执行并以D/UNRESOLVED停止，Codex1 Acceptance PENDING；performance、prefix lifecycle和EP2保持locked。
