@@ -1,5 +1,7 @@
 # Codex2 Prompt — QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC
 
+状态：**DO NOT DISPATCH — historical prompt；Task ended after old/new-server STOP Results。**
+
 User formal dispatch：**execute only `QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC` in this new Codex2 session. Complete its immutable diagnostic Result and Control sync, then stop. Do not execute any other Task.**
 
 ```text

@@ -15,8 +15,8 @@
 - Stage 0 Control / baseline establishment：**COMPLETE**。
 - A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]`及Stage 5 bounded serve correctness：**ACCEPTED**。
 - Frozen Validation Baseline：source `e610a990...` / tree `609ff1ad...`；Accepted wheel SHA-256 `2fcf788...`。`032fddc9...`仅为冻结时最后一个pre-change tracked reference。
-- Stage 6 A2-equivalent functional matrix：**STOP / NOT ACCEPTED**；Evidence-first U+FFFD diagnostic：**FORMALLY REVIEWED / D / UNRESOLVED / NEEDS-FOLLOWUP**。
-- Next Task：**READY — `QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC` / Awaiting explicit User dispatch**。
+- Stage 6：**STOP / NOT ACCEPTED**；new-server NPU invariant在exact scope PASS；prospective run在jemalloc preload reconstruction gap处STOP，0 generation，U+FFFD仍D/unresolved。
+- Next Task：**READY — `QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC` / Awaiting explicit User dispatch**。
 - Validation Code repo/fork：**Not needed**。
 - GLM-5.2-W8A8项目：由 User Decision 暂停；本仓库不接收 GLM Result。
 
@@ -115,7 +115,10 @@ A2 baseline与本项目A3复现状态、环境差异、bounded validation差异�
 - Stage 6 STOP Review：[REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)
 - U+FFFD diagnostic Result：[RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md](docs/qwen36-35b-a3b-a3-flagos/results/RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md)
 - U+FFFD diagnostic Formal Review：[REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md)
-- Next Task：[QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md)；Awaiting explicit User dispatch；performance/prefix/EP2 remain locked.
+- New-server Result：[RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827T173022+0800.md](docs/qwen36-35b-a3b-a3-flagos/results/RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827T173022+0800.md)
+- New-server Formal Review：[REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md)
+- Next Task：[QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC.md)；Awaiting explicit User dispatch；performance/prefix/EP2 remain locked.
+- New-session Prompt：[CODEX2-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-PROMPT.md](docs/qwen36-35b-a3b-a3-flagos/tasks/CODEX2-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-PROMPT.md)
 
 ## What Is Not Done
 

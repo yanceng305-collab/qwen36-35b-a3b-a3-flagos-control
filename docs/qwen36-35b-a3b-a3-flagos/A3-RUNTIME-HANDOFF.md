@@ -1,6 +1,6 @@
 # A3 Runtime Handoff — Qwen Validation to Future GLM Work
 
-更新时间：2026-08-26
+更新时间：2026-08-27
 
 当前状态：**STAGE 1-5 ACCEPTED, SCOPE-LIMITED**。真实A3/910C execution已完成A3-native wheel、standalone FL、TP2/HCCL BF16 eager、bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和service/API correctness；A2-equivalent matrix和performance仍未验证。Qwen-specific模型/graph/service结论不得直接外推到GLM。
 
@@ -34,7 +34,7 @@ Stage 6及后续handoff统一绑定User Decision `D-030` Frozen Validation Basel
 | Standalone FL formal installation | **ACCEPTED** | site-packages wheel origin、no source PYTHONPATH、no installed `vllm-ascend` accepted |
 | Cache isolation / compiler identity | **ACCEPTED — bounded Qwen graph scope** | FL-local GraphWrapper + eager FX + NPUGraph、task cache root和`[1,2,4,8]` capture/replay通过；service/other shapes待验 |
 | Evidence / immutable Result / reconstruction discipline | **ACCEPTED for Stage 1-5** | 完整三指针、checksum、immutable Results与Formal Reviews；Stage 6+适用final reproduction minimum |
-| Runtime image/wheel/startup handoff | PARTIAL | wheel已保留，PASS container已保留；最终 Stage 8 freeze/reconstruction尚未完成 |
+| Runtime image/wheel/startup handoff | PARTIAL | wheel/PASS container已保留；new-server Result补充Stage 6 clean-container jemalloc compatibility prerequisite；最终 Stage 8 freeze/reconstruction尚未完成 |
 
 ## Accepted A3 container runtime baseline
 
@@ -154,6 +154,22 @@ Must be resolved per task rather than copied literally:
 - model/TP/graph/serve-specific environment variables.
 
 The User example that led to the fix used `nightly-main-a3` and all eight cards, but those values are **not** part of this project baseline. The successful formal run retained the official `v0.20.2rc1-a3-openeuler` image and narrowed device scope to idle NPU 0/1.
+
+### Stage 6 clean-container jemalloc preload-path reconstruction
+
+The frozen Stage 6 service config retains:
+
+```text
+LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libjemalloc.so.2
+```
+
+The new-server run `20260827T173022+0800` used a fresh container from the exact Accepted image, observed `/usr/lib64/libjemalloc.so.2` but no frozen compatibility path, and stopped when the loader ignored the preload. The same run first passed the staged two-device NPU invariant on its exact host/container/device tuple.
+
+Clean-container Stage 6 reconstruction must verify the image-provided library's file/realpath/ownership/hash/architecture/loader compatibility before an explicitly authorized Task restores the frozen path inside its Task-owned container. Keep the frozen preload string unchanged; do not modify the host, image, source, wheel or publish a derived image. Before service admission prove target resolution, non-generative loader activation, the NPU invariant and positive relevant-process jemalloc loading.
+
+This is a [later-discovered Stage 6 reconstruction prerequisite](reconstruction/A3-STAGE1-2-ACCEPTED-RUNTIME.md#later-discovered-stage-6-jemalloc-compatibility-prerequisite), not a Stage 1/2 regression or new baseline. The [Formal Review](reviews/REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md) does not claim that the historical successful container used the same symlink or preparation step.
+
+The old-server invariant timeout remains historical and unresolved; the new-server positive invariant means it must not be generalized as a universal Frozen image/runtime regression.
 
 ## Explicitly non-transferable Qwen claims
 

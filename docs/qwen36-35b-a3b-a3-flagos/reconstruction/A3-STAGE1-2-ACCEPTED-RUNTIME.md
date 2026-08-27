@@ -78,6 +78,25 @@ If `torch_npu` imports but NPU unavailable/count mismatch：
 - 不继续 FL/FlagGems诊断；
 - 不安装 FlagGems掩盖问题。
 
+## Later-discovered Stage 6 jemalloc compatibility prerequisite
+
+The new-server diagnostic run `20260827T173022+0800` used a fresh Task-owned container from the exact Accepted image and observed:
+
+```text
+image-provided object: /usr/lib64/libjemalloc.so.2
+frozen Stage 6 preload: /usr/lib/aarch64-linux-gnu/libjemalloc.so.2
+fresh-container frozen path: absent
+loader result: frozen preload ignored
+```
+
+See the [immutable Result](../results/RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827T173022+0800.md) and [Formal Review](../reviews/REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md).
+
+For clean Stage 6 service reconstruction, first preserve the source/target path state and verify the image-provided object's file type, realpath, ownership when available, SHA-256, AArch64 ELF/dependency and loader compatibility. If the frozen target is absent, only an explicitly authorized Task may create a minimum Task-owned-container compatibility path to the verified object while leaving the frozen `LD_PRELOAD` string unchanged.
+
+Before service admission, verify target existence/realpath, non-generative loader activation without ignored-preload/ABI errors, the staged NPU invariant with the preload effective, and positive service-process jemalloc loading.
+
+This is a later-discovered Stage 6 clean-container runtime reconstruction prerequisite. It does not change the Stage 1/2 Accepted image/runtime identity, does not require Stage 1/2 revalidation, and does not prove that the historical Accepted container used the same symlink or preparation procedure. Historical observed success and this newly documented prerequisite are separate facts.
+
 ## Clean build reconstruction
 
 - 使用一个 Task container完成 build/install/runtime闭环。

@@ -31,8 +31,12 @@
 - [tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)：Evidence-first follow-up Task，已执行一次诊断。
 - [results/RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md](results/RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md)：diagnostic STOP D / unresolved Result，已Formal Review为NEEDS-FOLLOWUP。
 - [reviews/REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md](reviews/REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md)：D / unresolved diagnostic Formal Review，NEEDS-FOLLOWUP。
-- [tasks/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md](tasks/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md)：唯一Ready prospective root-cause Task。
-- [tasks/CODEX2-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-PROMPT.md](tasks/CODEX2-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-PROMPT.md)：可直接发送给Codex2新会话的完整prompt。
+- [tasks/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md](tasks/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md)：historical prospective Task，old/new-server STOP，DO NOT RESUME。
+- [tasks/CODEX2-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-PROMPT.md](tasks/CODEX2-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-PROMPT.md)：historical `DO NOT DISPATCH` prompt。
+- [results/RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827T173022+0800.md](results/RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827T173022+0800.md)：new-server invariant PASS / jemalloc reconstruction STOP Result。
+- [reviews/REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md](reviews/REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md)：new-server Formal Review。
+- [tasks/QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC.md](tasks/QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC.md)：唯一Ready combined correction+diagnostic Task。
+- [tasks/CODEX2-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-PROMPT.md](tasks/CODEX2-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-PROMPT.md)：可复制新会话prompt。
 - [tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md](tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md)：historical `DO NOT DISPATCH` prompt。
 - [results/INDEX.md](results/INDEX.md)：Execution Result、Control Sync、Codex1 Review/Acceptance索引。
 
@@ -44,4 +48,4 @@
 
 ## Current Stage
 
-Stage 1/2、Stage 3、Stage 4和Stage 5均已`ACCEPTED`。User Decision `D-030`已将Stage 6+ Frozen Validation Baseline固定为`e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...`；`032fddc9...`只保留为last pre-change reference。Stage 6为`STOP / NOT ACCEPTED`。Evidence-first U+FFFD diagnostic已Formal Review为D/UNRESOLVED / NEEDS-FOLLOWUP；唯一Ready后续为prospective instrumentation + bounded reproduction Task。Performance、prefix lifecycle和EP2保持locked。
+Stage 1/2、Stage 3、Stage 4和Stage 5均已`ACCEPTED`。D-030 Frozen baseline不变。Stage 6为`STOP / NOT ACCEPTED`。New-server NPU invariant在exact scope PASS，但service因jemalloc preload-path reconstruction gap在0 generation时STOP；U+FFFD仍D/unresolved。唯一Ready后续为combined jemalloc reconstruction→readiness→prospective diagnosis。Performance、prefix lifecycle和EP2保持locked。

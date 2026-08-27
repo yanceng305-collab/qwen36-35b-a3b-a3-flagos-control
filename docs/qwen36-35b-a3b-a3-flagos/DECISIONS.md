@@ -36,6 +36,7 @@
 | D-030 / FROZEN-UPSTREAM-VALIDATION-BASELINE | Stage 6及后续functional、performance/capacity、prefix、EP2和handoff统一冻结在`e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...`；停止跟踪upstream moving HEAD | **Required / User Decision** | 项目目标改为验证固定、可复现的同事实现快照；避免debug清理、rebase/squash/history rewrite或继续开发污染A3数据，保证A2-to-A3比较和最终复现文档有单一代码基准 | 只有User新的正式Decision可建立new validation baseline；必须作为新baseline/project evidence，不能覆盖本项目结果 |
 | D-031 / STAGE6-STOP-BOUNDARY-AND-DIAGNOSTIC | Preserve Stage 6 immutable STOP Result；formal boundary ends at`I1024/C64/O8` failure；post-STOP cells diagnostic-only；only Ready follow-up is artifact-first U+FFFD output-chain diagnostic | **Required / Codex1 Formal Review** | Frozen validator failure prevents Acceptance；execution incorrectly continued for 12 O8 and 16 O1024 cells；current record proves the blocker but not the underlying layer/cause | Diagnostic Result + Codex1 review；only that later Decision may authorize formal Stage 6 recovery，never performance/prefix/EP2 directly |
 | D-032 / UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC | Formally preserve the read-only diagnostic as D/UNRESOLVED and authorize exactly one prospective instrumentation + bounded reproduction Task；pin `long-context-orchestrator@0bb8a5e...` | **Required / User Decision + Codex1 Review** | Parent Evidence cannot locate the earliest U+FFFD layer；User now authorizes actual bounded A3 service/workload capture without changing Frozen baseline；finite stochastic/prehistory attempts are required | New diagnostic Result + Codex1 review；does not authorize Stage 6 PASS, performance, prefix or EP2 |
+| D-033 / JEMALLOC-RECONSTRUCTION-AND-UFFFD-CONTINUATION | Accept new-server staged NPU invariant for exact admission scope；classify ignored frozen jemalloc preload as Stage 6 reconstruction gap；authorize exactly one combined correction→readiness→U+FFFD Task | **Required / User Decision + Codex1 Review** | Fresh exact-image container exposed `/usr/lib64/libjemalloc.so.2` but lacked frozen preload path；0 generation；a jemalloc-only Task would delay the actual root-cause objective | Combined Task Result + Codex1 review；no Stage 6 PASS/later-stage authority |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -186,6 +187,28 @@ instrumentation-bundle corrections <= 1
 One complete classifiable U+FFFD chain cancels all remaining budget. Non-reproduction or incomplete capture remains D and cannot deny the parent blocker. No O1024, full matrix, performance, prefix lifecycle, EP2, production source change, wheel rebuild or parameter workaround is authorized.
 
 The Task pins `https://github.com/yanceng305-collab/long-context-orchestrator@0bb8a5eda9c46f1b170552ba41b871ba141e04b6`. The skill provides durable context memory only. It cannot expand the Task or User dispatch, subagents cannot create permission, STOP is immediate, and durable notes do not replace formal Evidence/Result/Control rules.
+
+## D-033 — Jemalloc reconstruction and direct diagnostic continuation
+
+The prospective Task ended after two bounded STOP Results and must not resume.
+
+- Old-server timeout remains exact-run historical Evidence and unresolved. It cannot be generalized as a universal Frozen image/runtime regression because the new-server staged invariant passed on the exact new host/container/device tuple.
+- New-server staged NPU invariant is accepted only for Python/torch/torch_npu availability, device count 2 and two `Ascend910_9382` devices on that instance. Service readiness/generation was not reached.
+- The first new-server blocker is the ignored frozen `LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libjemalloc.so.2` target while the exact image exposes `/usr/lib64/libjemalloc.so.2`.
+- This is a later-discovered Stage 6 clean-container runtime reconstruction prerequisite/documentation gap, not a source/wheel/image/model defect, Stage 1/2 regression or U+FFFD cause.
+- Historical service success does not prove which path/symlink preparation was used in the historical container.
+
+Exactly one new Task combines:
+
+```text
+R0 one verified Task-container jemalloc compatibility reconstruction
+-> R1 frozen service admission/readiness
+-> R2 prospective U+FFFD diagnosis
+```
+
+R0 leaves the frozen preload string unchanged and is accounted separately from the one permitted output-chain instrumentation-bundle correction. If R0/R1 pass, Codex2 must continue directly to R2 in the same Task. No jemalloc-only intermediate Task is authorized.
+
+Because the stopped new-server run generated zero requests, the new Task receives a newly frozen full budget: at most 3 service launches, 4 C64 targets, 2 prehistory sequences, 10 O8 cells and 338 requests. One complete classifiable chain cancels all remaining budget. No O1024, performance, prefix lifecycle, EP2, production change, second reconstruction method or second instrumentation correction is authorized.
 
 ## 明确拒绝的路线
 

@@ -2,7 +2,7 @@
 
 Last updated：2026-08-27
 
-Current formal cutoff：A3 Stage 5 **ACCEPTED — bounded service correctness**；Stage 6 **STOP / NOT ACCEPTED**。Evidence-first U+FFFD diagnostic已Formally Reviewed为D/UNRESOLVED；下一唯一Ready工作是prospective bounded root-cause capture，不是formal matrix recovery。
+Current formal cutoff：A3 Stage 5 **ACCEPTED — bounded service correctness**；Stage 6 **STOP / NOT ACCEPTED**。New-server prospective run确认exact-scope NPU invariant PASS，但在0 generation时因jemalloc preload compatibility-path reconstruction gap STOP；U+FFFD仍D/unresolved。
 
 ## Purpose / comparison contract
 
@@ -240,6 +240,6 @@ Stage 6另外观察到automatic capture/replay through 64、chunked-prefill sche
 
 ## Post-Stage-6 STOP mainline
 
-Stage 6 parent Task已STOP且不得续跑。Evidence-first diagnostic已确认parent缺少raw generated-token/raw HTTP/parsed API/client-memory chain，结论D/UNRESOLVED。唯一Ready主线是[`QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md)：在Frozen baseline不变下prospective capture完整chain，bounded最多3 launches / 4 target C64 / 10 O8 cells / 338 requests。Diagnostic本身不能使Stage 6 PASS；performance、prefix lifecycle和EP2保持locked。
+Stage 6 parent与旧prospective Task均已STOP且不得续跑。唯一Ready主线是[`QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC`](tasks/QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC.md)：在Task-owned container补齐frozen preload compatibility path，证明loader/NPU/service readiness后直接继续prospective chain capture。Workload仍bounded最多3 launches / 4 C64 / 10 O8 cells / 338 requests；diagnostic不能使Stage 6 PASS，performance/prefix/EP2保持locked。
 
 A2 colleague result与A3 FL result只作cross-platform reproduction reference。判断FL相对性能时优先A3 FL vs A3 matched native，并尽可能匹配cards/model/input/output/concurrency/prompts/order/sampling/cache/graph/warm-up；不得将910B1→910C硬件差异误算为FL implementation差异。

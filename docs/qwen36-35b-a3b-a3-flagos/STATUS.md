@@ -2,7 +2,7 @@
 
 更新时间：2026-08-27
 
-总体状态：A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和Stage 5 bounded service correctness均已 **ACCEPTED**。User已通过`D-030`冻结validation baseline为`e610a990...` / tree `609ff1ad...` / Accepted wheel SHA-256 `2fcf788...`；`032fddc9...`只作为last pre-change tracked reference。Stage 6仍 **STOP / NOT ACCEPTED**：formal boundary through `I1024/C64/O8` failure，last successful formal cell `I1024/C32/O8`。Evidence-first U+FFFD diagnostic的 `D / UNRESOLVED`结论已 **FORMALLY REVIEWED / NEEDS-FOLLOWUP**；parent blocker在saved-result/validator层有效，但early output chain缺失。唯一Ready后续为 prospective instrumentation + bounded reproduction Task；performance、prefix lifecycle、EP2及后续Stage保持locked。
+总体状态：A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和Stage 5 bounded service correctness均已 **ACCEPTED**；D-030 Frozen baseline不变。Stage 6仍 **STOP / NOT ACCEPTED**。New-server prospective run在exact host/container/NPU 0/1 scope完成staged NPU invariant PASS，但首个service launch因frozen jemalloc preload compatibility path缺失被loader忽略而STOP；0 generation，U+FFFD仍D/unresolved。该blocker已Formal Review为Stage 6 clean-container runtime reconstruction gap，不是source/wheel/image/model或Stage 1/2 regression。唯一Ready后续为combined jemalloc reconstruction→readiness→U+FFFD Task；performance、prefix lifecycle、EP2及后续Stage保持locked。
 
 ## 当前快照
 
@@ -21,8 +21,8 @@
 | Model artifact | **Gate M PASS** | `/data/tiankuan/zyg/FL/workspace/Qwen3.6-35B-A3B`；root 26/26 shards present，1045/1045 safetensors tensors BF16，no quantization，no download markers；checksum manifest saved |
 | First Codex2 task | **STOP / initial NEEDS-FOLLOWUP closed by Accepted chain** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Initial Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
 | Parent Stage 6 STOP | **STOP / FORMALLY REVIEWED — Stage 6 NOT ACCEPTED** | [`QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX`](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)；first blocker `I1024/C64/O8`，last formal success `I1024/C32/O8` |
-| Latest diagnostic Result | **FORMALLY REVIEWED — D / UNRESOLVED / NEEDS-FOLLOWUP** | [`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md)；Phase B not run was contract-compliant |
-| Next Task | **READY / Awaiting explicit User dispatch — ONLY NEXT TASK** | [`QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md)；capture-only instrumentation；hard cap 3 launches / 4 C64 targets / 10 cells / 338 O8 requests |
+| Latest diagnostic Result | **FORMALLY REVIEWED — new-server invariant PASS / jemalloc reconstruction STOP / D UNRESOLVED / NEEDS-FOLLOWUP** | [New-server Result](results/RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827T173022+0800.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md)；0 generation |
+| Next Task | **READY / Awaiting explicit User dispatch — ONLY NEXT TASK** | [`QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC`](tasks/QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC.md)；R0 correction→R1 readiness→R2 diagnosis；full 3/4/2/10/338 budget |
 | Validation Code repo/fork | **Not needed** | Stage 1/2 blockers均以 non-source route闭合；implementation source未修改 |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
@@ -87,7 +87,7 @@ User已确认 bounded authorization：
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
-Stage 1/2、Stage 3、Stage 4和Stage 5 Formal Acceptance均已完成。Stage 6 functional matrix已执行、STOP并完成Codex1 Formal Review；Stage 6未Accepted。Evidence-first U+FFFD diagnostic已Formal Review为D/UNRESOLVED / NEEDS-FOLLOWUP。只有新的prospective root-cause diagnostic在explicit User dispatch后可执行；不得自动恢复Stage 6、进入performance、prefix lifecycle或EP2。
+Stage 1/2、Stage 3、Stage 4和Stage 5 Formal Acceptance均已完成且不因old/new-server diagnostics重开。Stage 6未Accepted。旧prospective Task已结束；只有combined jemalloc reconstruction + U+FFFD diagnostic在explicit User dispatch后可执行。不得自动恢复formal Stage 6、进入performance、prefix lifecycle或EP2。
 
 ## Current Stage 6 STOP review — QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX
 
@@ -109,16 +109,18 @@ Formal Review：[`REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md`](reviews/REVIEW-QWEN
 - Existing Evidence sufficiency：read-only diagnostic确认parent缺raw generated-token/raw HTTP/parsed API/client-memory chain；classification D成立。
 - Follow-up status：[`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)已结束并Formal Review；不得续跑。
 
-## Current U+FFFD diagnostic review and next Task
+## Current prospective diagnostic chain and next Task
 
-- Diagnostic Result：[`RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md`](results/RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md)
-- Formal Review：[`REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md`](reviews/REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md)
-- Codex1 disposition：**valid diagnostic STOP D record / NEEDS-FOLLOWUP**；Stage 6仍STOP/NOT ACCEPTED。
-- Confirmed：`s6-i1024-c64-o8-34` saved output含29个U+FFFD，validator blocker有效；earliest actual layer unknown。
-- Phase B：`NOT RUN`且符合旧Task；不构成execution deviation。
-- Only Ready Task：[`QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md)。
-- Workload cap：最多3次service launch、4个C64 target、2个same-service prehistory sequences、10个O8 cells、338 requests；一条complete/classifiable chain即取消剩余预算。
-- Instrumentation：capture-only Task/Evidence-local hooks/wrappers/monkey patches；最多一次bundle correction；不改production source/wheel/model/parameters。
+- Evidence-first diagnostic：D/UNRESOLVED / Formally Reviewed；parent raw chain缺失。
+- Old-server Result：[`20260827T113500+0800`](results/RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-20260827T113500+0800.md)；20-second invariant timeout保留为exact-run historical Evidence，不能泛化为Frozen runtime regression。
+- New-server Result：[`20260827T173022+0800`](results/RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827T173022+0800.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md)。
+- New-server invariant：host `bm-jn-zs-zone1-910C-64G-10-111`，physical/logical 0/1，两张`Ascend910_9382`，Python/torch/torch_npu/is_available/device_count staged gate PASS。
+- First blocker：frozen `LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libjemalloc.so.2`未解析；exact image记录`/usr/lib64/libjemalloc.so.2`；loader ignored preload；service readiness/generation未到达。
+- Formal classification：**later-discovered Stage 6 clean-container jemalloc compatibility-path prerequisite / runtime reconstruction gap**。不改Stage 1/2 Acceptance；不声称historical container使用相同symlink步骤。
+- Workload use：1 service launch，0 cells，0 generation requests，0 instrumentation correction；U+FFFD仍D/UNRESOLVED。
+- Only Ready Task：[`QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC`](tasks/QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC.md)。
+- Task sequence：R0 one verified Task-container path reconstruction → R1 loader/NPU/service admission → R2 direct prospective diagnosis。
+- Budget：最多3 service launches、4 C64 targets、2 prehistory sequences、10 O8 cells、338 requests；runtime filesystem correction与最多一次output-chain instrumentation correction分开计数。
 - Pinned context skill：`https://github.com/yanceng305-collab/long-context-orchestrator@0bb8a5eda9c46f1b170552ba41b871ba141e04b6`；skill/subagents不能扩大Task权限。
 
 ## Current Stage 3 run — QWEN36-A3-S3-TP2-BF16-EAGER
