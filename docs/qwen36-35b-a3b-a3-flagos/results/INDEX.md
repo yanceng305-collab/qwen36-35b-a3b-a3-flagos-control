@@ -25,3 +25,5 @@ Codex2生成的 run snapshot首次 push后不可修改。Codex1 Acceptance只更
 - `READY / Awaiting explicit User dispatch`不是 run，也不产生 immutable Result或 Acceptance。
 
 每个 future row必须保留 Code/source、Control、Server Evidence三指针，并明确 exact source SHA/tree/clean state、environment和 claim boundary。Stage 6及以后还必须满足[`REPOSITORY-AND-EVIDENCE-RULES.md`](../REPOSITORY-AND-EVIDENCE-RULES.md)的final reproduction minimum。
+
+| `QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC` | `2026-08-27T11:35:00+08:00` | **DIAGNOSTIC STOP - D / UNRESOLVED**; mandatory NPU invariant probe timed out before workload | `xiemingda-1002/vllm-plugin-FL@e610a990d785356bf51a3cad50219d4c03310a31` / tree `609ff1ad0f08239f353cb4d8774e504b4deba03b`; Code PR=`N/A` | [RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-20260827T113500+0800.md](RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-20260827T113500+0800.md) | `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC/evidence` | SYNCED | **PENDING** |
