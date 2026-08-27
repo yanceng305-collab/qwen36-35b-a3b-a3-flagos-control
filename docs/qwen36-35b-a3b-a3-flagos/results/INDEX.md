@@ -19,6 +19,8 @@ Codex2生成的 run snapshot首次 push后不可修改。Codex1 Acceptance只更
 
 ## Status semantics
 
+| `QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC` new-server fresh run | `2026-08-27T17:30:22+08:00` | **DIAGNOSTIC STOP — D / UNRESOLVED**; new-server staged NPU invariant PASS; first service launch stopped before readiness/generation because frozen jemalloc `LD_PRELOAD` target was absent and ignored | frozen `xiemingda-1002/vllm-plugin-FL@e610a990d785356bf51a3cad50219d4c03310a31` / tree `609ff1ad0f08239f353cb4d8774e504b4deba03b`; wheel sha256 `2fcf788660f3fe42b364bc60d593ee1b9b634fc0632de58c444d961bff4aa1bd`; Code PR=`N/A` | [RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827T173022+0800.md](RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827T173022+0800.md) | `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC/runs/20260827T173022+0800/evidence`; main logs `runtime/staged_npu_invariant.log`, `runtime/server_s1.log`, `runtime/server_chain_s1.jsonl`; selected physical 0/1; container removed | PENDING sync | **PENDING** |
+
 - Experiment Result：服务器执行的 `PASS / STOP / PARTIAL`。
 - Control Sync：`SYNCED / PENDING`；同步失败不改变 execution事实。
 - Codex1 Acceptance：`PENDING / ACCEPTED / REJECTED / NEEDS-FOLLOWUP`。
