@@ -35,6 +35,7 @@
 | D-029 | 下一主线为单一Stage 6 A2-equivalent DP1/TP2 16-cell functional Task；O8矩阵先warm-up，O1024做16/16 strict functional gate，performance另后置 | Required / Ready | A2正式资料冻结BF16、DP1/TP2、FULL_DECODE_ONLY、66560/64/16384、automatic capture、chunked/async、temperature=1、independent random prompts和seed公式；不再添加baseline外小correctness Stage | Frozen artifact/runtime/workload变化或首个真实functional blocker |
 | D-030 / FROZEN-UPSTREAM-VALIDATION-BASELINE | Stage 6及后续functional、performance/capacity、prefix、EP2和handoff统一冻结在`e610a990...` / tree `609ff1ad...` / wheel SHA-256 `2fcf788...`；停止跟踪upstream moving HEAD | **Required / User Decision** | 项目目标改为验证固定、可复现的同事实现快照；避免debug清理、rebase/squash/history rewrite或继续开发污染A3数据，保证A2-to-A3比较和最终复现文档有单一代码基准 | 只有User新的正式Decision可建立new validation baseline；必须作为新baseline/project evidence，不能覆盖本项目结果 |
 | D-031 / STAGE6-STOP-BOUNDARY-AND-DIAGNOSTIC | Preserve Stage 6 immutable STOP Result；formal boundary ends at`I1024/C64/O8` failure；post-STOP cells diagnostic-only；only Ready follow-up is artifact-first U+FFFD output-chain diagnostic | **Required / Codex1 Formal Review** | Frozen validator failure prevents Acceptance；execution incorrectly continued for 12 O8 and 16 O1024 cells；current record proves the blocker but not the underlying layer/cause | Diagnostic Result + Codex1 review；only that later Decision may authorize formal Stage 6 recovery，never performance/prefix/EP2 directly |
+| D-032 / UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC | Formally preserve the read-only diagnostic as D/UNRESOLVED and authorize exactly one prospective instrumentation + bounded reproduction Task；pin `long-context-orchestrator@0bb8a5e...` | **Required / User Decision + Codex1 Review** | Parent Evidence cannot locate the earliest U+FFFD layer；User now authorizes actual bounded A3 service/workload capture without changing Frozen baseline；finite stochastic/prehistory attempts are required | New diagnostic Result + Codex1 review；does not authorize Stage 6 PASS, performance, prefix or EP2 |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -163,7 +164,28 @@ The remaining 12 O8 cells and all 16 O1024 cells ran after the mandatory STOP bo
 
 Underlying cause remains `LOW / NOT CONFIRMED / UNRESOLVED`. Positive capture/replay/chunked/async-config/negative-scan/shutdown observations remain bounded runtime-path evidence only. The Evidence-local runtime instrumentation overlay must be identified and impact-audited; it is not silently treated as production source drift or ignored.
 
-Only [`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md) is Ready. It must first read the preserved Evidence and may run at most one faithful `I1024/C64/O8` diagnostic cell only if a required raw layer is absent. It cannot change source/baseline, cannot make Stage 6 PASS, and cannot authorize performance, prefix lifecycle, EP2 or later work. Codex2 still requires explicit User dispatch.
+At D-031 time, [`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md) was the only Ready Task. It later ended D/unresolved and is now historical; D-032 supersedes current routing without rewriting this decision's original boundary.
+
+## D-032 — Prospective U+FFFD root-cause diagnostic
+
+The Evidence-first diagnostic completed Phase A and is formally preserved as a valid `D / UNRESOLVED` record. Phase B was optional and not running it was contract-compliant. That Task is ended and must not resume.
+
+The User now explicitly authorizes one new prospective A3 diagnostic that may start the exact Accepted service, add capture-only runtime/client hooks and run bounded O8 reproduction. The Frozen source/tree/wheel, Accepted image/runtime/model, service parameters and Stage 6 sampling contract remain unchanged.
+
+The new Task hard cap is:
+
+```text
+service launches <= 3
+I1024/C64/O8 target cells <= 4
+same-service C1 -> C8 -> C32 -> C64 sequences <= 2
+total O8 cells <= 10
+total requests <= 338
+instrumentation-bundle corrections <= 1
+```
+
+One complete classifiable U+FFFD chain cancels all remaining budget. Non-reproduction or incomplete capture remains D and cannot deny the parent blocker. No O1024, full matrix, performance, prefix lifecycle, EP2, production source change, wheel rebuild or parameter workaround is authorized.
+
+The Task pins `https://github.com/yanceng305-collab/long-context-orchestrator@0bb8a5eda9c46f1b170552ba41b871ba141e04b6`. The skill provides durable context memory only. It cannot expand the Task or User dispatch, subagents cannot create permission, STOP is immediate, and durable notes do not replace formal Evidence/Result/Control rules.
 
 ## 明确拒绝的路线
 

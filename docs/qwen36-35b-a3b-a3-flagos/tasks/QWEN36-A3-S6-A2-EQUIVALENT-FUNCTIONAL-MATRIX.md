@@ -6,7 +6,7 @@ Execution agent：Codex2
 
 Formal Review：[`REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md`](../reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)
 
-First blocker：`I1024 / C64 / O8` request index `34` decoded output contains `29` U+FFFD characters. The formal boundary ends at that failed cell; `I1024 / C32 / O8` is the last successful formal cell. Remaining O8 and all O1024 execution are diagnostic-only. Do not resume this Task; the only Ready next Task is [`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md).
+First blocker：`I1024 / C64 / O8` request index `34` decoded output contains `29` U+FFFD characters. The formal boundary ends at that failed cell; `I1024 / C32 / O8` is the last successful formal cell. Remaining O8 and all O1024 execution are diagnostic-only. Do not resume this Task. The Evidence-first diagnostic ended D/unresolved; current routing is recorded in `STATUS.md` and the new prospective root-cause Task.
 
 ## Unified identity
 

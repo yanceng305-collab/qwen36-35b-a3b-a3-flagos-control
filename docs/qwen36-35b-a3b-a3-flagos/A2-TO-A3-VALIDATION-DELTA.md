@@ -1,8 +1,8 @@
 # A2 to A3 Validation Delta Ledger
 
-Last updated：2026-08-26
+Last updated：2026-08-27
 
-Current formal cutoff：A3 Stage 5 **ACCEPTED — bounded service correctness**；Stage 6 A2-equivalent DP1/TP2 functional matrix **STOP / NOT ACCEPTED / FORMALLY REVIEWED**。Stage 6 formal boundary ends at`I1024/C64/O8` failure；post-STOP data diagnostic-only。
+Current formal cutoff：A3 Stage 5 **ACCEPTED — bounded service correctness**；Stage 6 **STOP / NOT ACCEPTED**。Evidence-first U+FFFD diagnostic已Formally Reviewed为D/UNRESOLVED；下一唯一Ready工作是prospective bounded root-cause capture，不是formal matrix recovery。
 
 ## Purpose / comparison contract
 
@@ -240,6 +240,6 @@ Stage 6另外观察到automatic capture/replay through 64、chunked-prefill sche
 
 ## Post-Stage-6 STOP mainline
 
-Stage 6 parent Task已STOP且不得续跑。唯一Ready主线是[`QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md)：先read-only审计existing Evidence，只在缺少关键raw layer时允许一个faithful `I1024/C64/O8` diagnostic cell。Diagnostic本身不能使Stage 6 PASS；其Result经Codex1 review后，才决定是否恢复正式16-cell matrix。Performance、prefix lifecycle和EP2保持locked。
+Stage 6 parent Task已STOP且不得续跑。Evidence-first diagnostic已确认parent缺少raw generated-token/raw HTTP/parsed API/client-memory chain，结论D/UNRESOLVED。唯一Ready主线是[`QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC`](tasks/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md)：在Frozen baseline不变下prospective capture完整chain，bounded最多3 launches / 4 target C64 / 10 O8 cells / 338 requests。Diagnostic本身不能使Stage 6 PASS；performance、prefix lifecycle和EP2保持locked。
 
 A2 colleague result与A3 FL result只作cross-platform reproduction reference。判断FL相对性能时优先A3 FL vs A3 matched native，并尽可能匹配cards/model/input/output/concurrency/prompts/order/sampling/cache/graph/warm-up；不得将910B1→910C硬件差异误算为FL implementation差异。

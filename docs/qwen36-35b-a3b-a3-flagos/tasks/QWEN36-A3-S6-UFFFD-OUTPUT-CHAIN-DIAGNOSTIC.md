@@ -1,14 +1,18 @@
 # QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC
 
-状态：**READY / Awaiting explicit User dispatch — ONLY NEXT TASK**
+状态：**ENDED / DIAGNOSTIC STOP D / FORMALLY REVIEWED NEEDS-FOLLOWUP — DO NOT RESUME**
 
 执行代理：Codex2
 
-Formal Review：[`REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md`](../reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)
+Formal Review：[`REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md`](../reviews/REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md)
+
+Immutable Result：[`RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md`](../results/RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md)
+
+This Task ended after Phase A with `D / UNRESOLVED`; Phase B was not run and this contract must not be resumed. The only Ready next Task is [`QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC`](QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md).
 
 Parent immutable Result：[`RESULT-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-20260826T180105+0800.md`](../results/RESULT-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-20260826T180105+0800.md)
 
-This is the only Ready follow-up. It is an Evidence-first diagnostic, not a Stage 6 resume, rerun or Acceptance Task. It requires explicit User dispatch.
+This was an Evidence-first diagnostic, not a Stage 6 resume, rerun or Acceptance Task. Its historical contract is preserved below.
 
 User formal dispatch statement：execute only `QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC` after the User explicitly sends this Task to Codex2. A Control link, Ready status, Codex1 review or prior Stage 6 dispatch is not execution authorization.
 

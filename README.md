@@ -10,13 +10,13 @@
 
 ## Current State
 
-更新时间：2026-08-26
+更新时间：2026-08-27
 
 - Stage 0 Control / baseline establishment：**COMPLETE**。
 - A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]`及Stage 5 bounded serve correctness：**ACCEPTED**。
 - Frozen Validation Baseline：source `e610a990...` / tree `609ff1ad...`；Accepted wheel SHA-256 `2fcf788...`。`032fddc9...`仅为冻结时最后一个pre-change tracked reference。
-- Stage 6 A2-equivalent functional matrix：**STOP / NOT ACCEPTED / FORMALLY REVIEWED**；U+FFFD output-chain diagnostic：**DIAGNOSTIC STOP — D / UNRESOLVED / Codex1 Acceptance PENDING**。
-- Next Task：**Decision required / Not created**。
+- Stage 6 A2-equivalent functional matrix：**STOP / NOT ACCEPTED**；Evidence-first U+FFFD diagnostic：**FORMALLY REVIEWED / D / UNRESOLVED / NEEDS-FOLLOWUP**。
+- Next Task：**READY — `QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC` / Awaiting explicit User dispatch**。
 - Validation Code repo/fork：**Not needed**。
 - GLM-5.2-W8A8项目：由 User Decision 暂停；本仓库不接收 GLM Result。
 
@@ -114,7 +114,8 @@ A2 baseline与本项目A3复现状态、环境差异、bounded validation差异�
 - Accepted reconstruction：[A3-STAGE1-2-ACCEPTED-RUNTIME.md](docs/qwen36-35b-a3b-a3-flagos/reconstruction/A3-STAGE1-2-ACCEPTED-RUNTIME.md)
 - Stage 6 STOP Review：[REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)
 - U+FFFD diagnostic Result：[RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md](docs/qwen36-35b-a3b-a3-flagos/results/RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md)
-- Next Task：Decision required / Not created；do not resume Stage 6 or enter performance/prefix/EP2 without new User dispatch.
+- U+FFFD diagnostic Formal Review：[REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md)
+- Next Task：[QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md)；Awaiting explicit User dispatch；performance/prefix/EP2 remain locked.
 
 ## What Is Not Done
 
