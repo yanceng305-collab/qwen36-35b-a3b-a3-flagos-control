@@ -97,6 +97,8 @@ Before service admission, verify target existence/realpath, non-generative loade
 
 This is a later-discovered Stage 6 clean-container runtime reconstruction prerequisite. It does not change the Stage 1/2 Accepted image/runtime identity, does not require Stage 1/2 revalidation, and does not prove that the historical Accepted container used the same symlink or preparation procedure. Historical observed success and this newly documented prerequisite are separate facts.
 
+Run `20260828T093900+0800` subsequently executed this correction in one Task-owned container. It verified package `jemalloc-5.3.0-2.oe2403sp2.aarch64`, resolved-object SHA-256 `2059f0cb5c2b3da8b834f4a54c12a633295eadb01844cef298398f350a2df43e`, AArch64 loader compatibility, the minimum compatibility symlink, frozen-path loader activation and the staged NPU invariant. The corresponding [Formal Acceptance](../reviews/REVIEW-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828.md) accepts that correction only for the exact Task-owned-container scope. It does not promote the ephemeral symlink into the base image or historical Stage 1/2 baseline.
+
 ## Clean build reconstruction
 
 - 使用一个 Task container完成 build/install/runtime闭环。

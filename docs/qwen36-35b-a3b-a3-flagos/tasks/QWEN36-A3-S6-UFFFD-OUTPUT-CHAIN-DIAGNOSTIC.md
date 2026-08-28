@@ -8,7 +8,7 @@ Formal Review：[`REVIEW-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827.md`
 
 Immutable Result：[`RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md`](../results/RESULT-QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC-20260827T101217+0800.md)
 
-This Task ended after Phase A with `D / UNRESOLVED`; Phase B was not run and this contract must not be resumed. The only Ready next Task is [`QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC`](QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md).
+This Task ended after Phase A with `D / UNRESOLVED`; Phase B was not run and this contract must not be resumed. Later diagnostics completed the prospective chain；current routing is governed by `STATUS.md` and D-034.
 
 Parent immutable Result：[`RESULT-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-20260826T180105+0800.md`](../results/RESULT-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-20260826T180105+0800.md)
 

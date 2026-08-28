@@ -1,14 +1,18 @@
 # QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC
 
-状态：**READY / Awaiting explicit User dispatch — ONLY NEXT TASK**
+状态：**ENDED / DIAGNOSTIC A ACCEPTED / STAGE 6 NOT ACCEPTED — DO NOT RESUME**
 
 执行代理：Codex2
 
-Formal Review：[`REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md`](../reviews/REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md)
+Formal Acceptance：[`REVIEW-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828.md`](../reviews/REVIEW-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828.md)
+
+Immutable Result：[`RESULT-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828T093900+0800.md`](../results/RESULT-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828T093900+0800.md)
+
+This Task ended after one complete classifiable chain and must not resume. Diagnostic A is Accepted within scope；Stage 6 remains STOP / NOT ACCEPTED. Any functional rerun awaits User Decision D-034.
 
 New-server parent Result：[`RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827T173022+0800.md`](../results/RESULT-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827T173022+0800.md)
 
-This is one combined runtime-reconstruction and U+FFFD root-cause diagnostic. Ready status is not dispatch authority.
+This was one combined runtime-reconstruction and U+FFFD root-cause diagnostic. Its historical contract is preserved below.
 
 ## Unified identity
 

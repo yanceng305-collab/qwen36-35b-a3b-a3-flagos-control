@@ -1,8 +1,8 @@
 # A2 to A3 Validation Delta Ledger
 
-Last updated：2026-08-27
+Last updated：2026-08-28
 
-Current formal cutoff：A3 Stage 5 **ACCEPTED — bounded service correctness**；Stage 6 **STOP / NOT ACCEPTED**。New-server prospective run确认exact-scope NPU invariant PASS，但在0 generation时因jemalloc preload compatibility-path reconstruction gap STOP；U+FFFD仍D/unresolved。
+Current formal cutoff：A3 Stage 5 **ACCEPTED — bounded service correctness**；Stage 6 **STOP / NOT ACCEPTED**。Prospective diagnostic已Accepted为A/tokenizer-decoder-native，但这不改变原blanket validator；D-034 U+FFFD semantics等待User Decision。
 
 ## Purpose / comparison contract
 
@@ -240,6 +240,6 @@ Stage 6另外观察到automatic capture/replay through 64、chunked-prefill sche
 
 ## Post-Stage-6 STOP mainline
 
-Stage 6 parent与旧prospective Task均已STOP且不得续跑。唯一Ready主线是[`QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC`](tasks/QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC.md)：在Task-owned container补齐frozen preload compatibility path，证明loader/NPU/service readiness后直接继续prospective chain capture。Workload仍bounded最多3 launches / 4 C64 / 10 O8 cells / 338 requests；diagnostic不能使Stage 6 PASS，performance/prefix/EP2保持locked。
+Diagnostic A已定位prospective U+FFFD首先出现在exact tokenizer native decode并在downstream chain保持一致。下一步不是自动rerun：[`QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN`](tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md)保持NOT READY，等待User选择D-034 provenance-aware或absolute-zero branch。Stage 6、performance、prefix和EP2继续locked。
 
 A2 colleague result与A3 FL result只作cross-platform reproduction reference。判断FL相对性能时优先A3 FL vs A3 matched native，并尽可能匹配cards/model/input/output/concurrency/prompts/order/sampling/cache/graph/warm-up；不得将910B1→910C硬件差异误算为FL implementation差异。

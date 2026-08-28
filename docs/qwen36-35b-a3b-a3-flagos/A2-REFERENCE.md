@@ -56,6 +56,12 @@ Image名称包含 vLLM-Ascend，但资料记录的 final FL runtime卸载了 `vl
 
 Functional equality不等于普通 BF16 token-level numerical parity；资料只对受限 EP2比较记录 token-identical。未来 A3 hard gate应关注 readable output、finite logprobs、stable state、repeatability和无 pathological repetition，并对需要的 strict oracle单独定义 tolerance。
 
+### U+FFFD oracle boundary
+
+The Control-recorded A2 synthesis describes readable output, no obvious illegal characters and 16/16 strict matrix PASS, but does not define an explicit U+FFFD codepoint rule or distinguish tokenizer-native replacement output from post-tokenizer mutation. The blanket `any U+FFFD => FAIL` rule first appears as an A3 Stage 6 procedural contract.
+
+The three hash-registered private originals are not present in Control/workspace, so Control may state that absolute zero-U+FFFD is **not established as an A2-documented fact**; it may not claim conclusively that the private originals contained no such requirement. `readable` and `no obvious illegal characters` remain qualitative and do not settle provenance-aware final-output policy.
+
 ## A2 performance / capacity reference
 
 **以下所有数字都是 A2，不是 A3 SLO或 Acceptance。**

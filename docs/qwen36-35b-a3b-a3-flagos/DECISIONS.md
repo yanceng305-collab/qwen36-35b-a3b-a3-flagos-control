@@ -37,6 +37,7 @@
 | D-031 / STAGE6-STOP-BOUNDARY-AND-DIAGNOSTIC | Preserve Stage 6 immutable STOP Result；formal boundary ends at`I1024/C64/O8` failure；post-STOP cells diagnostic-only；only Ready follow-up is artifact-first U+FFFD output-chain diagnostic | **Required / Codex1 Formal Review** | Frozen validator failure prevents Acceptance；execution incorrectly continued for 12 O8 and 16 O1024 cells；current record proves the blocker but not the underlying layer/cause | Diagnostic Result + Codex1 review；only that later Decision may authorize formal Stage 6 recovery，never performance/prefix/EP2 directly |
 | D-032 / UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC | Formally preserve the read-only diagnostic as D/UNRESOLVED and authorize exactly one prospective instrumentation + bounded reproduction Task；pin `long-context-orchestrator@0bb8a5e...` | **Required / User Decision + Codex1 Review** | Parent Evidence cannot locate the earliest U+FFFD layer；User now authorizes actual bounded A3 service/workload capture without changing Frozen baseline；finite stochastic/prehistory attempts are required | New diagnostic Result + Codex1 review；does not authorize Stage 6 PASS, performance, prefix or EP2 |
 | D-033 / JEMALLOC-RECONSTRUCTION-AND-UFFFD-CONTINUATION | Accept new-server staged NPU invariant for exact admission scope；classify ignored frozen jemalloc preload as Stage 6 reconstruction gap；authorize exactly one combined correction→readiness→U+FFFD Task | **Required / User Decision + Codex1 Review** | Fresh exact-image container exposed `/usr/lib64/libjemalloc.so.2` but lacked frozen preload path；0 generation；a jemalloc-only Task would delay the actual root-cause objective | Combined Task Result + Codex1 review；no Stage 6 PASS/later-stage authority |
+| D-034 / STAGE6-TOKENIZER-NATIVE-UFFFD-SEMANTICS | Decide whether tokenizer-native U+FFFD is exempt only from corruption attribution or remains an absolute final-output quality failure | **PROPOSED / AWAITING USER DECISION** | Diagnostic A proves native decode can first introduce U+FFFD and downstream layers preserve it；A2 Control oracle does not establish an explicit zero-U+FFFD product rule | User selects provenance-aware branch or absolute-zero branch；no Task Ready before decision |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -209,6 +210,28 @@ R0 one verified Task-container jemalloc compatibility reconstruction
 R0 leaves the frozen preload string unchanged and is accounted separately from the one permitted output-chain instrumentation-bundle correction. If R0/R1 pass, Codex2 must continue directly to R2 in the same Task. No jemalloc-only intermediate Task is authorized.
 
 Because the stopped new-server run generated zero requests, the new Task receives a newly frozen full budget: at most 3 service launches, 4 C64 targets, 2 prehistory sequences, 10 O8 cells and 338 requests. One complete classifiable chain cancels all remaining budget. No O1024, performance, prefix lifecycle, EP2, production change, second reconstruction method or second instrumentation correction is authorized.
+
+## D-034 — Stage 6 tokenizer-native U+FFFD semantics
+
+Status：**PROPOSED / AWAITING USER DECISION**. This section is a recommendation, not an approved contract change.
+
+Diagnostic run `20260828T093900+0800` is Formally Accepted as scope-limited A/tokenizer-decoder-native. For prospective request `ufffd-s1-c64a-035`, generated IDs independently decoded by the exact Frozen tokenizer produced the same U+FFFD-bearing text first observed at native decode, and all later serving/wire/client/save/validator layers were identical.
+
+This proves the blanket predicate is a semantic false-positive when interpreted as “post-tokenizer corruption.” It does not decide whether final output containing tokenizer-native U+FFFD is acceptable product/output quality.
+
+The Control-recorded A2 oracle contains readable/no-obvious-illegal-character and 16/16 strict-pass statements, but no explicit zero-U+FFFD or layer-attribution rule. The private hash-registered originals are unavailable in Control, so zero-U+FFFD is not established as an A2 fact and cannot be conclusively ruled out either.
+
+Recommended provenance-aware branch, if no external product rule requires zero final-text U+FFFD:
+
+1. Independently decode generated IDs with the exact Frozen tokenizer.
+2. If native decode and every downstream text/codepoint layer are identical, record `TOKENIZER_NATIVE_UFFFD` and do not fail the corruption-attribution gate solely for that observation.
+3. Continue enforcing readability/final-output quality and every other functional gate.
+4. If U+FFFD or any text mutation first appears after native decode, fail corruption immediately.
+5. Do not retroactively pass the parent; rerun Stage 6 from the beginning under the revised oracle.
+
+Alternative absolute-zero branch：any final-text U+FFFD remains an output-quality failure regardless of provenance. Under that branch, unchanged-source/parameter rerun is not an adequate remedy and any remediation route requires another User Decision.
+
+Until the User selects a branch, Stage 6 remains STOP / NOT ACCEPTED, no Task is Ready and no dispatchable prompt may be created.
 
 ## 明确拒绝的路线
 

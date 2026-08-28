@@ -1,6 +1,6 @@
 # A3 Runtime Handoff — Qwen Validation to Future GLM Work
 
-更新时间：2026-08-27
+更新时间：2026-08-28
 
 当前状态：**STAGE 1-5 ACCEPTED, SCOPE-LIMITED**。真实A3/910C execution已完成A3-native wheel、standalone FL、TP2/HCCL BF16 eager、bounded `FULL_DECODE_ONLY [1,2,4,8]` graph和service/API correctness；A2-equivalent matrix和performance仍未验证。Qwen-specific模型/graph/service结论不得直接外推到GLM。
 
@@ -170,6 +170,10 @@ Clean-container Stage 6 reconstruction must verify the image-provided library's 
 This is a [later-discovered Stage 6 reconstruction prerequisite](reconstruction/A3-STAGE1-2-ACCEPTED-RUNTIME.md#later-discovered-stage-6-jemalloc-compatibility-prerequisite), not a Stage 1/2 regression or new baseline. The [Formal Review](reviews/REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md) does not claim that the historical successful container used the same symlink or preparation step.
 
 The old-server invariant timeout remains historical and unresolved; the new-server positive invariant means it must not be generalized as a universal Frozen image/runtime regression.
+
+Run `20260828T093900+0800` then proved the Task-owned compatibility method and frozen service admission on the exact new-host scope. The verified object SHA-256 was `2059f0cb5c2b3da8b834f4a54c12a633295eadb01844cef298398f350a2df43e`; the frozen preload string remained unchanged; loader and NPU checks passed. API, EngineCore and both TP workers mapped the verified jemalloc object, service readiness passed and automatic capture through 64 completed. See the [immutable Result](results/RESULT-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828T093900+0800.md) and [Formal Acceptance](reviews/REVIEW-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828.md).
+
+This accepts the reconstruction/admission method only for the recorded Task-owned container. It does not prove the historical container used that symlink and does not change the Accepted image or Stage 1/2 baseline.
 
 ## Explicitly non-transferable Qwen claims
 

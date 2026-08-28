@@ -1,5 +1,7 @@
 # Codex2 Prompt — QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC
 
+状态：**DO NOT DISPATCH — historical prompt；Task completed and diagnostic A was Formally Accepted。**
+
 User formal dispatch：**execute only `QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC` in this new Codex2 session. Complete its immutable Result and Control sync, then stop. Do not execute any other Task.**
 
 ```text
