@@ -2,7 +2,7 @@
 
 更新时间：2026-08-28
 
-总体状态：A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded graph和Stage 5 bounded service correctness均已 **ACCEPTED**；D-030 baseline不变。Combined diagnostic已 **ACCEPTED — A / tokenizer-decoder-native, scope-limited**：R0 jemalloc reconstruction、R1 frozen service admission、request-linked R2 chain和immediate STOP均合规。Stage 6仍 **STOP / NOT ACCEPTED**；Diagnostic Acceptance不改blanket validator。D-034 tokenizer-native U+FFFD semantics为 **PROPOSED / Awaiting User Decision**；当前无Ready Task，performance/prefix/EP2继续locked。
+总体状态：A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded graph和Stage 5 bounded service correctness均已 **ACCEPTED**；D-030 baseline不变。Combined diagnostic已 **ACCEPTED — A / tokenizer-decoder-native, scope-limited**：R0 jemalloc reconstruction、R1 frozen service admission、request-linked R2 chain和immediate STOP均合规。D-034现为 **APPROVED / provenance-aware branch**：`TOKENIZER_NATIVE_UFFFD`不单独触发corruption-attribution FAIL，`POST_TOKENIZER_CORRUPTION`立即FAIL/STOP，其他functional/output-quality gates不变。Stage 6仍 **STOP / NOT ACCEPTED**，直到fresh rerun完成；唯一下一Task已Ready，performance/prefix/EP2继续locked。
 
 ## 当前快照
 
@@ -22,7 +22,7 @@
 | First Codex2 task | **STOP / initial NEEDS-FOLLOWUP closed by Accepted chain** | [Immutable Result](results/RESULT-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825T205424+0800.md)；[Initial Review](reviews/REVIEW-QWEN36-A3-S1S2-ENV-BUILD-RUNTIME-20260825.md) |
 | Parent Stage 6 STOP | **STOP / FORMALLY REVIEWED — Stage 6 NOT ACCEPTED** | [`QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX`](tasks/QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX.md)；[Formal Review](reviews/REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md)；first blocker `I1024/C64/O8`，last formal success `I1024/C32/O8` |
 | Latest diagnostic Result | **ACCEPTED — A / tokenizer-decoder-native, scope-limited** | [Result](results/RESULT-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828T093900+0800.md)；[Formal Acceptance](reviews/REVIEW-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828.md)；R0/R1/control accepted；not Stage 6 PASS |
-| Next Task | **NOT READY / Awaiting User Decision D-034 — DO NOT DISPATCH** | [`QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN`](tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md)；no prompt；no A3 authorization |
+| Next Task | **READY / Awaiting explicit User dispatch — ONLY NEXT TASK** | [`QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN`](tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md)；D-034 approved；Ready本身不是A3 execution authorization |
 | Validation Code repo/fork | **Not needed** | Stage 1/2 blockers均以 non-source route闭合；implementation source未修改 |
 | GLM project | PAUSED by User Decision | 独立 Control；旧 Evidence/history保留，不写入本仓库 |
 
@@ -87,7 +87,7 @@ User已确认 bounded authorization：
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
-Stage 1/2、Stage 3、Stage 4和Stage 5 Formal Acceptance保持。Combined diagnostic已完成并Accepted为A/tokenizer-decoder-native；Stage 6未Accepted。D-034等待User Decision，当前没有Ready Task或可dispatch prompt。不得自动恢复Stage 6、进入performance、prefix lifecycle或EP2。
+Stage 1/2、Stage 3、Stage 4和Stage 5 Formal Acceptance保持。Combined diagnostic已完成并Accepted为A/tokenizer-decoder-native；D-034已批准provenance-aware branch。Stage 6仍未Accepted；唯一下一Task已Ready，但只有User明确dispatch该exact Task后Codex2才可执行。不得自动进入performance、prefix lifecycle或EP2。
 
 ## Current Stage 6 STOP review — QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX
 
@@ -118,10 +118,10 @@ Formal Review：[`REVIEW-QWEN36-A3-STAGE6-STOP-20260826.md`](reviews/REVIEW-QWEN
 - R0：one Task-container jemalloc method PASS；frozen preload unchanged；not a new baseline。
 - R1：exact service readiness、two workers、capture through64、four-process jemalloc maps PASS；not full Stage 6 Acceptance。
 - Execution control：1/3 launches，1/4 C64，0/2 prehistory，1/10 cells，64/338 requests，1/1 reconstruction，0/1 instrumentation correction；immediate STOP compliant。
-- Validator semantics：blanket U+FFFD predicate是post-tokenizer corruption attribution的semantic false-positive；absolute output-quality policy仍未决定。
+- Validator semantics：D-034已批准provenance-aware branch；native decode与全部downstream text/codepoints一致时记录`TOKENIZER_NATIVE_UFFFD`且不单独触发corruption-attribution FAIL；任何post-tokenizer mutation记录`POST_TOKENIZER_CORRUPTION`并立即FAIL/STOP；其他readability/output-quality/functional gates继续执行。
 - A2 boundary：zero-U+FFFD未在Control-visible A2 oracle中明确建立；private originals unavailable，不能作更强否定。
-- Pending Decision：[`D-034`](DECISIONS.md#d-034--stage-6-tokenizer-native-ufffd-semantics) provenance-aware vs absolute-zero branch。
-- Proposed Task：[`QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN`](tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md) — **NOT READY / DO NOT DISPATCH**。
+- Decision：[`D-034`](DECISIONS.md#d-034--stage-6-tokenizer-native-ufffd-semantics) — **APPROVED / provenance-aware branch**。
+- Only next Task：[`QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN`](tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md) — **READY / Awaiting explicit User dispatch — ONLY NEXT TASK**；[Codex2 prompt](tasks/CODEX2-QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN-PROMPT.md)；fresh roots，完整O8通过后才可进入16-cell O1024。
 
 ## Current Stage 3 run — QWEN36-A3-S3-TP2-BF16-EAGER
 

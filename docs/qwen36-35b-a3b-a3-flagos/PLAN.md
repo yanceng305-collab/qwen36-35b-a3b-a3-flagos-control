@@ -1,6 +1,6 @@
 # Qwen3.6-35B-A3B × FlagOS × Ascend A3/910C 项目计划
 
-状态：Stage 1/2、Stage 3、Stage 4和Stage 5均已 **ACCEPTED**；Stage 6仍 **STOP / NOT ACCEPTED**。Combined diagnostic已 **ACCEPTED — A / tokenizer-decoder-native, scope-limited**；R0/R1/control compliant。D-034 validator semantics等待User Decision；当前无Ready Task。
+状态：Stage 1/2、Stage 3、Stage 4和Stage 5均已 **ACCEPTED**；Stage 6仍 **STOP / NOT ACCEPTED**。Combined diagnostic已 **ACCEPTED — A / tokenizer-decoder-native, scope-limited**；R0/R1/control compliant。D-034已 **APPROVED / provenance-aware branch**；fresh Stage 6 rerun是唯一Ready Task，等待明确User dispatch。
 
 ## 结果目标
 
@@ -28,8 +28,8 @@ Stage 0-5 accepted foundation
   -> new-server jemalloc reconstruction STOP
   -> combined runtime correction + readiness + output-chain capture
   -> diagnostic A accepted
-  -> User Decision on tokenizer-native U+FFFD semantics
-  -> User-authorized formal Stage 6 recovery, if later approved
+  -> D-034 provenance-aware User Decision approved
+  -> explicit User dispatch of fresh formal Stage 6 recovery
   -> same-matrix A3 performance/capacity validation
   -> prefix / EP2 / other specialist capabilities as needed
   -> runtime freeze / reconstruction / handoff
@@ -53,8 +53,8 @@ Stage 5通过后不再为了流程本身拆分与A2 baseline无关的小Stage。
 | 6D — Evidence-first U+FFFD diagnostic | read-only审计parent output-chain | [Historical Task](tasks/QWEN36-A3-S6-UFFFD-OUTPUT-CHAIN-DIAGNOSTIC.md) | 证明existing Evidence是否足够归因 | **FORMALLY REVIEWED — D / UNRESOLVED / NEEDS-FOLLOWUP** |
 | 6R — Prospective root-cause diagnostic | instrument并捕获generated-token→validator完整chain | [Historical Task](tasks/QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC.md) | A/B/C earliest-layer attribution，或bounded D unresolved | **ENDED — old-server timeout + new-server jemalloc STOP；D unresolved** |
 | 6J — Jemalloc reconstruction + U+FFFD | R0 compatibility path→R1 readiness→R2 complete output chain | [Historical Task](tasks/QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC.md) | loader/NPU/service admission + earliest-layer classification | **ACCEPTED — diagnostic A / tokenizer-decoder-native；Stage 6 still STOP** |
-| 6V — Validator semantics decision | decide provenance-aware corruption gate vs absolute zero-U+FFFD quality rule | [D-034 proposed](DECISIONS.md#d-034--stage-6-tokenizer-native-ufffd-semantics) | User-selected contract branch | **AWAITING USER DECISION；no Ready Task** |
-| 6M — Functional matrix recovery proposal | rerun full Stage 6 from beginning if D-034 permits | [Proposed Task](tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md) | revised-oracle 16/16 functional correctness | **NOT READY / DO NOT DISPATCH** |
+| 6V — Validator semantics decision | provenance-aware corruption gate vs absolute zero-U+FFFD quality rule | [D-034 approved](DECISIONS.md#d-034--stage-6-tokenizer-native-ufffd-semantics) | User-selected provenance-aware contract | **APPROVED — provenance-aware branch** |
+| 6M — Functional matrix recovery | rerun full Stage 6 from beginning under D-034 | [Ready Task](tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md) | revised-oracle 16/16 functional correctness | **READY / Awaiting explicit User dispatch — ONLY NEXT TASK** |
 | Performance / Capacity | 对同一16-cell合同记录A3 FL结果；条件允许时做A3 matched native | functional 16/16 PASS | comparable raw measurements、cache/warm-up口径、capacity/variance | Locked |
 | Specialist capabilities | aligned prefix lifecycle、EP2 eager/graph、cold/persistent startup、更宽eager覆盖等 | 主TP2路线稳定；按价值解锁 | 每项独立A3 Evidence；不挡主矩阵除非成为真实依赖 | Locked |
 | Runtime Freeze / Handoff | validated image/wheel/source/environment/device/cache/HCCL/startup/Evidence/reconstruction | 所需前序范围Accepted | 可重建 manifest、hash、pointer、handoff边界 | Locked |

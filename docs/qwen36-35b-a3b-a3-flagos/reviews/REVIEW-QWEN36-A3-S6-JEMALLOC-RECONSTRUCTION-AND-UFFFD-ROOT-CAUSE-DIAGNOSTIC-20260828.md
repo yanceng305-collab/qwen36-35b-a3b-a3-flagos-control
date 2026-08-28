@@ -1,5 +1,7 @@
 # Codex1 Formal Acceptance — Qwen3.6 A3 Tokenizer-Native U+FFFD Diagnostic
 
+> Historical review snapshot: the D-034 status and next-task readiness statements below describe the review state at its original acceptance time. User Decision D-034 was subsequently approved as the provenance-aware branch; current routing is authoritative in `DECISIONS.md`, `STATUS.md`, and the Ready Task contract.
+
 Review date：2026-08-28
 
 Disposition：**ACCEPTED — scope-limited diagnostic A / tokenizer-decoder-native**
