@@ -10,16 +10,17 @@
 
 ## Current State
 
-更新时间：2026-08-28
+更新时间：2026-08-29
 
 - Stage 0 Control / baseline establishment：**COMPLETE**。
 - A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]`及Stage 5 bounded serve correctness：**ACCEPTED**。
 - Frozen Validation Baseline：source `e610a990...` / tree `609ff1ad...`；Accepted wheel SHA-256 `2fcf788...`。`032fddc9...`仅为冻结时最后一个pre-change tracked reference。
-- Stage 6：**STOP / NOT ACCEPTED**；scope-limited Diagnostic A/tokenizer-decoder-native已Accepted，R0/R1/control compliant；正式 rerun `20260828T161700+0800`及late concurrent supplemental run均未进入完整矩阵。
+- Stage 6：**STOP / NOT ACCEPTED**；scope-limited Diagnostic A/tokenizer-decoder-native已Accepted；最新 provenance rerun `20260829T120000+0800`在 F0 前因`UNRESOLVED_PROVENANCE` STOP，O8/O1024均未运行。
 - Validator Decision：**D-034 APPROVED / provenance-aware branch**；tokenizer-native U+FFFD不单独触发corruption-attribution FAIL，post-tokenizer mutation立即FAIL/STOP，其他functional/output-quality gates不变。
 - Ended rerun：`QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN` — **STOP / FORMALLY REVIEWED — DO NOT RESUME**；first blocker为device-scope mapping drift。
 - Current unsynced execution：`QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP` — **SERVER EVIDENCE EXISTS / CONTROL SYNC PENDING**；local STOP Result未进入Control，supplemental mapping仅为diagnostic evidence。
-- Only next Task：`QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN` — **READY / Awaiting explicit User dispatch — ONLY NEXT TASK**；D-036 composite mapping policy applies。
+- Latest provenance rerun：`QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN` — **STOP / FORMALLY REVIEWED — UNRESOLVED_PROVENANCE — DO NOT RESUME**；F0未进入，O8/O1024未运行。
+- Only next Task：`QWEN36-A3-S6-PROVENANCE-AUDIT-AND-FUNCTIONAL-MATRIX-RERUN` — **READY / Awaiting explicit User dispatch — ONLY NEXT TASK**。
 - Validation Code repo/fork：**Not needed**。
 - GLM-5.2-W8A8项目：由 User Decision 暂停；本仓库不接收 GLM Result。
 
@@ -126,7 +127,8 @@ A2 baseline与本项目A3复现状态、环境差异、bounded validation差异�
 - Supplemental concurrent Evidence：[SUPPLEMENTAL-QWEN36-A3-S6-CONCURRENT-RUN-20260828T180824.md](docs/qwen36-35b-a3b-a3-flagos/reviews/SUPPLEMENTAL-QWEN36-A3-S6-CONCURRENT-RUN-20260828T180824.md)；非formal progress、非immutable Result。
 - Unsynced execution：[QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP.md)；**SERVER EVIDENCE EXISTS / CONTROL SYNC PENDING**，不得冒充immutable Result或Formal Acceptance。
 - Supplemental mapping：[SUPPLEMENTAL-QWEN36-A3-S6-DEVICE-MAPPING-20260829T113000.md](docs/qwen36-35b-a3b-a3-flagos/reviews/SUPPLEMENTAL-QWEN36-A3-S6-DEVICE-MAPPING-20260829T113000.md)；mapping proven for that run，非formal progress。
-- Only next Task：[QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN.md)；**READY / ONLY NEXT TASK**，awaiting explicit User dispatch；[Codex2 prompt](docs/qwen36-35b-a3b-a3-flagos/tasks/CODEX2-QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN-PROMPT.md)。
+- Latest provenance rerun：[QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN.md)；**STOP / FORMALLY REVIEWED — UNRESOLVED_PROVENANCE — DO NOT RESUME**；[Formal Review](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN-STOP-20260829.md)。
+- Only next Task：[QWEN36-A3-S6-PROVENANCE-AUDIT-AND-FUNCTIONAL-MATRIX-RERUN.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-PROVENANCE-AUDIT-AND-FUNCTIONAL-MATRIX-RERUN.md)；**READY / ONLY NEXT TASK**，awaiting explicit User dispatch；[Codex2 prompt](docs/qwen36-35b-a3b-a3-flagos/tasks/CODEX2-QWEN36-A3-S6-PROVENANCE-AUDIT-AND-FUNCTIONAL-MATRIX-RERUN-PROMPT.md)。
 
 ## What Is Not Done
 

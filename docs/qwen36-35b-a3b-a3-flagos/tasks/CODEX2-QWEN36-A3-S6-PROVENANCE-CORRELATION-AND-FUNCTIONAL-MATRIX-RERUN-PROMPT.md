@@ -1,8 +1,10 @@
 # Codex2 Prompt — QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN
 
-状态：**DISPATCHABLE ONLY AFTER EXPLICIT USER DISPATCH**
+状态：**DO NOT DISPATCH — historical prompt; Task ended with immutable UNRESOLVED_PROVENANCE STOP**
 
-User formal dispatch:
+This historical prompt is retained for audit only. Do not dispatch it. The only next route is `QWEN36-A3-S6-PROVENANCE-AUDIT-AND-FUNCTIONAL-MATRIX-RERUN`.
+
+Historical User formal dispatch:
 
 **Execute only `QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN` in this completely new Codex2 session. Complete exactly one immutable Result and Control sync, then STOP. Do not execute any other Task.**
 

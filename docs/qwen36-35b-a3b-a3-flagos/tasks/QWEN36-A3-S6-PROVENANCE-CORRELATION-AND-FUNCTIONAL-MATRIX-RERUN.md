@@ -1,8 +1,8 @@
 # QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN
 
-状态：**READY / Awaiting explicit User dispatch — ONLY NEXT TASK**
+状态：**ENDED / STOP / FORMALLY REVIEWED — UNRESOLVED_PROVENANCE — DO NOT RESUME**
 
-执行代理：Codex2 only after explicit User dispatch of this exact Task.
+执行代理：Codex2（completed run `20260829T120000+0800`）
 
 Decision basis:
 
@@ -11,7 +11,7 @@ Decision basis:
 - [unsynced STOP Control note](../reviews/UNSYNCED-QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP-20260829.md);
 - [supplemental mapping Evidence boundary](../reviews/SUPPLEMENTAL-QWEN36-A3-S6-DEVICE-MAPPING-20260829T113000.md).
 
-This Task supersedes the ended unsynced device/provenance follow-up route. It is the only Ready Task. Ready is not execution: do not touch A3 without explicit User dispatch.
+This Task ended before F0 with `UNRESOLVED_PROVENANCE`. See the immutable Result and Formal Review. Do not resume or dispatch this Task; the only next route is `QWEN36-A3-S6-PROVENANCE-AUDIT-AND-FUNCTIONAL-MATRIX-RERUN`.
 
 ## Unified identity
 

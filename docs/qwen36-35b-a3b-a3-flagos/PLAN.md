@@ -29,9 +29,9 @@ Stage 0-5 accepted foundation
   -> combined runtime correction + readiness + output-chain capture
   -> diagnostic A accepted
   -> D-034 provenance-aware User Decision approved
-  -> unsynced F0 proof-gap STOP + supplemental composite mapping proof
-  -> UNRESOLVED_PROVENANCE remains
-  -> explicit User dispatch of provenance-correlation + functional rerun
+  -> provenance-correlation rerun STOP / UNRESOLVED_PROVENANCE before F0
+  -> exact source/runtime provenance audit
+  -> explicit User dispatch of bounded provenance audit + functional rerun
   -> same-matrix A3 performance/capacity validation
   -> prefix / EP2 / other specialist capabilities as needed
   -> runtime freeze / reconstruction / handoff
@@ -58,7 +58,8 @@ Stage 5通过后不再为了流程本身拆分与A2 baseline无关的小Stage。
 | 6V — Validator semantics decision | provenance-aware corruption gate vs absolute zero-U+FFFD quality rule | [D-034 approved](DECISIONS.md#d-034--stage-6-tokenizer-native-ufffd-semantics) | User-selected provenance-aware contract | **APPROVED — provenance-aware branch** |
 | 6M — Functional matrix recovery | rerun full Stage 6 from beginning under D-034 | [Ended rerun](tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md) | revised-oracle 16/16 functional correctness | **STOP / NOT ACCEPTED — F0 device-scope mapping drift** |
 | 6C — Device/provenance correction follow-up | close dynamic device mapping and exact request-ID correlation, then rerun Stage 6 from beginning | [Ended Task](tasks/QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP.md) | corrected F0 + 16/16 O8 + 16/16 O1024 | **STOP / CONTROL SYNC PENDING — DO NOT RESUME** |
-| 6P — Provenance correlation + functional matrix rerun | use D-036 composite mapping proof, exact ID transform audit, then fresh Stage 6 matrix | [Ready Task](tasks/QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN.md) | corrected F0 + deterministic provenance + 16/16 O8 + 16/16 O1024 | **READY / Awaiting explicit User dispatch — ONLY NEXT TASK** |
+| 6P — Provenance correlation + functional matrix rerun | use D-036 composite mapping proof, exact ID transform audit, then fresh Stage 6 matrix | [Ended Task](tasks/QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN.md) | corrected F0 + deterministic provenance + 16/16 O8 + 16/16 O1024 | **STOP / UNRESOLVED_PROVENANCE — NOT ACCEPTED** |
+| 6PA — Provenance audit + functional matrix rerun | prove exact ID transform before F0, then fresh Stage 6 matrix in same Task | [Ready Task](tasks/QWEN36-A3-S6-PROVENANCE-AUDIT-AND-FUNCTIONAL-MATRIX-RERUN.md) | deterministic provenance + F0 + 16/16 O8 + 16/16 O1024 | **READY / Awaiting explicit User dispatch — ONLY NEXT TASK** |
 | Performance / Capacity | 对同一16-cell合同记录A3 FL结果；条件允许时做A3 matched native | functional 16/16 PASS | comparable raw measurements、cache/warm-up口径、capacity/variance | Locked |
 | Specialist capabilities | aligned prefix lifecycle、EP2 eager/graph、cold/persistent startup、更宽eager覆盖等 | 主TP2路线稳定；按价值解锁 | 每项独立A3 Evidence；不挡主矩阵除非成为真实依赖 | Locked |
 | Runtime Freeze / Handoff | validated image/wheel/source/environment/device/cache/HCCL/startup/Evidence/reconstruction | 所需前序范围Accepted | 可重建 manifest、hash、pointer、handoff边界 | Locked |

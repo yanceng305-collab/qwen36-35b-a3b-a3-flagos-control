@@ -235,7 +235,7 @@ Alternative absolute-zero branch：any final-text U+FFFD remains an output-quali
 
 The absolute-zero alternative is not selected. It is retained only as a rejected alternative: any separate product requirement that final text contain zero U+FFFD would require a new User Decision and remediation contract.
 
-Stage 6 remains **STOP / NOT ACCEPTED** until a corrected fresh rerun completes. The original rerun ended at F0; D-035's combined follow-up is now the only Ready Task and may be dispatched only by an explicit User instruction.
+Stage 6 remains **STOP / NOT ACCEPTED** until a corrected fresh rerun completes. The original rerun and the D-035/D-036 provenance follow-up ended in STOP; the current provenance-audit + functional rerun is now the only Ready Task and may be dispatched only by an explicit User instruction.
 
 Normative reproduction contract: [`reconstruction/STAGE6-TOKENIZER-NATIVE-UFFFD-VALIDATOR-CONTRACT.md`](reconstruction/STAGE6-TOKENIZER-NATIVE-UFFFD-VALIDATOR-CONTRACT.md). Ready execution contract: [`tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md`](tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md).
 
