@@ -1,6 +1,6 @@
 # 技术与治理决策
 
-更新时间：2026-08-26
+更新时间：2026-08-29
 
 | ID | Decision | Status | Rationale / boundary | Revisit trigger |
 | --- | --- | --- | --- | --- |
@@ -38,6 +38,7 @@
 | D-032 / UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC | Formally preserve the read-only diagnostic as D/UNRESOLVED and authorize exactly one prospective instrumentation + bounded reproduction Task；pin `long-context-orchestrator@0bb8a5e...` | **Required / User Decision + Codex1 Review** | Parent Evidence cannot locate the earliest U+FFFD layer；User now authorizes actual bounded A3 service/workload capture without changing Frozen baseline；finite stochastic/prehistory attempts are required | New diagnostic Result + Codex1 review；does not authorize Stage 6 PASS, performance, prefix or EP2 |
 | D-033 / JEMALLOC-RECONSTRUCTION-AND-UFFFD-CONTINUATION | Accept new-server staged NPU invariant for exact admission scope；classify ignored frozen jemalloc preload as Stage 6 reconstruction gap；authorize exactly one combined correction→readiness→U+FFFD Task | **Required / User Decision + Codex1 Review** | Fresh exact-image container exposed `/usr/lib64/libjemalloc.so.2` but lacked frozen preload path；0 generation；a jemalloc-only Task would delay the actual root-cause objective | Combined Task Result + Codex1 review；no Stage 6 PASS/later-stage authority |
 | D-034 / STAGE6-TOKENIZER-NATIVE-UFFFD-SEMANTICS | Freeze provenance-aware semantics: native decode U+FFFD with unchanged downstream codepoints is `TOKENIZER_NATIVE_UFFFD`; post-tokenizer mutation is corruption | **APPROVED / USER DECISION — provenance-aware branch** | Diagnostic A proves native decode can first introduce U+FFFD and downstream layers preserve it；A2 Control oracle does not establish an explicit zero-U+FFFD product rule | Fresh Stage 6 rerun under D-034；historical Results unchanged；only the Ready rerun Task may be dispatched explicitly |
+| D-035 / STAGE6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP | Combine dynamic host-device scope preservation and source-backed request-ID correlation correction, then rerun Stage 6 from the beginning | **APPROVED / Codex1 follow-up routing — READY pending explicit User dispatch** | Exact rerun STOP proved privileged/direct-device `0,1` overwrite drift；late concurrent run proved raw ID-shape correlation gap. Narrow `/data/tiankuan:/data/tiankuan` mount is accepted for Task/runtime scope. No fuzzy matching; no historical/supplemental progress reuse; one active session only | Mapping/PID mismatch, unproven ID transform, race, Frozen drift, or any functional blocker; then immediate STOP |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -233,9 +234,32 @@ Alternative absolute-zero branch：any final-text U+FFFD remains an output-quali
 
 The absolute-zero alternative is not selected. It is retained only as a rejected alternative: any separate product requirement that final text contain zero U+FFFD would require a new User Decision and remediation contract.
 
-Stage 6 remains **STOP / NOT ACCEPTED** until the new rerun completes. The proposed rerun below is now the only Ready Task and may be dispatched only by an explicit User instruction.
+Stage 6 remains **STOP / NOT ACCEPTED** until a corrected fresh rerun completes. The original rerun ended at F0; D-035's combined follow-up is now the only Ready Task and may be dispatched only by an explicit User instruction.
 
 Normative reproduction contract: [`reconstruction/STAGE6-TOKENIZER-NATIVE-UFFFD-VALIDATOR-CONTRACT.md`](reconstruction/STAGE6-TOKENIZER-NATIVE-UFFFD-VALIDATOR-CONTRACT.md). Ready execution contract: [`tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md`](tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md).
+
+## D-035 — Stage 6 device mapping and provenance correlation follow-up
+
+Status: **APPROVED / Codex1 follow-up routing — READY pending explicit User dispatch** (2026-08-29).
+
+The exact `20260828T161700+0800` rerun is a valid immutable F0 STOP: admission selected physical NPU 7 / host logical 14/15, but the privileged/direct-device service launch overwrote visibility with unproven `0,1`, and Task-owned PIDs landed on host logical 0/1. This is an exact-runtime scope mismatch, not a general image, remapping, physical-NPU or Frozen-runtime defect.
+
+The late same-Task run around `20260828T180824+0800` is registered only as supplemental diagnostic Evidence. It reported F0 and C1/C8/C32 O8 success, then stopped at C64 because bare IDs, `cmpl-<request-id>`, and `cmpl-<request-id>-0` could not be correlated under exact raw-string equality. The classification is `UNRESOLVED_PROVENANCE`; no model/runtime corruption or `POST_TOKENIZER_CORRUPTION` was established. No second immutable Result is created.
+
+One bounded follow-up combines:
+
+```text
+dynamic safe device selection and host-logical PID placement proof
+-> exact Frozen-path request-ID transform audit and collision-free canonical identity
+-> F0
+-> fresh full Stage 6 rerun from the beginning
+```
+
+The User-authorized `/data/tiankuan:/data/tiankuan` bind is the accepted Task/runtime mount scope for the follow-up because all required paths are beneath it and `/data:/data` caused shared-mount propagation/overlay ENOSPC. Do not restore `/data:/data`, mutate the host, or rewrite the historical template.
+
+No fuzzy identifier matching is allowed. Canonicalization requires exact source/runtime Evidence of a deterministic reversible or uniquely attributable transform, no per-cell collision, preservation of all raw IDs, and an impact audit proving it changes Evidence correlation only. It must not change IDs, service/client behavior, generated tokens, sampling, order, concurrency, scheduling, graph, tokenizer return or functional semantics.
+
+Only one active Codex2 session may execute the follow-up. If the Task is no longer Ready, another immutable Result exists, another session is active, or Control races, stop before new workload. Supplemental cells and the old Task's cells cannot count toward formal progress. The follow-up must run fresh 16-cell O8 warm-up first, then only after all O8 pass, fresh 16-cell O1024; D-034 and all other Stage 6 gates remain in force.
 
 ## 明确拒绝的路线
 

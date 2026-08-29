@@ -1,8 +1,8 @@
 # QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN
 
-状态：**READY / Awaiting explicit User dispatch — ONLY NEXT TASK**
+状态：**ENDED / STOP / FORMALLY REVIEWED — DO NOT RESUME**
 
-执行代理：Codex2 only after explicit User dispatch of this exact Task
+执行代理：Codex2（ended run `20260828T161700+0800`）
 
 Decision：[`D-034 / STAGE6-TOKENIZER-NATIVE-UFFFD-SEMANTICS`](../DECISIONS.md#d-034--stage-6-tokenizer-native-ufffd-semantics) — **APPROVED / provenance-aware branch**
 
@@ -10,7 +10,7 @@ Validator contract：[`STAGE6-TOKENIZER-NATIVE-UFFFD-VALIDATOR-CONTRACT.md`](../
 
 Diagnostic Formal Acceptance：[`REVIEW-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828.md`](../reviews/REVIEW-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828.md)
 
-This is the only Ready Task. Ready is not execution: Codex2 must not touch A3 until the User explicitly dispatches this exact Task.
+This Task ended at F0 before readiness due device-scope mapping drift. See the immutable Result and Formal Review. Do not resume it; the only next route is `QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP`.
 
 ## Unified identity
 

@@ -1,8 +1,8 @@
 # Codex2 Prompt — QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN
 
-状态：**DISPATCHABLE — ONLY AFTER EXPLICIT USER DISPATCH**
+状态：**DO NOT DISPATCH — historical prompt; exact Task ended at F0 and must not resume**
 
-User formal dispatch：**Execute only `QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN` in this new Codex2 session. Complete its immutable Result and Control sync, then stop. Do not execute any other Task.**
+This prompt is retained as historical execution context only. Do not dispatch it. The only dispatchable route is `QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP`.
 
 ```text
 Control repo:

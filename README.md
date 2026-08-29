@@ -15,9 +15,10 @@
 - Stage 0 Control / baseline establishment：**COMPLETE**。
 - A3 Stage 1/2、Stage 3 TP2 BF16 eager、Stage 4 bounded `FULL_DECODE_ONLY [1,2,4,8]`及Stage 5 bounded serve correctness：**ACCEPTED**。
 - Frozen Validation Baseline：source `e610a990...` / tree `609ff1ad...`；Accepted wheel SHA-256 `2fcf788...`。`032fddc9...`仅为冻结时最后一个pre-change tracked reference。
-- Stage 6：**STOP / NOT ACCEPTED**；scope-limited Diagnostic A/tokenizer-decoder-native已Accepted，R0/R1/control compliant；新的正式 rerun 尚未执行。
+- Stage 6：**STOP / NOT ACCEPTED**；scope-limited Diagnostic A/tokenizer-decoder-native已Accepted，R0/R1/control compliant；正式 rerun `20260828T161700+0800`及late concurrent supplemental run均未进入完整矩阵。
 - Validator Decision：**D-034 APPROVED / provenance-aware branch**；tokenizer-native U+FFFD不单独触发corruption-attribution FAIL，post-tokenizer mutation立即FAIL/STOP，其他functional/output-quality gates不变。
-- Only next Task：`QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN` — **READY / Awaiting explicit User dispatch — ONLY NEXT TASK**。
+- Ended rerun：`QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN` — **STOP / FORMALLY REVIEWED — DO NOT RESUME**；first blocker为device-scope mapping drift。
+- Only next Task：`QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP` — **READY / Awaiting explicit User dispatch — ONLY NEXT TASK**；supplemental concurrent run仅为diagnostic evidence。
 - Validation Code repo/fork：**Not needed**。
 - GLM-5.2-W8A8项目：由 User Decision 暂停；本仓库不接收 GLM Result。
 
@@ -120,7 +121,9 @@ A2 baseline与本项目A3复现状态、环境差异、bounded validation差异�
 - New-server Formal Review：[REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-S6-UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC-NEW-SERVER-20260827.md)
 - Diagnostic A Result：[RESULT-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828T093900+0800.md](docs/qwen36-35b-a3b-a3-flagos/results/RESULT-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828T093900+0800.md)
 - Diagnostic A Formal Acceptance：[REVIEW-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828.md](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-S6-JEMALLOC-RECONSTRUCTION-AND-UFFFD-ROOT-CAUSE-DIAGNOSTIC-20260828.md)
-- Only next Task：[QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md)；**READY / ONLY NEXT TASK**，awaiting explicit User dispatch；[Codex2 prompt](docs/qwen36-35b-a3b-a3-flagos/tasks/CODEX2-QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN-PROMPT.md)。
+- Ended rerun：[QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md)；**STOP / FORMALLY REVIEWED — DO NOT RESUME**，first blocker为device-scope mapping drift；[Formal Review](docs/qwen36-35b-a3b-a3-flagos/reviews/REVIEW-QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN-STOP-20260828.md)。
+- Supplemental concurrent Evidence：[SUPPLEMENTAL-QWEN36-A3-S6-CONCURRENT-RUN-20260828T180824.md](docs/qwen36-35b-a3b-a3-flagos/reviews/SUPPLEMENTAL-QWEN36-A3-S6-CONCURRENT-RUN-20260828T180824.md)；非formal progress、非immutable Result。
+- Only next Task：[QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP.md](docs/qwen36-35b-a3b-a3-flagos/tasks/QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP.md)；**READY / ONLY NEXT TASK**，awaiting explicit User dispatch；[Codex2 prompt](docs/qwen36-35b-a3b-a3-flagos/tasks/CODEX2-QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP-PROMPT.md)。
 
 ## What Is Not Done
 
