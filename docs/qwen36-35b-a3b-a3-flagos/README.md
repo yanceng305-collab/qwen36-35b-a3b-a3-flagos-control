@@ -42,8 +42,11 @@
 - [tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md](tasks/QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN.md)：ended `STOP / FORMALLY REVIEWED`，不得续跑。
 - [reviews/REVIEW-QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN-STOP-20260828.md](reviews/REVIEW-QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN-STOP-20260828.md)：F0 device-scope mapping drift Formal Review。
 - [reviews/SUPPLEMENTAL-QWEN36-A3-S6-CONCURRENT-RUN-20260828T180824.md](reviews/SUPPLEMENTAL-QWEN36-A3-S6-CONCURRENT-RUN-20260828T180824.md)：late concurrent-run supplemental diagnostic，非immutable Result。
-- [tasks/QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP.md](tasks/QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP.md)：**READY / ONLY NEXT TASK**，等待明确User dispatch。
-- [tasks/CODEX2-QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP-PROMPT.md](tasks/CODEX2-QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP-PROMPT.md)：完整可复制Codex2 execution prompt，仅在User明确dispatch后使用。
+- [tasks/QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP.md](tasks/QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP.md)：ended `STOP / CONTROL SYNC PENDING`，不得续跑。
+- [reviews/UNSYNCED-QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP-20260829.md](reviews/UNSYNCED-QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP-20260829.md)：server Evidence exists but Control sync pending。
+- [reviews/SUPPLEMENTAL-QWEN36-A3-S6-DEVICE-MAPPING-20260829T113000.md](reviews/SUPPLEMENTAL-QWEN36-A3-S6-DEVICE-MAPPING-20260829T113000.md)：composite mapping proof，非formal progress。
+- [tasks/QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN.md](tasks/QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN.md)：**READY / ONLY NEXT TASK**，等待明确User dispatch。
+- [tasks/CODEX2-QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN-PROMPT.md](tasks/CODEX2-QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN-PROMPT.md)：完整可复制Codex2 execution prompt，仅在User明确dispatch后使用。
 - [tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md](tasks/CODEX2-QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX-PROMPT.md)：historical `DO NOT DISPATCH` prompt。
 - [results/INDEX.md](results/INDEX.md)：Execution Result、Control Sync、Codex1 Review/Acceptance索引。
 
@@ -55,4 +58,4 @@
 
 ## Current Stage
 
-Stage 1/2、Stage 3、Stage 4和Stage 5均已`ACCEPTED`；D-030 baseline不变。Diagnostic A/tokenizer-decoder-native已scope-limited Accepted，D-034已批准provenance-aware branch。旧 rerun Task 已在 F0 因 device-scope mapping drift STOP 并完成 Formal Review；并发 run 仅作为 supplemental diagnostic。Stage 6仍`STOP / NOT ACCEPTED`。唯一下一Task为`QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP`，状态`READY / Awaiting explicit User dispatch — ONLY NEXT TASK`。Performance、prefix lifecycle和EP2保持locked。
+Stage 1/2、Stage 3、Stage 4和Stage 5均已`ACCEPTED`；D-030 baseline不变。Diagnostic A/tokenizer-decoder-native已scope-limited Accepted，D-034已批准provenance-aware branch。旧 rerun Task 已在 F0 因 device-scope mapping drift STOP 并完成 Formal Review；后续同 Task local STOP 尚未同步入Control，mapping supplemental证明该次run的composite placement，provenance仍未闭合。D-036现规定numeric ID差异不自动失败，需bounded composite mapping proof。Stage 6仍`STOP / NOT ACCEPTED`。唯一下一Task为`QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN`，状态`READY / Awaiting explicit User dispatch — ONLY NEXT TASK`。Performance、prefix lifecycle和EP2保持locked。

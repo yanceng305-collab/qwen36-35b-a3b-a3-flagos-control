@@ -1,14 +1,16 @@
 # QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP
 
-状态：**READY / Awaiting explicit User dispatch — ONLY NEXT TASK**
+状态：**ENDED / STOP / CONTROL SYNC PENDING — DO NOT RESUME**
 
-执行代理：Codex2 only after explicit User dispatch of this exact Task. This Task supersedes the ended same-Task rerun route; it is the only Ready Task.
+执行代理：Codex2（local STOP Result unsynced; supplemental continuation recorded）
 
 Formal basis:
 
 - [`REVIEW-QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN-STOP-20260828.md`](../reviews/REVIEW-QWEN36-A3-S6-TOKENIZER-NATIVE-UFFFD-AWARE-FUNCTIONAL-MATRIX-RERUN-STOP-20260828.md)
 - [`SUPPLEMENTAL-QWEN36-A3-S6-CONCURRENT-RUN-20260828T180824.md`](../reviews/SUPPLEMENTAL-QWEN36-A3-S6-CONCURRENT-RUN-20260828T180824.md)
 - [`D-034`](../DECISIONS.md#d-034--stage-6-tokenizer-native-ufffd-semantics)
+
+This Task ended at its F0 proof-gap. Its local immutable STOP Result remains server-local and `SERVER EVIDENCE EXISTS / CONTROL SYNC PENDING`; the supplemental mapping continuation is recorded separately. Do not resume this Task. The only next route is `QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN`.
 
 ## Unified identity
 

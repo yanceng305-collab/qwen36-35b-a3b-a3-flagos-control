@@ -2,7 +2,16 @@
 
 Codex2生成的 run snapshot首次 push后不可修改。Codex1 Acceptance只更新本 INDEX或 `../STATUS.md`，不修改 immutable Result。
 
-当前已有 14 个 A3 execution Result。Stage 1/2、Stage 3、Stage 4和Stage 5各自bounded scope均已 **ACCEPTED**。Combined diagnostic已由Codex1 **ACCEPTED — A / tokenizer-decoder-native, scope-limited**。D-034已由User **APPROVED / provenance-aware branch**。旧Stage 6 rerun已由Codex1 Formal Review为有效F0 STOP；late concurrent run仅登记为supplemental diagnostic，不能计入formal progress；Stage 6仍 **STOP / NOT ACCEPTED**。唯一下一Task是D-035 device/provenance follow-up，等待明确User dispatch。Tracked `032fddc9...`仅为historical reference，不改写Frozen wheel identity。
+当前已有 14 个 A3 execution Result。Stage 1/2、Stage 3、Stage 4和Stage 5各自bounded scope均已 **ACCEPTED**。Combined diagnostic已由Codex1 **ACCEPTED — A / tokenizer-decoder-native, scope-limited**。D-034已由User **APPROVED / provenance-aware branch**。旧Stage 6 rerun已由Codex1 Formal Review为有效F0 STOP；D-035 follow-up local STOP尚未同步入Control，D-036 supplemental mapping仅作诊断记录，不能计入formal progress；remaining blocker为`UNRESOLVED_PROVENANCE`；Stage 6仍 **STOP / NOT ACCEPTED**。唯一下一Task是D-036后的 provenance+functional rerun，等待明确User dispatch。Tracked `032fddc9...`仅为historical reference，不改写Frozen wheel identity。
+
+## Unsynced execution and supplemental evidence (not immutable Results)
+
+| Record | Status / boundary | Pointer |
+| --- | --- | --- |
+| `QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP` local STOP `20260829T111455+0800` | **SERVER EVIDENCE EXISTS / CONTROL SYNC PENDING**；F0 proof-gap because direct PID→host logical NPU placement unavailable；not repository-resident immutable Result or Formal Acceptance | [Control note](../reviews/UNSYNCED-QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP-20260829.md); local Result `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP/results/RESULT-QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP-20260829T111455+0800.md` |
+| Supplemental mapping `20260829T113000+0800` | **MAPPING PROVEN FOR THAT RUN / NOT FORMAL PROGRESS**；torch local 0→`/dev/davinci14`→host 14，torch local 1→`/dev/davinci15`→host 15；no O8/O1024 | [Supplemental record](../reviews/SUPPLEMENTAL-QWEN36-A3-S6-DEVICE-MAPPING-20260829T113000.md); server root `/data/tiankuan/zyg/FL/workspace/QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP/supplemental/20260829T113000+0800/evidence` |
+
+Current next Task: [`QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN`](../tasks/QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN.md) — **READY / Awaiting explicit User dispatch — ONLY NEXT TASK**. No Result exists for this Task yet.
 
 ## Supplemental diagnostic evidence (not immutable Results)
 

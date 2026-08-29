@@ -38,7 +38,8 @@
 | D-032 / UFFFD-PROSPECTIVE-ROOT-CAUSE-DIAGNOSTIC | Formally preserve the read-only diagnostic as D/UNRESOLVED and authorize exactly one prospective instrumentation + bounded reproduction Task；pin `long-context-orchestrator@0bb8a5e...` | **Required / User Decision + Codex1 Review** | Parent Evidence cannot locate the earliest U+FFFD layer；User now authorizes actual bounded A3 service/workload capture without changing Frozen baseline；finite stochastic/prehistory attempts are required | New diagnostic Result + Codex1 review；does not authorize Stage 6 PASS, performance, prefix or EP2 |
 | D-033 / JEMALLOC-RECONSTRUCTION-AND-UFFFD-CONTINUATION | Accept new-server staged NPU invariant for exact admission scope；classify ignored frozen jemalloc preload as Stage 6 reconstruction gap；authorize exactly one combined correction→readiness→U+FFFD Task | **Required / User Decision + Codex1 Review** | Fresh exact-image container exposed `/usr/lib64/libjemalloc.so.2` but lacked frozen preload path；0 generation；a jemalloc-only Task would delay the actual root-cause objective | Combined Task Result + Codex1 review；no Stage 6 PASS/later-stage authority |
 | D-034 / STAGE6-TOKENIZER-NATIVE-UFFFD-SEMANTICS | Freeze provenance-aware semantics: native decode U+FFFD with unchanged downstream codepoints is `TOKENIZER_NATIVE_UFFFD`; post-tokenizer mutation is corruption | **APPROVED / USER DECISION — provenance-aware branch** | Diagnostic A proves native decode can first introduce U+FFFD and downstream layers preserve it；A2 Control oracle does not establish an explicit zero-U+FFFD product rule | Fresh Stage 6 rerun under D-034；historical Results unchanged；only the Ready rerun Task may be dispatched explicitly |
-| D-035 / STAGE6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP | Combine dynamic host-device scope preservation and source-backed request-ID correlation correction, then rerun Stage 6 from the beginning | **APPROVED / Codex1 follow-up routing — READY pending explicit User dispatch** | Exact rerun STOP proved privileged/direct-device `0,1` overwrite drift；late concurrent run proved raw ID-shape correlation gap. Narrow `/data/tiankuan:/data/tiankuan` mount is accepted for Task/runtime scope. No fuzzy matching; no historical/supplemental progress reuse; one active session only | Mapping/PID mismatch, unproven ID transform, race, Frozen drift, or any functional blocker; then immediate STOP |
+| D-035 / STAGE6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP | Combine dynamic host-device scope preservation and source-backed request-ID correlation correction, then rerun Stage 6 from the beginning | **ENDED / STOP — CONTROL SYNC PENDING; superseded by D-036** | Local STOP reported direct PID→host logical placement proof-gap; later supplemental mapping closed practical mapping for that run but provenance remained unresolved. Narrow `/data/tiankuan:/data/tiankuan` mount remains accepted. No immutable Result was imported or fabricated. | Contradictory server Evidence or explicit User direction to reconcile the unsynced Result |
+| D-036 / BOUNDED-DEVICE-MAPPING-DIAGNOSIS-AND-COMPOSITE-PLACEMENT-PROOF | A numeric difference between host logical IDs, container-visible IDs and torch indices is not itself a failure; require bounded deterministic mapping diagnosis and composite placement proof | **APPROVED / User-confirmed Control policy** | Supplemental run proved container torch 0/1 mapped to `/dev/davinci14/15` and host logical 14/15. Preferred direct PID-to-NPU API is useful but not mandatory when unsupported. Mapping correction is allowed once within Task-local visibility/container configuration if authorized devices remain unchanged and safe | Unauthorized/occupied devices, ambiguous mapping after bounded diagnosis, unsafe correction, unrelated-workload mutation, or Frozen drift; then immediate STOP |
 
 ## D-002 / D-003 — tracking 与正式验证身份
 
@@ -259,7 +260,33 @@ The User-authorized `/data/tiankuan:/data/tiankuan` bind is the accepted Task/ru
 
 No fuzzy identifier matching is allowed. Canonicalization requires exact source/runtime Evidence of a deterministic reversible or uniquely attributable transform, no per-cell collision, preservation of all raw IDs, and an impact audit proving it changes Evidence correlation only. It must not change IDs, service/client behavior, generated tokens, sampling, order, concurrency, scheduling, graph, tokenizer return or functional semantics.
 
-Only one active Codex2 session may execute the follow-up. If the Task is no longer Ready, another immutable Result exists, another session is active, or Control races, stop before new workload. Supplemental cells and the old Task's cells cannot count toward formal progress. The follow-up must run fresh 16-cell O8 warm-up first, then only after all O8 pass, fresh 16-cell O1024; D-034 and all other Stage 6 gates remain in force.
+The D-035 follow-up ended with an unsynced local STOP and is superseded by D-036. Its local Result is not repository-resident and is not formal Acceptance. The new D-036 route is the only active follow-up; supplemental cells and all old Task cells cannot count toward formal progress. Any future formal run must use one active Codex2 session, fresh roots, fresh 16-cell O8 warm-up first, then only after all O8 pass, fresh 16-cell O1024; D-034 and all other Stage 6 gates remain in force.
+
+## D-036 — Bounded device-mapping diagnosis and composite placement proof
+
+Status: **APPROVED / User-confirmed Control policy** (2026-08-29).
+
+A numeric difference between host logical IDs, container-visible IDs, and torch indices is not by itself a failure. For example, container torch indices `0/1` may deterministically map to host logical devices `14/15`.
+
+The required route is:
+
+```text
+apparent mismatch
+-> suspend formal workload
+-> bounded read-only mapping diagnosis
+-> determine physical/logical/device-node/container/torch mapping
+-> allow one Task-local visibility correction if needed
+-> re-prove mapping
+-> continue only when authorized scope is safely established
+```
+
+Acceptable read-only evidence includes host physical/logical inventory, device-node identity and major/minor, container `--device` configuration, process namespace/device visibility where available, `ASCEND_VISIBLE_DEVICES`, `ASCEND_RT_VISIBLE_DEVICES`, torch_npu count/names, TP rank to visible-device index, HCCL/runtime rank-device evidence, and other deterministic runtime evidence. Direct `npu-smi info proc` or direct PID-to-NPU reporting is preferred when supported but is not mandatory when the platform/runtime reports it as unsupported.
+
+The composite proof must be deterministic, auditable, internally consistent, and demonstrate that the Task-visible two-device scope corresponds to the authorized host devices. A single bounded correction may change Task-local visibility configuration, container `--device` selection, service-launch visibility environment, or local-index interpretation only when it keeps the same authorized idle physical devices, does not disturb unrelated workload, and does not change Frozen source/model/runtime/workload.
+
+STOP only when authorized devices cannot be safely identified, mapping remains ambiguous after bounded diagnosis, unauthorized/occupied devices are used and cannot be safely corrected, correction requires unrelated-workload mutation, or Frozen source/model/runtime change is required. Do not STOP merely because a preferred inspection API is unsupported.
+
+The supplemental `20260829T113000+0800` evidence closes the practical mapping diagnosis for that run: torch local `0 -> /dev/davinci14 -> host 14`, torch local `1 -> /dev/davinci15 -> host 15`. This is not a universal renumbering claim; every fresh run must still inventory and prove its actual mapping. Device mapping is no longer a separate research Task unless contradictory Evidence appears.
 
 ## 明确拒绝的路线
 

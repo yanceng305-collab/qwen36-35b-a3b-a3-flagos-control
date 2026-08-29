@@ -1,8 +1,10 @@
 # Codex2 Prompt — QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP
 
-状态：**DISPATCHABLE ONLY AFTER EXPLICIT USER DISPATCH**
+状态：**DO NOT DISPATCH — historical prompt; Task ended with unsynced local STOP**
 
-User formal dispatch:
+This historical prompt is retained for audit only. Do not dispatch it. The only next route is `QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN`.
+
+Historical User formal dispatch:
 
 **Execute only `QWEN36-A3-S6-DEVICE-MAPPING-AND-PROVENANCE-CORRELATION-FOLLOWUP` in this completely new Codex2 session. Complete its one immutable Result and Control sync, then STOP. Do not execute any other Task.**
 
