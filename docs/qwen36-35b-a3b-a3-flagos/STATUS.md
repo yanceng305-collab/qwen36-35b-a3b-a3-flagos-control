@@ -91,7 +91,7 @@ User已确认 bounded authorization：
 - 可在现有 `/data`创建新的 Qwen Validation专属 work/Evidence/artifacts/cache目录，参考 `/data/tiankuan/zyg/FL/`，但不得覆盖既有目录或写入模型目录；返回 exact paths。
 - 可使用现有 GitHub/package index/container registry/CATLASS访问；离线 artifact必须可核验，CATLASS绑定 exact `41bf90da655bba3c66d0acd7e00abe33960ecfd6`。
 
-Stage 1/2、Stage 3、Stage 4和Stage 5 Formal Acceptance保持。Combined diagnostic已完成并Accepted为A/tokenizer-decoder-native。D-034已批准provenance-aware branch；同一旧Task的正式run已在F0因device-scope mapping drift STOP并完成Formal Review，后续并发run仅登记为supplemental diagnostic且不得计入formal progress。Stage 6仍未Accepted；唯一下一Task为device mapping/provenance correlation follow-up，只有User明确dispatch该exact Task后Codex2才可执行。不得自动进入performance、prefix lifecycle或EP2。
+Stage 1/2、Stage 3、Stage 4和Stage 5 Formal Acceptance保持。Combined diagnostic已完成并Accepted为A/tokenizer-decoder-native。D-034已批准provenance-aware branch；同一旧Task的正式run已在F0因device-scope mapping drift STOP并完成Formal Review，后续并发run仅登记为supplemental diagnostic且不得计入formal progress。D-036已规定numeric mapping差异先走bounded composite diagnosis。Stage 6仍未Accepted；唯一下一Task为`QWEN36-A3-S6-PROVENANCE-CORRELATION-AND-FUNCTIONAL-MATRIX-RERUN`，只有User明确dispatch该exact Task后Codex2才可执行。不得自动进入performance、prefix lifecycle或EP2。
 
 ## Current Stage 6 STOP review — QWEN36-A3-S6-A2-EQUIVALENT-FUNCTIONAL-MATRIX
 

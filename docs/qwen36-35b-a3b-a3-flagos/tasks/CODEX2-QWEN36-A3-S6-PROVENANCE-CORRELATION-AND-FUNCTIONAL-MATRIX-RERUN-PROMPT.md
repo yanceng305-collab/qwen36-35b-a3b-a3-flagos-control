@@ -60,9 +60,18 @@ repo:
 https://github.com/yanceng305-collab/long-context-orchestrator
 commit:
 0bb8a5eda9c46f1b170552ba41b871ba141e04b6
+
+SKILL.md expected SHA-256:
+f4e15f8c5f097d6aec0fe42b58e1cb5386d3104a02b5ebb502e8f7b0041af1f2
 ```
 
-Record repository URL, resolved commit, Task-owned load path, and `SKILL.md` SHA-256. Maintain Task-owned `WORKPLAN.md` and `INDEX.md`. Across compaction preserve current phase/gate, selected physical/logical scope, container/service identity, PID placement, canonical request-ID rule/proof, completed O8/O1024 cells, current/last-success cell, `TOKENIZER_NATIVE_UFFFD`, `UNRESOLVED_PROVENANCE`, `POST_TOKENIZER_CORRUPTION`, first blocker, STOP state, Evidence pointers, and Control/Result sync state.
+After loading, compute the `SKILL.md` SHA-256 and require it to equal:
+
+```text
+f4e15f8c5f097d6aec0fe42b58e1cb5386d3104a02b5ebb502e8f7b0041af1f2
+```
+
+If the computed hash differs, STOP before any A3 workload mutation. Record repository URL, resolved commit, Task-owned load path, and computed hash. Maintain Task-owned `WORKPLAN.md` and `INDEX.md`. Across compaction preserve current phase/gate, selected physical/logical scope, container/service identity, PID placement, canonical request-ID rule/proof, completed O8/O1024 cells, current/last-success cell, `TOKENIZER_NATIVE_UFFFD`, `UNRESOLVED_PROVENANCE`, `POST_TOKENIZER_CORRUPTION`, first blocker, STOP state, Evidence pointers, and Control/Result sync state.
 
 The skill manages context/state only. The Formal Task, D-034, D-036, User dispatch, PASS/STOP rules and Evidence contract are authoritative. Skill or subagents cannot expand authorization. After formal STOP do not continue workload. Durable notes do not replace formal Evidence or immutable Result.
 

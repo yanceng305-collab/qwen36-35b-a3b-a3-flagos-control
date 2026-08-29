@@ -58,7 +58,7 @@ The previous `20260828T161700+0800` Result remains an immutable valid STOP at F0
 
 Before any A3 mutation, live-query/sync Control `main` and read `AGENTS.md`, root `README.md`, `STATUS.md`, this Task, D-034, the ended Task's immutable Result and Formal Review, the supplemental Evidence record, `A3-RUNTIME-HANDOFF.md`, `A2-TO-A3-VALIDATION-DELTA.md`, reconstruction docs and evidence rules.
 
-If this Task is no longer `READY / ONLY NEXT TASK`, if any immutable Result for this Task already exists, or if another active session is running this exact Task, STOP before workload/container mutation. Never launch a concurrent formal run. Use a unique run ID, container name and fresh roots. If Control changes during execution or a race is detected, stop new workload, preserve local Evidence, do not overwrite remote Control, and report the race.
+This Task is ended and must not be dispatched or resumed. Its local Result remains server-local and Control sync is pending. Do not launch any execution under this historical Task.
 
 ## Correction A — device scope and mount
 
