@@ -49,6 +49,37 @@ feature/qwen3.6-35b-a3b-ascend-graph-migration
 
 This is a completely new session. Do not infer facts or authorization from prior chat, another Codex2 session, or server-local assumptions.
 
+Before A3 mutation, load the pinned context/state-management skill in a Task-owned path:
+
+```text
+repo:
+https://github.com/yanceng305-collab/long-context-orchestrator
+
+commit:
+0bb8a5eda9c46f1b170552ba41b871ba141e04b6
+```
+
+Record the repository URL, resolved commit, Task-owned load path, and the `SKILL.md` SHA-256. Maintain Task-owned `WORKPLAN.md` and `INDEX.md`. Across context compaction, these durable files must preserve at least:
+
+```text
+current phase/gate
+selected physical/logical NPU scope
+container/service identity
+PID placement
+canonical request-ID rule and proof state
+completed O8/O1024 cells
+current/last-success cell
+TOKENIZER_NATIVE_UFFFD events
+UNRESOLVED_PROVENANCE state
+POST_TOKENIZER_CORRUPTION state
+first blocker
+STOP state
+Evidence pointers
+Control/Result sync state
+```
+
+The skill manages context and execution state only. The Formal Task, D-034, D-035, User dispatch, PASS/STOP rules, Evidence contract, and Control remain authoritative. The skill or any subagent cannot expand authorization. After a formal STOP, do not continue workload. Durable notes do not replace formal Evidence or the immutable Result.
+
 Before any A3 mutation, live-query and sync Control `main`, then read `AGENTS.md`, root `README.md`, `STATUS.md`, this exact Task, D-034, the ended Task's immutable Result and Formal Review, the supplemental concurrent-run record, `A3-RUNTIME-HANDOFF.md`, `A2-TO-A3-VALIDATION-DELTA.md`, reconstruction docs, and `REPOSITORY-AND-EVIDENCE-RULES.md`.
 
 Confirm all of the following before mutation:
@@ -92,7 +123,13 @@ Do not hard-code `0,1` or `14,15`. Preserve the resolved host logical scope thro
 - device names and physical/logical mapping;
 - APIServer, EngineCore and both TP-worker PIDs' actual host logical-device placement.
 
-Actual service/worker PID placement must equal the authorized selected scope before readiness or workload is accepted. Any mismatch is immediate F0 STOP. Never kill, pause, reset, preempt, inspect or alter unrelated devices, processes, containers, caches or workloads.
+Actual service/worker PID placement must equal the authorized selected scope before readiness or workload is accepted. Any mismatch is immediate F0 STOP.
+
+Read-only inspection required for safe device inventory, health, occupancy,
+ownership and PID-placement verification is allowed.
+
+Never kill, pause, reset, preempt, mutate, or otherwise disturb unrelated
+devices, processes, containers, caches, or workloads.
 
 Reuse the Accepted jemalloc reconstruction method inside this Task container only. Keep exactly:
 
